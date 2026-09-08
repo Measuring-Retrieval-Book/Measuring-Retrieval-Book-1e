@@ -1,7 +1,12 @@
 PYTHON ?= python3
 PANDOC ?= pandoc
-NODE ?= /Users/madhavagaikwad/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node
-NODE_PATH ?= /Users/madhavagaikwad/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules
+# Rendering the SVG diagram masters to PNG needs a Node that can require('sharp').
+# Put machine-specific paths in local.mk, which is not tracked:
+#     NODE = /path/to/node
+#     NODE_PATH = /path/to/node_modules
+-include local.mk
+NODE ?= node
+NODE_PATH ?=
 BOOK = measuring-retrieval-full.pdf
 HTML = measuring-retrieval-full.html
 FILES = cover.md \

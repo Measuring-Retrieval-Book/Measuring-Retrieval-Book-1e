@@ -8,3 +8,4 @@ measuring-retrieval-book/assets/diagrams/*.png
 # single-file HTML is a build artifact; docs/ is the published edition
 measuring-retrieval-full-book/index.html
 measuring-retrieval-full-book/measuring-retrieval-full.html
+local.mk

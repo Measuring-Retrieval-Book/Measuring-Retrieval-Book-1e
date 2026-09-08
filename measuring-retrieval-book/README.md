@@ -1,13 +1,10 @@
 # Measuring Retrieval Book
 
-This folder contains a Pandoc-ready Markdown book generated from the top-level metrics whitepapers in this directory.
-
-The generator skipped the `bk/` folder.
+An early, much shorter draft, superseded by `measuring-retrieval-full-book/`. Kept for reference.
 
 ## Build
 
 ```sh
-cd /Users/madhavagaikwad/Desktop/product/metrics/measuring-retrieval-book
 pandoc metadata.yaml chapters/*.md --css assets/book.css --toc --number-sections -o measuring-retrieval.pdf
 ```
 
