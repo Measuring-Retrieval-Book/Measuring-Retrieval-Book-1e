@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Madhava Gaikwad" />
+  <title>Measuring Retrieval</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="assets/book.css" />
+  
+</head>
+<body>
+<section class="cover front-cover">
+  <img src="assets/covers/front-fractal-dark.png" alt="Dark branching fractal cover">
+  <div class="cover-copy"><p>Information Retrieval and RAG</p><h1>Measuring Retrieval</h1><h2>A working book on metrics, evidence, and evaluation design</h2><p class="author">Madhava Gaikwad</p></div>
+</section>
+<h1 class="unnumbered" id="preface">Preface</h1>
+<p>When you build a search system, or a system that feeds search results
+to a language model, you eventually have to answer a simple question: is
+it any good? The usual way to answer it is to compute a number, put the
+number on a dashboard, and watch it. This book is about what those
+numbers actually mean, because a number that is computed correctly can
+still be read wrongly, and a system that is measured wrongly tends to
+get built wrongly.</p>
+<p>Every metric in this book carries a set of assumptions with it. It
+assumes a particular kind of reader looking at the results, a particular
+thing being counted, a particular way of deciding what counts as a
+correct answer, and a particular point in the system where the
+measurement is taken. The number is useful when those assumptions match
+the system you are actually reviewing, and it quietly misleads you when
+they do not. Because choosing what to measure ends up shaping what gets
+built, evaluation turns out to be a design activity rather than a
+reporting one.</p>
+<p>This edition brings the complete classical information retrieval
+material and the newer RAG material together into a single manuscript.
+It keeps the worked calculations, the implementation guidance, the
+evidence ledgers, and the failure sketches from the sources it was built
+from, and where a later correction revised an earlier section, the
+correction appears beside the section it revises. Throughout, one
+working rule decides whether a metric belongs in the book at all, which
+is that it has to answer an operational question no other metric already
+answers.</p>
+<h2 id="reading-paths">Reading paths</h2>
+<p>You do not have to read this book in order, although Chapters 0
+through 3 are worth reading first whatever your goal is, since
+everything later depends on the vocabulary they set up.</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Starting point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learn retrieval evaluation in sequence</td>
+<td>Chapter 0</td>
+</tr>
+<tr>
+<td>Diagnose a RAG pipeline</td>
+<td>Part II, then Part IV</td>
+</tr>
+<tr>
+<td>Choose a retriever or embedder</td>
+<td>Part III</td>
+</tr>
+<tr>
+<td>Choose a generator</td>
+<td>Chapters C.7 and A.3</td>
+</tr>
+<tr>
+<td>Build an evaluation set</td>
+<td>Chapter 14</td>
+</tr>
+<tr>
+<td>Select a production dashboard</td>
+<td>Chapter 15</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagram-system">Diagram system</h2>
+<p>Every metric in this book gets a figure, and the figures are meant to
+be part of the argument rather than decoration. Each one is a sketch you
+could redraw on a whiteboard in about thirty seconds, which matters
+because a metric you can sketch quickly is a metric you can defend in a
+design review. The color coding is consistent throughout: cyan marks
+flow through a system, gold marks a decision, coral marks a failure,
+emerald marks the conditions under which something works, and indigo
+marks the structure of a system.</p>
+<p>The prose does not depend on the figures. Wherever a figure carries a
+calculation or a decision rule, the same content is worked through in
+the text as well, so you can follow the argument without stopping to
+study the picture.</p>
+<h2 id="source-policy">Source policy</h2>
+<p>The manuscript is built from nine Markdown sources and one PowerPoint
+deck, and it keeps two records of where its material came from. The
+source ledger lists every source file, its size, which chapters it fed,
+and how many figures came out of it, while the diagram ledger maps each
+figure back to the exact line of the source it was generated from.
+Appendix B goes further and records the verification status of roughly
+130 citations, including two places where earlier versions of this
+material got something wrong and the correction that followed.</p>
+<section class="book-part cyan">
+  <p class="part-kicker">Part</p>
+  <h1>Classical Foundations</h1>
+  <p>Sets, ranks, judgments, diversity, fairness, significance, and time</p>
+</section>
+<h1 id="chapter-0---how-to-read-this-book">Chapter 0 - How To Read This
+Book</h1>
+<h2 id="who-this-is-for">0.1 Who this is for</h2>
+<p>You are building or maintaining a system that finds things. It might
+be a classical search engine running over a collection of documents, or
+it might be a RAG pipeline, which is a setup where a search step pulls
+in some documents and a language model writes an answer using them. Most
+likely it is a mixture of the two, where you inherited the search
+component, somebody else chose the language model, and nobody is
+entirely sure which of the two is at fault when the answers come out
+wrong.</p>
+<p>You almost certainly have a dashboard already, and the numbers on it
+are green, although you are not especially confident that they mean what
+you assume they mean.</p>
+<p>That last sentence is the reason this book exists. Retrieval
+evaluation usually fails at the point of interpretation rather than the
+point of calculation, which is to say that the number was computed
+correctly and then understood to mean something it never meant. A system
+can score 0.84 on context adherence, which sounds close to perfect,
+while still producing a third of its correct answers as guesses that
+were not actually supported by anything it retrieved. A search component
+can find 57.6% of the relevant material while 22% of what it returns is
+duplicated content that crowds out something it never found at all. Both
+of those are real published findings, and neither one is visible on a
+dashboard that tracks accuracy.</p>
+<h2 id="scope-and-companion-surveys">0.2 Scope and companion
+surveys</h2>
+<p>Two survey papers map the field broadly and are worth keeping beside
+this book, because they cover the breadth while this book concentrates
+on depth.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Survey</th>
+<th>What it covers</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gan et al. (2025)</td>
+<td>Most comprehensive RAG evaluation survey; performance, factual
+accuracy, safety, computational efficiency</td>
+<td><a href="https://arxiv.org/abs/2504.14891">arXiv:2504.14891</a></td>
+</tr>
+<tr>
+<td>Brehme, Ströhle &amp; Breu (2025)</td>
+<td>Systematic review of 63 papers; uniquely covers indexing and dataset
+generation</td>
+<td><a href="https://arxiv.org/abs/2504.20119">arXiv:2504.20119</a></td>
+</tr>
+</tbody>
+</table>
+<p>This book is an operating guide, so it is organized around what to
+do. For each metric it tells you what the metric can tell you, what will
+distort it, and which companion measure will reveal that distortion when
+it happens.</p>
+<h2 id="the-diagram-convention">0.3 The diagram convention</h2>
+<p>Every metric in this book gets a diagram, and the diagrams
+deliberately use a plain visual vocabulary of stick figures, boxes,
+color and a caption that carries the point. The reason for keeping them
+simple is that a metric you can sketch on a whiteboard in thirty seconds
+is a metric you can explain and defend in a design review, and the
+difficulty in retrieval evaluation is almost never the arithmetic. The
+difficulty is that the meaning of a metric drifts away from its
+mathematics until people are reading a number that no longer describes
+their system.</p>
+<p>You will not need to study the figures to follow the book. Where a
+figure carries a calculation or a decision rule, the same material is
+worked through in the surrounding text.</p>
+<h2 id="the-per-metric-template">0.4 The per-metric template</h2>
+<p>From Chapter 4 onward, every metric is presented in the same order,
+so that once you have read a few of them you always know where to look
+for the part you need.</p>
+<p><img src="assets/diagrams/fig-001-metric-name.png"
+class="diagram-figure" style="width:96.0%" alt="Metric Name" /></p>
+<p>The order matters, because each section answers a question raised by
+the one before it. The entry opens with a one-line summary, the formula,
+and a facets line that tags the metric by dimension, unit, supervision
+and stage, all of which are explained in Chapters 1 and 2. Then comes
+the problem the metric was invented to solve, which describes the
+situation someone was stuck in and what the earlier metrics could not
+tell them. The idea explains how the metric works, building up one piece
+at a time. The worked example runs real numbers through it by hand.
+Advantages and disadvantages cover when it earns its place and how it
+misleads. Domain examples show it behaving differently in three
+different industries, and the recommendation tells you what to actually
+do.</p>
+<p>If you are in a hurry, skip to the recommendation. If you are about
+to ship something, read the disadvantages first.</p>
+<h2 id="roadmap">0.5 Roadmap</h2>
+<p>The book was written and released in installments, and the tables
+below show how the material was originally divided. Everything listed
+here is present in this edition.</p>
+<p><strong>Volume I - Classical IR</strong></p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Installment</th>
+<th>Chapters</th>
+<th>Contents</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>0-4</td>
+<td>Dimensions, facets, signals and metrics, set-based metrics</td>
+<td><strong>this file</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>5-7</td>
+<td>Rank-based metrics; incomplete judgments; rank comparison and
+drift</td>
+<td>planned</td>
+</tr>
+<tr>
+<td>3</td>
+<td>8-10</td>
+<td>Diversity and novelty; fairness and exposure; online and
+counterfactual</td>
+<td>planned</td>
+</tr>
+<tr>
+<td>4</td>
+<td>11-12</td>
+<td>Significance and reporting; efficiency and cost</td>
+<td>planned</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Volume II - RAG-Era</strong></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Installment</th>
+<th>Chapters</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>13-15</td>
+<td>Grounding, attribution, citation quality</td>
+</tr>
+<tr>
+<td>6</td>
+<td>16-18</td>
+<td>Alignment: utility, interference, the contribution family</td>
+</tr>
+<tr>
+<td>7</td>
+<td>19-21</td>
+<td>Integrity, drift, staleness, robustness</td>
+</tr>
+<tr>
+<td>8</td>
+<td>22-24</td>
+<td>Meta-evaluation, judge reliability, and deployment playbooks</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="chapter-1---the-four-dimensions">Chapter 1 - The Four
+Dimensions</h1>
+<h2 id="why-dimensions-at-all">1.1 Why dimensions at all</h2>
+<p>A list of ninety metrics is not a catalogue, it is a menu, and menus
+encourage the worst habits in evaluation. Given a menu, people pick the
+metrics that are cheapest to compute, report all of them, and leave the
+reader to assume that a long list of green numbers adds up to a healthy
+system.</p>
+<p>Sorting metrics into dimensions imposes a useful discipline, because
+it forces you to say which single question a metric answers before you
+are allowed to put it on a dashboard. There are four such questions in
+this book, and they are worth memorising, since almost everything that
+follows is an attempt to answer one of them properly.</p>
+<p>Correctness asks whether the thing is right. Alignment asks whether
+the parts of the system cooperate with each other. Integrity, sometimes
+called drift, asks whether it is still right six months from now.
+Efficiency asks what being right cost you.</p>
+<p><img src="assets/diagrams/fig-002-the-four-questions.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Four Questions" /></p>
+<p>The trap the figure is pointing at is that a team can have four green
+metrics that are all answering the first question. Four metrics is not
+the same as four different metrics, and having a full dashboard is not
+the same as having coverage.</p>
+<h2 id="dimension-i---correctness">1.2 Dimension I - Correctness</h2>
+<p><strong>The question:</strong> is the retrieved or generated content
+actually right, relevant, grounded, and cited correctly?</p>
+<p>This is the dimension everyone starts with, and it is the one most
+teams never leave. It covers precision, recall, nDCG, faithfulness,
+citation accuracy and hallucination rate, which is to say most of the
+apparatus you have already heard of.</p>
+<p>Correctness is seductive because it can be checked one item at a
+time. You can take a single query, a single document, or a single
+sentence of a generated answer, and give a yes or no verdict on it
+without needing to know anything about the rest of the system. That
+makes it easy to instrument, easy to explain to people who are not
+engineers, and consequently easy to trust more than it deserves.</p>
+<p>What a correctness score cannot see:</p>
+<ul>
+<li>Whether the right answer arrived for the wrong reason, which is the
+Accuracy Fallacy described in §1.3</li>
+<li>Whether your search component and your language model are working at
+cross purposes</li>
+<li>Whether today’s 0.91 means the same thing as last quarter’s
+0.91</li>
+<li>What that 0.91 cost you in waiting time and in money</li>
+</ul>
+<p><img
+src="assets/diagrams/fig-003-correctness-is-a-photograph-not-a-film.png"
+class="diagram-figure" style="width:96.0%"
+alt="Correctness Is A Photograph, Not A Film" /></p>
+<p>The figure makes the point with a single query. The system was asked
+something, it answered “Bern”, the truth was “Bern”, and the item is
+marked correct. Repeat that four thousand times and you can announce
+that you are 91% correct, which sounds conclusive until someone asks the
+follow-up questions: correct on which set of queries, using documents
+retrieved from where, compared against results measured when, and at
+what cost per answer. A correctness score is a photograph of one moment,
+and the other three dimensions exist because a system is a film.</p>
+<h2 id="dimension-ii---alignment">1.3 Dimension II - Alignment</h2>
+<p><strong>The question:</strong> do retrieval and generation actually
+cooperate?</p>
+<p>This dimension does not exist in classical search, because classical
+search had only one component to measure. It appears the moment you put
+a language model downstream of a search component, since you now have
+two parts that can each be working correctly while the system they form
+together still fails.</p>
+<p>To make the rest of this section readable, two terms. The retriever
+is the part that searches the collection and hands back a ranked list of
+documents, best first. The generator is the language model that reads
+those documents and writes the answer. The whole point of the
+arrangement is that the generator should build its answer out of what
+the retriever found.</p>
+<p>It very often does not. RAG-E (Randl et al., <a
+href="https://arxiv.org/abs/2601.21803">arXiv:2601.21803</a>) measured
+how frequently this breaks down and found that on somewhere between
+47.4% and 66.7% of queries, the generator ignored the document the
+retriever had ranked first. Between 48.1% and 65.9% of the time it
+leaned mainly on a document the retriever had judged less relevant. The
+paper names the two ways this goes wrong. Wasted retrieval is when the
+retriever found exactly the right document and the generator walked past
+it. Noise distraction is when the generator built its answer out of a
+passage the retriever had ranked near the bottom.</p>
+<p><img src="assets/diagrams/fig-004-the-alignment-problem.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Alignment Problem" /></p>
+<p>The figure shows what that looks like on a dashboard. The retriever
+hands over four documents in confidence order and its own quality score,
+nDCG, comes out at 0.89, which is very good. The generator picks the
+third document, writes its answer from that, and its faithfulness score
+comes out at 0.84, which is also very good, because faithfulness only
+asks whether the answer matches the document it was based on. Both
+components report excellent numbers, the system is quietly broken, and
+no dashboard in the building is showing it.</p>
+<p>The sharpest published illustration of this is the Accuracy Fallacy,
+from RAG-X (Sivakumar, Sugumaran &amp; Qiang, <a
+href="https://arxiv.org/abs/2603.03541">arXiv:2603.03541</a>). On a
+medical question set called GuidelineQA, their best pipeline answered
+71% of questions correctly. When they broke that 71% down by asking
+separately whether the retriever had found the right document and
+whether the generator had used it, the number came apart.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Quadrant</th>
+<th>Share</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effective Use</td>
+<td>49.2%</td>
+<td>Retriever found it, generator used it - genuine grounding</td>
+</tr>
+<tr>
+<td>Lucky Guess</td>
+<td>33.9%</td>
+<td>Retriever missed, generator was right anyway from parametric
+memory</td>
+</tr>
+<tr>
+<td>Information Blindness</td>
+<td>8.5%</td>
+<td>Retriever found it, generator ignored it</td>
+</tr>
+<tr>
+<td>Correct Rejection</td>
+<td>~8.4%</td>
+<td>Retriever missed, generator correctly showed low adherence</td>
+</tr>
+</tbody>
+</table>
+<p>The second row is the one that should worry you. Parametric memory
+means the facts the language model absorbed during its own training, so
+a lucky guess is an answer the model produced from memory while the
+retrieval step contributed nothing. Roughly a third of this pipeline’s
+correct answers were of that kind, which means the retrieval half of the
+system could have been switched off for those queries without changing
+the result.</p>
+<p>Worse, the same pipeline scored 0.84 on context adherence, so it
+looked highly faithful while a third of its correct answers had no
+retrieved support at all. The paper calls that the Adherence Paradox,
+and the reason it happens is straightforward once you see it: adherence
+is only measured on the answers where there was something to adhere
+to.</p>
+<blockquote>
+<p><strong>The single most important sentence in this chapter:</strong>
+a faithfulness score is meaningless unless the retrieval hit rate is
+printed next to it. Faithfulness measures whether the answer matches the
+retrieved context. It says nothing about whether the retrieved context
+contained the answer in the first place.</p>
+</blockquote>
+<h2 id="dimension-iii---integrity-and-drift">1.4 Dimension III -
+Integrity and drift</h2>
+<p><strong>The question:</strong> is the ground under the system still
+trustworthy as time passes?</p>
+<p>Correctness and alignment are both measured at a single instant.
+Integrity asks whether that instant still describes the system next
+month, on a collection of documents that has since been edited, using an
+evaluation setup that may have changed without anyone announcing it.</p>
+<p>Four separate things drift, and treating them as one thing is the
+most common mistake in this dimension.</p>
+<p><img
+src="assets/diagrams/fig-005-four-things-that-drift-and-they-are-not-the-same-thing.png"
+class="diagram-figure" style="width:96.0%"
+alt="FOUR THINGS THAT DRIFT (and they are NOT the same thing" /></p>
+<p>The first is the corpus, which is the collection of documents you
+search over. Documents get edited, policies get revised, and the correct
+answer to a question changes even though the question did not.</p>
+<p>The second is the embedder, which is the model that converts text
+into the numeric vectors your search index is built from. When you
+upgrade it, the vectors mean something different than they did before,
+so distances computed under the old model and the new one are not
+comparable.</p>
+<p>The third is the queries. Users gradually start asking about things
+that did not exist when you launched, so a test set assembled at launch
+slowly stops representing what the system is actually being asked.</p>
+<p>The fourth is the judge, which is the language model you use to score
+your own outputs. This one is invisible by design. If your faithfulness
+numbers come from a judge model and that model is silently updated by
+its provider, nothing on your dashboard changes color, and every
+comparison you make against your historical numbers has quietly become
+invalid. Brehme et al. raise exactly this problem, pointing out that
+model advances can invalidate previous evaluation results and that
+nobody has yet established a way to keep an evaluation standard
+consistent across model versions.</p>
+<p>For the corpus case there are hard numbers, and they are worse than
+most teams assume. VersionRAG (Huwiler, Stockinger &amp; Fürst, <a
+href="https://arxiv.org/abs/2510.08109">arXiv:2510.08109</a>) tested
+pipelines on questions about technical documentation where the answer
+depends on which version of the document you are looking at. A standard
+RAG pipeline answered 58% of them correctly and a graph-based one
+answered 64%, against 90% for a pipeline that had been told to track
+versions. On the harder task of noticing that a document had changed
+without being told, the baseline pipelines scored between 0% and
+10%.</p>
+<h2 id="dimension-iv---efficiency-and-cost">1.5 Dimension IV -
+Efficiency and cost</h2>
+<p><strong>The question:</strong> what did being right cost you?</p>
+<p>An earlier version of the catalogue behind this book filed waiting
+time, throughput, index size and query cost under a label meaning “not a
+real dimension”. That was wrong, and the field has since settled the
+other way, with Gan et al.’s survey treating computational efficiency as
+an equal axis alongside performance, factual accuracy and safety.</p>
+<p>Efficiency has to be its own dimension because it trades directly
+against correctness, and you cannot reason about a trade-off when you
+only have a number for one side of it.</p>
+<p><img src="assets/diagrams/fig-006-the-dial-nobody-labels.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Dial Nobody Labels" /></p>
+<p>The figure draws that trade-off as a dial. Turn it toward retrieving
+more and correctness goes up, cost goes up, and redundancy goes up with
+them. Turn it toward retrieving less and all three come down together.
+The settings that control the dial are the number of documents you
+retrieve, usually written k, how deep you rerank, and how large your
+text chunks are, and in most systems those numbers were chosen once,
+early, by copying a tutorial, and never revisited.</p>
+<p>RAG-X supplies the concrete cost of leaving the dial alone. In their
+pipeline, 22% of the top-ranked contexts were near-duplicates of each
+other, meaning the same content was purchased twice. Their Exclusive Hit
+Rate at rank 2, which measures how often the second document contributed
+something the first one had not already supplied, was 6.8%. Rank two was
+almost always redundant. A fifth of the context budget was being paid
+for and thrown away, and no correctness metric will ever surface
+that.</p>
+<h2 id="the-dimension-selection-rule">1.6 The dimension selection
+rule</h2>
+<p>Before you add any metric to a dashboard, put it through three
+questions.</p>
+<p><img src="assets/diagrams/fig-007-decision-map.png"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>First, which one dimension does this metric primarily answer? Second,
+do you already have a metric covering that dimension? Third, if you do,
+does this new one measure something the existing one genuinely cannot?
+If you cannot answer the third question, you are adding noise to the
+dashboard instead of signal.</p>
+<p>A dashboard carrying one strong metric per dimension is more
+informative than a dashboard carrying nine correctness metrics, because
+the nine will move together and their agreement will feel like
+confirmation when it is really one measurement wearing nine different
+hats. Volume II gives a concrete example of this. eRAG, Gain, DIG and
+ΔSePer are four separately published metrics that all estimate how much
+a passage contributed by running the model with and without that passage
+and comparing the results. They are the same measurement four times
+over, and reporting all four does not give you four times the
+evidence.</p>
+<hr />
+<h1 id="chapter-2---the-facet-system">Chapter 2 - The Facet System</h1>
+<p>Dimensions tell you which question a metric answers. Facets tell you
+which other metrics it can legitimately be compared with, and this turns
+out to matter just as much, because the most common way to produce a
+meaningless number is to average two metrics that were never counting
+the same kind of thing. Teams do this routinely, putting a score that
+was computed once per sentence next to a score that was computed once
+per question and taking the mean of the two.</p>
+<p>There are four facets, and every metric in this book is tagged with
+all four.</p>
+<h2 id="facet-a---unit-of-analysis">2.1 Facet A - Unit of analysis</h2>
+<p>The unit of analysis is simply the thing you get one number for. It
+sounds trivial and it is the facet people get wrong most often.</p>
+<p><img src="assets/diagrams/fig-008-the-unit-ladder.png"
+class="diagram-figure" style="width:96.0%" alt="The Unit Ladder" /></p>
+<p>The figure arranges the possible units as a ladder, from the widest
+to the narrowest. At the top is the system, where you get a single
+number for the entire deployment, such as an Elo rating or the size of
+your index. Below that is the corpus, one number for the whole document
+collection, which is where coverage and drift measurements live. Then
+the session, one number per user journey, which is where you measure
+things like whether someone gave up. Then the query, one number per
+question asked, which is where nDCG, MRR and accuracy sit and where most
+people spend their time. Then the passage, one number for each retrieved
+chunk of text, which is where contribution metrics like DIG and Gain
+operate. At the bottom is the claim, one number for each individual
+factual assertion in an answer, which is where FActScore and claim
+recall operate.</p>
+<p>The rule that follows from the ladder is that you aggregate within a
+unit and never across units. A claim-level metric and a query-level
+metric can sit side by side on the same dashboard quite happily, and
+they cannot go into the same average.</p>
+<p>The reason is worth working through, because it is not obvious.
+Suppose one question produces an answer containing forty separate
+factual claims and another produces an answer containing two. At the
+query level, each of those questions contributes exactly one number to
+your average, so they count equally. At the claim level, the first
+question contributes forty numbers and the second contributes two, so
+the first question is twenty times more influential. Neither weighting
+is wrong, and they are answering different questions, so an average that
+mixes them is answering neither.</p>
+<h2 id="facet-b---supervision">2.2 Facet B - Supervision</h2>
+<p>Supervision describes what a metric needs in order to produce a score
+at all, and it ranges from needing nothing but the system’s own output
+to needing a person.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+<th>CI-friendly?</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ref</strong></td>
+<td>Reference-based; needs golden answers</td>
+<td>Yes</td>
+<td>Label creation</td>
+</tr>
+<tr>
+<td><strong>free</strong></td>
+<td>Reference-free; needs no ground truth</td>
+<td>Yes</td>
+<td>Compute only</td>
+</tr>
+<tr>
+<td><strong>judge</strong></td>
+<td>LLM-as-judge scoring</td>
+<td>Partly</td>
+<td>API calls + drift risk</td>
+</tr>
+<tr>
+<td><strong>human</strong></td>
+<td>Human annotation</td>
+<td>No</td>
+<td>Time, expertise</td>
+</tr>
+</tbody>
+</table>
+<p>Reference-based means the metric compares your system’s output
+against a correct answer that somebody wrote down in advance, so you
+have to build and maintain a set of those answers. Reference-free means
+the metric can score the output using only the output and the retrieved
+documents, so it costs computation and nothing else. Judge means a
+language model reads the output and scores it, which is flexible and
+introduces the drift problem from §1.4. Human means a person does
+it.</p>
+<p>This facet decides something very practical, which is what you are
+able to run automatically every time somebody changes the code.</p>
+<p><img src="assets/diagrams/fig-009-the-ci-gate.png"
+class="diagram-figure" style="width:96.0%" alt="The Ci Gate" /></p>
+<p>The figure sets out the arrangement that works. Reference-based and
+reference-free metrics are fast and give the same answer every time, so
+they run on every commit. Judge metrics are slow, cost money per call,
+and drift over time, so they run nightly. A human-annotated anchor set
+is slow, expensive and authoritative, so it runs once per release. Teams
+that skip this arrangement and run the entire suite on every pull
+request usually discover the problem when the invoice arrives.</p>
+<p>This is also why RAGAS spread so quickly through continuous
+integration pipelines while ALCE did not. RAGAS is reference-free and
+needs no golden answers, ALCE is reference-based and does. For your
+engineering practice, that single difference matters more than any
+difference in what the two of them actually measure.</p>
+<h2 id="facet-c---stage">2.3 Facet C - Stage</h2>
+<p>Stage records where in the pipeline the metric is looking.</p>
+<p><img src="assets/diagrams/fig-010-where-does-the-metric-look.png"
+class="diagram-figure" style="width:96.0%"
+alt="Where Does The Metric Look?" /></p>
+<p>A query goes into the retriever, the retriever passes context to the
+generator, and the generator produces an answer. A metric can watch any
+of three places along that path. Retriever-only metrics, marked R, look
+at the ranked list before the generator has seen it, and this is where
+nDCG, MRR and recall live. Generator-only metrics, marked G, look at the
+answer given the context it was built from, and this is where
+faithfulness and Trust-Score live. End-to-end metrics, marked E2E, look
+only at the question and the final answer and treat everything in
+between as a black box, which is where plain accuracy, CUE, eRAG and
+WARG live.</p>
+<p>The diagnostic value here is high. If your end-to-end number drops
+and you do not have an R number and a G number beside it, you have no
+way of telling which half of the system caused the drop, so you are
+reduced to guessing or to changing things until the number recovers.
+This is the entire argument behind RAG-X, which separates retrieval and
+generation scoring specifically so that an error can be attributed to
+one component, because an aggregate number cannot tell you whether a
+failure came from retrieving the wrong thing or from writing the wrong
+answer about the right thing.</p>
+<h2 id="facet-d---verification-tier">2.4 Facet D - Verification
+tier</h2>
+<p>This facet was added late, during a review of the catalogue that this
+book was built from, and it records two different things about a
+citation.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Mark</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESTABLISHED</td>
+<td>Established - widely adopted, multiple independent uses</td>
+</tr>
+<tr>
+<td>EMERGING</td>
+<td>Emerging - published and awaiting broad replication</td>
+</tr>
+<tr>
+<td>o</td>
+<td>Practitioner-only - blog/industry, no peer review</td>
+</tr>
+<tr>
+<td>VERIFIED</td>
+<td>Citation verified against primary source this pass</td>
+</tr>
+<tr>
+<td>OPEN</td>
+<td>Citation asserted from memory, NOT verified</td>
+</tr>
+</tbody>
+</table>
+<p>The first three marks describe how well accepted a metric is. The
+last two describe whether the reference given for it in this book was
+actually checked against the original paper. Those are independent
+properties, and keeping them separate is the point of the facet.</p>
+<p>An example from this book’s own construction shows why. The AIS
+metric is about as established as anything in the attribution
+literature, and it was nevertheless carried in the working catalogue
+with the venue given as TACL 2023. It was published in <em>Computational
+Linguistics</em> 49(4):777-840. The metric was established and the
+citation was wrong, and treating those two properties as one is exactly
+how an incorrect reference gets copied from paper to paper for
+years.</p>
+<p><img
+src="assets/diagrams/fig-011-o-it-s-a-famous-paper-i-know-the-citation.png"
+class="diagram-figure" style="width:96.0%"
+alt="o “It’s a famous paper, I know the citation.”" /></p>
+<p>Across four verification passes over the companion catalogue, 34
+identifiers were checked and one was wrong. The wrong one came from the
+person who was most confident about it.</p>
+<hr />
+<h1 id="chapter-3---signals-are-not-metrics">Chapter 3 - Signals Are Not
+Metrics</h1>
+<h2 id="the-category-error">3.1 The category error</h2>
+<p>The biggest structural fault in most metric catalogues is that they
+mix three completely different kinds of thing into a single table and
+treat them all as measurements.</p>
+<p><img src="assets/diagrams/fig-012-decision-map.png"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>The figure separates them into three columns. Signals are features
+you rank with, such as tf-idf, a BM25 score, cosine similarity, PageRank
+or query likelihood. Parameters are knobs you tune, such as BM25’s k1
+and b, a smoothing value, the number of expansion terms, or your chunk
+size. Metrics are measurements you report, such as nDCG, MAP, MRR,
+recall@k or faithfulness. The three columns have different jobs: you
+rank with the first, you tune the second, and you report the third.</p>
+<p>Once they are separated, a question that gets asked constantly stops
+making sense. Asking which dimension BM25’s b parameter belongs to is
+the same kind of question as asking what color the number seven is. The
+b parameter controls how much BM25 discounts long documents, and you
+adjust it in order to push nDCG up. nDCG belongs to a dimension. The
+knob you turned to improve it does not.</p>
+<h2 id="why-this-matters-practically">3.2 Why this matters
+practically</h2>
+<p>Mixing the three does three concrete kinds of damage.</p>
+<ol type="1">
+<li><p><strong>It corrupts your dimension counts.</strong> If eleven of
+the things you have filed under correctness are actually ranking
+features, then your correctness coverage is far thinner than the table
+suggests, and you will not notice because the table looks full.</p></li>
+<li><p><strong>It invites optimizing the wrong object.</strong> Teams
+start reporting that their BM25 score improved, which is not a statement
+about quality at all. Raw retrieval scores cannot be compared across
+different queries, across different collections, or even across two
+rebuilds of the same index, because the score is only meaningful
+relative to the other documents it was computed alongside.</p></li>
+<li><p><strong>It hides genuine gaps.</strong> A catalogue padded out
+with signals looks comprehensive. Strip the signals out and the real
+measurement coverage is often thin, particularly in the alignment and
+integrity dimensions where the metrics are newest and fewest.</p></li>
+</ol>
+<h2 id="the-test">3.3 The test</h2>
+<p>There is a single question that sorts them reliably.</p>
+<p><img src="assets/diagrams/fig-013-decision-map.png"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>Ask whether you could put this number in a quarterly report as
+evidence that the system is good. Saying that your nDCG@10 is 0.71
+passes, because it is a claim about quality that someone could act on.
+Saying that your BM25 b is 0.75 does not, because it describes a setting
+rather than an outcome. Saying that your mean cosine similarity is 0.83
+also does not, and this is the one people get wrong. If the honest
+response to your number is “and?”, then what you have is not a
+metric.</p>
+<p>The cosine similarity case is worth dwelling on, because it feels
+like a quality measurement and gets reported as one constantly. Cosine
+similarity measures how close the retrieved chunks are to the query in
+the embedding space, so a retriever that returns five nearly identical
+chunks, all of them irrelevant, can post a high average similarity.
+Similarity to the query is the signal the ranking was built from, and
+asking whether the ranking was any good is a separate measurement that
+requires someone to have judged which documents were actually
+relevant.</p>
+<h2 id="the-one-legitimate-exception">3.4 The one legitimate
+exception</h2>
+<p>There is a way for a knob to enter the metrics column, and it is by
+measuring the difference the knob makes rather than reporting its
+setting. Relevance feedback effectiveness, meaning the change in MAP
+that results from applying Rocchio’s method, is a genuine alignment
+measurement, because it tells you something about how well two parts of
+the system are cooperating.</p>
+<table>
+<thead>
+<tr>
+<th>Not a metric</th>
+<th>Metric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rocchio α, β, γ values</td>
+<td>Δ MAP after relevance feedback</td>
+</tr>
+<tr>
+<td>Number of expansion terms</td>
+<td>Δ recall after query expansion</td>
+</tr>
+<tr>
+<td>Chunk size</td>
+<td>Δ Effective Use across chunk sizes</td>
+</tr>
+<tr>
+<td>Embedding dimensionality</td>
+<td>Δ nDCG across embedders</td>
+</tr>
+</tbody>
+</table>
+<p>The pattern running down the right column is the same in every row. A
+knob becomes a metric at the moment you stop reporting where you set it
+and start reporting the difference that setting made.</p>
+<hr />
+<h1 id="chapter-4---set-based-metrics">Chapter 4 - Set-Based
+Metrics</h1>
+<p>We start with the oldest family of metrics in the book. Everything in
+this chapter predates the web, most of it predates 1980, and all of it
+is still sitting on your dashboard.</p>
+<p>These four metrics share an assumption that is worth naming at the
+outset. They treat the results your system returns as a set, meaning an
+unordered bag of documents where nothing is first and nothing is last,
+and they treat relevance as a yes or no property. Both assumptions are
+wrong about real systems, and Chapter 5 exists to fix them. They are
+still the right place to begin, because everything later is built out of
+these pieces.</p>
+<h2 id="the-confusion-matrix-and-why-it-deserves-respect">4.0 The
+confusion matrix, and why it deserves respect</h2>
+<p>Every metric in this chapter comes from the same small table. Suppose
+you have a collection of documents, somebody has asked a question, and
+for each document in the collection there are two independent facts:
+whether your system returned it, and whether it was actually relevant.
+That gives four possible combinations.</p>
+<p><img src="assets/diagrams/fig-014-retrieved.png"
+class="diagram-figure" style="width:96.0%" alt="Retrieved?" /></p>
+<p>A document that is relevant and was returned is a true positive,
+written TP, and that is the case you want. A document that is relevant
+and was not returned is a false negative, written FN, which is a miss. A
+document that is irrelevant and was returned is a false positive,
+written FP, which is noise the reader has to wade through. A document
+that is irrelevant and was not returned is a true negative, written TN,
+and that is the ordinary, uninteresting case.</p>
+<p>Precision is TP divided by (TP + FP), which asks how much of what you
+returned was any good. Recall is TP divided by (TP + FN), which asks how
+much of the good material you managed to return.</p>
+<p>The reason retrieval uses these two rather than plain accuracy is an
+asymmetry in that table that almost nobody mentions. The true negative
+box is enormous and it is useless. In a collection of ten million
+documents where twenty are relevant to a given question, there are
+roughly 9,999,980 true negatives, so any metric that counts them will be
+dominated by them. A system that returns nothing at all gets every one
+of those true negatives right and scores about 0.999998 on plain
+accuracy. This is worth internalizing, because the same trap comes back
+in RAG: any metric whose denominator is dominated by cases that are
+trivially correct will look excellent and mean nothing.</p>
+<hr />
+<h2 id="precision">4.1 Precision</h2>
+<p><strong>One-line:</strong> Of the documents you returned, what
+fraction were relevant?</p>
+<p><strong>Formula:</strong> <code>P = TP / (TP + FP)</code></p>
+<p><strong>Facets:</strong> Correctness | query | ref | R | ESTABLISHED
+VERIFIED <em>(Manning, Raghavan &amp; Schütze, Ch. 8)</em></p>
+<h3 id="the-problem-it-solves">The problem it solves</h3>
+<p>Imagine you have run a search and you are now looking at the results.
+Before you can ask whether the system found everything, there is a
+cheaper and more immediate question: is the material in front of you
+worth reading? Somebody has to open each of these documents and decide
+whether it helps, and every document that turns out to be irrelevant is
+time that person spent for nothing. Precision is the measurement of that
+wasted time, and it is the only metric in this chapter you can compute
+without knowing anything about the documents you did not return.</p>
+<h3 id="the-idea">The idea</h3>
+<p>Precision counts how many of the returned documents were relevant,
+and divides by how many you returned. Nothing in the calculation refers
+to the collection as a whole, so precision is completely silent about
+what you missed. A system that returns exactly one relevant document and
+stops there scores a perfect 1.0, even when nine hundred other relevant
+documents are sitting in the collection untouched.</p>
+<p><img src="assets/diagrams/fig-015-the-fisherman-s-first-question.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Fisherman’S First Question" /></p>
+<p>The fishing image in the figure is the clearest way to hold this.
+Precision asks whether everything in your net is actually a fish. A net
+holding four fish and nothing else scores 1.0. A net holding two fish, a
+boot and a tin can scores 0.5. Neither fisherman has any idea how many
+fish are still swimming in the river, because that is a different
+question entirely, and it is the question §4.2 takes up.</p>
+<h3 id="worked-example">Worked example</h3>
+<p>A legal search is run for “force majeure precedent, shipping,
+2020-2024” and returns 10 documents. A paralegal reads all ten and finds
+that 6 of them are on point, while the other 4 turn out to be about
+force majeure in construction contracts, which is the right doctrine in
+the wrong industry.</p>
+<p><img src="assets/diagrams/fig-016-tp-6-fp-4.png"
+class="diagram-figure" style="width:96.0%" alt="Tp = 6, Fp = 4" /></p>
+<p>So TP is 6 and FP is 4, and precision is 6 divided by (6 + 4), which
+is 0.60. Read plainly, sixty percent of the paralegal’s reading time was
+well spent and forty percent was not.</p>
+<h3 id="advantages">Advantages</h3>
+<ul>
+<li><strong>Directly interpretable as wasted effort.</strong> The
+quantity <code>1 - P</code> is the fraction of the returned material a
+human has to read and throw away, so a precision of 0.60 means 40% of
+the reading was wasted. No other metric in this book maps onto a cost
+that cleanly.</li>
+<li><strong>Cheap to judge.</strong> You only need relevance labels for
+the documents you actually returned, which keeps the annotation budget
+small and predictable.</li>
+<li><strong>Robust to corpus size.</strong> Since the calculation never
+refers to the whole collection, you do not need to know how many
+relevant documents exist, and the number stays meaningful as the
+collection grows.</li>
+</ul>
+<h3 id="disadvantages">Disadvantages</h3>
+<ul>
+<li><strong>Silent about misses.</strong> This is the big one. Precision
+cannot tell the difference between a system that found everything and a
+system that found almost nothing, as long as both were tidy about what
+they returned.</li>
+<li><strong>Trivially gamed by returning less.</strong> Precision climbs
+as soon as you return only the single result you are most confident in,
+which is why optimizing for unqualified precision tends to produce a
+system that answers fewer questions rather than a better one.</li>
+<li><strong>Ignores rank.</strong> Precision@10 gives the same score
+whether the relevant document sat at position 1 or position 10, although
+users emphatically do not experience those as the same. Chapter 5 exists
+to fix this.</li>
+<li><strong>Set-based judgment hides gradation.</strong> A document that
+is partly relevant has to be forced into a yes or a no, so the
+assessor’s real opinion is lost. Graded relevance metrics such as nDCG
+handle this properly.</li>
+</ul>
+<h3 id="domain-examples">Domain examples</h3>
+<p><strong>Legal and e-discovery.</strong> Precision is a direct budget
+line here. In a document review costing roughly one to three dollars per
+document, a precision drop from 0.6 to 0.4 across a 50,000-document
+production adds a six-figure sum to the review cost, which is why legal
+teams often write a minimum precision into the contract.</p>
+<p><strong>Clinical decision support.</strong> In this setting precision
+is a safety measure rather than a cost measure. A clinician who receives
+five guideline excerpts of which two apply to the wrong patient
+population has been actively harmed, because the irrelevant material
+competes for attention during a decision made under time pressure. This
+is the domain where RAG-X measured 22% pairwise redundancy, meaning the
+same guidance came back twice while guidance that was never returned at
+all stayed missing.</p>
+<p><strong>E-commerce search.</strong> Precision maps onto whether
+people buy anything. A shopper searching for “waterproof hiking boots
+women’s 8” who gets men’s boots and non-waterproof boots in the top ten
+will usually give up. In this domain precision at a very shallow depth,
+P@3 or P@5, matters far more than P@10, for the simple reason that a
+phone screen shows about three results.</p>
+<h3 id="recommendation">Recommendation</h3>
+<p>Never report precision on its own. Pair it with recall or with
+something that stands in for recall, and the standard pairing is F1,
+which §4.3 covers. In production the more useful arrangement is
+precision at a shallow depth alongside recall at a deeper one, for
+example P@3 reported next to Recall@50, because those two answer
+genuinely different operational questions: is the top of the page clean,
+and did we find the thing at all?</p>
+<p>Set your depth to match your interface. If your interface shows three
+results, then P@10 is measuring an experience none of your users are
+having.</p>
+<h3 id="failure-mode-to-watch">Failure mode to watch</h3>
+<p><img src="assets/diagrams/fig-017-the-precision-ratchet.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Precision Ratchet" /></p>
+<p>The figure traces a team over one quarter. In week 1 they report P@10
+of 0.55 while returning ten results. By week 4 P@10 has reached 0.71 and
+everyone is pleased. In week 8 they report P@5 of 0.80, and by week 12
+they report P@3 of 0.91 and call it the best quarter ever. Asked what
+recall did over the same period, they explain that they stopped tracking
+it in week 3.</p>
+<p>Every number went up, and the system found strictly less material
+every single week. The team had not improved retrieval, they had
+improved precision by returning less, which is exactly the gaming
+behaviour precision invites when nothing is watching the other side.</p>
+<hr />
+<h2 id="recall">4.2 Recall</h2>
+<p><strong>One-line:</strong> Of all the relevant documents that exist,
+what fraction did you return?</p>
+<p><strong>Formula:</strong> <code>R = TP / (TP + FN)</code></p>
+<p><strong>Facets:</strong> Correctness | query | ref | R | ESTABLISHED
+VERIFIED <em>(Manning Ch. 8)</em></p>
+<h3 id="the-problem-it-solves-1">The problem it solves</h3>
+<p>Precision tells you whether the material in front of you is worth
+reading, and it will happily report a perfect score for a system that
+found one document out of five hundred. If the cost of missing something
+is high, that is the wrong question. What you need to know is how much
+of the relevant material in the collection your system actually managed
+to surface, which means counting the documents that never appeared, and
+that is what recall does.</p>
+<h3 id="the-idea-1">The idea</h3>
+<p>Recall counts the relevant documents you returned and divides by the
+total number of relevant documents that exist. It is precision’s mirror
+image and its natural adversary, because you can almost always buy one
+by giving up the other simply by adjusting how much you return.</p>
+<p>Recall has a structural problem that precision does not, and it is
+severe. Computing recall requires knowing FN, the number of relevant
+documents you failed to return, which means knowing how many relevant
+documents exist in the whole collection. For any collection of realistic
+size, nobody knows that number. This is the hardest practical problem in
+retrieval evaluation and Chapter 6 is devoted entirely to working around
+it.</p>
+<p><img
+src="assets/diagrams/fig-018-the-fisherman-s-second-question.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Fisherman’S Second Question" /></p>
+<p>The fisherman’s second question is whether he got all the fish. If he
+caught 2 and 5 are still in the river, his recall is 2 divided by 7,
+which is 0.29. The figure then asks the question that matters: how does
+he know there are seven? The only honest answer is that he drained the
+river and counted, and you cannot drain a ten-million-document
+river.</p>
+<h3 id="worked-example-1">Worked example</h3>
+<p>Continuing the legal search from §4.1. To establish the truth, a
+senior associate reviews a random sample of the collection plus the
+results of several targeted searches, and concludes that 15 genuinely
+on-point documents exist. Your system returned 6 of them.</p>
+<p><img src="assets/diagrams/fig-019-tp-6-fn-9.png"
+class="diagram-figure" style="width:96.0%" alt="Tp = 6, Fn = 9" /></p>
+<p>So TP is 6 and FN is 9, and recall is 6 divided by (6 + 9), which is
+0.40. Note what has happened across the two sections. Precision on this
+same result set was 0.60 and recall is 0.40. Two numbers, one set of
+results, and two quite different stories about how the system is
+doing.</p>
+<h3 id="advantages-1">Advantages</h3>
+<ul>
+<li><strong>The right metric when misses are expensive.</strong> In
+legal discovery, medical safety, patent search and compliance, a
+document you failed to find can be catastrophic in a way that an extra
+irrelevant document never is.</li>
+<li><strong>Harder to game than precision.</strong> Returning everything
+inflates recall while visibly destroying precision, so the gaming
+announces itself.</li>
+<li><strong>Sets the ceiling for everything downstream.</strong> This is
+under-appreciated in RAG. Your generator cannot use what your retriever
+never fetched, so recall is the upper bound on how much genuine
+grounding the system can possibly achieve.</li>
+</ul>
+<h3 id="disadvantages-1">Disadvantages</h3>
+<ul>
+<li><strong>The denominator is usually unknowable.</strong> This is not
+a small caveat. Recall reported by most production systems is recall
+against a labelled subset of the collection, which can differ from true
+recall by a wide margin that nobody has measured.</li>
+<li><strong>Trivially gamed by returning more.</strong> Recall@1000 will
+look wonderful and tell you nothing.</li>
+<li><strong>Says nothing about rank or redundancy.</strong> A recall of
+0.9 reached by returning the same fact nine times looks identical to a
+recall of 0.9 across nine distinct facts, which is precisely why RAG-X’s
+Exclusive Hit Rate exists.</li>
+<li><strong>Insensitive to context-window economics.</strong> In RAG, a
+high recall at k=50 is worthless when you can only fit five chunks into
+the prompt.</li>
+</ul>
+<h3 id="domain-examples-1">Domain examples</h3>
+<p><strong>Patent prior-art search.</strong> Recall is close to the only
+thing that matters, because missing a single piece of prior art can
+invalidate a patent years later at enormous cost. Searches in this field
+routinely accept precision below 0.1 in exchange for recall above 0.95,
+since the reviewer’s time is cheap compared with the downside.</p>
+<p><strong>Pharmacovigilance and adverse-event detection.</strong> A
+missed report is a regulatory failure, so systems are tuned for very
+high recall and human triage absorbs the resulting flood of false
+positives. This is a domain where the cost dimension from Chapter 12 is
+being sacrificed consciously, which is the right way to sacrifice
+it.</p>
+<p><strong>Customer-support RAG.</strong> Here the calculation inverts.
+A support bot that retrieves 50 chunks to guarantee recall will exhaust
+its context budget, and <em>Lost in the Middle</em> (Liu et al., TACL,
+<a href="https://arxiv.org/abs/2307.03172">arXiv:2307.03172</a>
+VERIFIED) shows that material placed in the middle of a long context
+gets under-used anyway. Recall beyond what the generator can actually
+attend to is recall you paid for and did not receive.</p>
+<h3 id="recommendation-1">Recommendation</h3>
+<p>Report recall at the depth your generator actually consumes rather
+than the depth your retriever returns. If you retrieve 50 documents and
+pass 5 into the model, then Recall@5 is your real recall, and Recall@50
+is a statement about a reranker you may not even have.</p>
+<p>In domains where misses are expensive, do not chase recall by itself.
+Pair it with an estimate of how much of the relevant set your labels
+actually cover, because an unqualified claim of “recall 0.85” measured
+against labels covering 10% of the collection is a claim about your
+labels rather than about your system.</p>
+<h3 id="failure-mode-to-watch-1">Failure mode to watch</h3>
+<p><img src="assets/diagrams/fig-020-the-recall-mirage.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Recall Mirage" /></p>
+<p>A team reports Recall@50 of 0.92, which looks excellent. The pipeline
+then passes only the top 5 chunks to the generator, and recall at that
+depth is 0.61. Of those five, some sit in the middle of the prompt where
+the model attends to them least, so the effective figure is lower again
+by an unknown amount. The retriever has 92% recall and the generator has
+61% recall, and the second number is the one that determines the
+answer.</p>
+<hr />
+<h2 id="f-measure-f1-and-fβ">4.3 F-measure, F1, and Fβ</h2>
+<p><strong>One-line:</strong> The harmonic mean of precision and recall,
+optionally weighted toward one of them.</p>
+<p><strong>Formula:</strong></p>
+<p><img src="assets/diagrams/fig-021-f1-2pr-p-r.png"
+class="diagram-figure" style="width:96.0%"
+alt="F1 = 2Pr / (P + R" /></p>
+<p><strong>Facets:</strong> Correctness | query | ref | R | ESTABLISHED
+VERIFIED <em>(Manning Ch. 8)</em></p>
+<h3 id="the-problem-it-solves-2">The problem it solves</h3>
+<p>You now have two numbers that move in opposite directions, which
+means a team reporting its own results can always lead with whichever
+one looks better this month. Two numbers also make ranking systems
+awkward, because a system with higher precision and lower recall is
+neither clearly better nor clearly worse than its rival. F-measure
+exists to collapse the pair into a single figure that cannot be improved
+by sacrificing one side.</p>
+<h3 id="the-idea-2">The idea</h3>
+<p>The formula in the figure has two parts. F1 is 2PR divided by (P +
+R), which is the harmonic mean of precision and recall. The general
+form, Fβ, is (1 + β²) multiplied by PR, divided by (β²P + R), where β is
+a number you choose. Setting β below 1 weights precision more heavily,
+setting β to exactly 1 gives the balanced F1, and setting β above 1
+weights recall more heavily.</p>
+<p>The choice of a harmonic mean rather than an ordinary average is the
+whole design, and it is what makes the metric hard to cheat.</p>
+<p><img src="assets/diagrams/fig-022-why-harmonic-not-arithmetic.png"
+class="diagram-figure" style="width:96.0%"
+alt="Why Harmonic, Not Arithmetic" /></p>
+<p>Compare two systems. System A has precision 0.50 and recall 0.50.
+System B returns exactly one document, which happens to be correct,
+giving precision 1.00 and recall 0.01. Under an ordinary average, A
+scores 0.500 and B scores 0.505, so B wins, which is absurd for a system
+that ignores 99% of the collection. Under the harmonic mean, A scores
+0.500 and B scores 0.020, because the harmonic mean is pulled hard
+toward whichever number is smaller. Punishing imbalance is not a side
+effect of the harmonic mean. It is the reason it was chosen.</p>
+<h3 id="worked-example-2">Worked example</h3>
+<p>Take the legal search, where precision was 0.60 and recall was
+0.40.</p>
+<p><img src="assets/diagrams/fig-023-f1-2-0-60-0-40-0-60-0-40.png"
+class="diagram-figure" style="width:96.0%"
+alt="F1 = 2(0.60)(0.40) / (0.60 + 0.40" /></p>
+<p>F1 is 2 multiplied by 0.60 multiplied by 0.40, divided by (0.60 +
+0.40). The top comes to 0.48 and the bottom comes to 1.00, so F1 is
+0.48.</p>
+<p>Now suppose this is e-discovery, where a missed document costs
+roughly four times as much as a document somebody read unnecessarily.
+That ratio of four to one is what β encodes, so set β to 2, since β is
+squared inside the formula. F2 is (1 + 4) multiplied by 0.60 multiplied
+by 0.40, divided by (4 × 0.60 + 0.40). The top is 5 × 0.24, which is
+1.20, and the bottom is 2.4 + 0.4, which is 2.80, so F2 is 0.43.</p>
+<p>F2 came out lower than F1, and the reason is worth stating. This
+system’s weakness is its recall, and F2 weights recall more heavily, so
+the score falls once you tell the metric which failure you actually care
+about. Choosing β is choosing which failure you fear.</p>
+<h3 id="advantages-2">Advantages</h3>
+<ul>
+<li><strong>One number, honestly derived.</strong> F1 gives you a single
+figure for ranking systems while still penalizing extreme
+imbalance.</li>
+<li><strong>β makes your priorities explicit and auditable.</strong>
+Writing down that you optimize F2 because a missed document costs four
+times a reviewed one is a defensible engineering statement that somebody
+else can check.</li>
+<li><strong>Standard and comparable.</strong> It is close to universal,
+so published benchmark numbers are interpretable against your own.</li>
+</ul>
+<h3 id="disadvantages-2">Disadvantages</h3>
+<ul>
+<li><strong>Collapses information you often need.</strong> An F1 of 0.48
+could come from precision 0.6 with recall 0.4, or from precision 0.4
+with recall 0.6, and those two situations call for entirely different
+fixes. Always print P and R next to F1.</li>
+<li><strong>β is usually chosen by default instead of by
+analysis.</strong> Most teams use F1 because it is what everyone uses,
+rather than because their costs are symmetric, and costs almost never
+are.</li>
+<li><strong>Still rank-blind and still set-based.</strong> Every
+limitation from §4.1 and §4.2 carries over intact.</li>
+<li><strong>Poor fit for graded relevance.</strong> Forcing a “somewhat
+relevant” document into a binary label throws away real signal before
+the formula ever sees it.</li>
+<li><strong>Misleading when relevant-set sizes vary.</strong> Averaging
+F1 across queries whose relevant sets differ wildly in size lets the
+easy queries dominate the average.</li>
+</ul>
+<h3 id="domain-examples-2">Domain examples</h3>
+<p><strong>E-discovery.</strong> F2 or even F3 is common, because the
+cost ratio weighs the risk of sanctions for missing a responsive
+document against the cost of reviewing too much. Some protocols write
+the value of β into the discovery agreement itself.</p>
+<p><strong>Spam and abuse filtering in search.</strong> F0.5 is typical
+here, since suppressing a legitimate result is worse from the user’s
+point of view than letting one piece of spam through.</p>
+<p><strong>RAG chunk selection.</strong> F-measure is often the wrong
+tool in this setting and it is worth saying so plainly. Chunk-level
+precision and recall assume each chunk is relevant on its own, and
+chunks are not independent in that way: two chunks can each be relevant
+while together being redundant, or each be marginal while together being
+sufficient to answer the question. That set-level property is exactly
+what SURE-RAG (<a
+href="https://arxiv.org/abs/2605.03534">arXiv:2605.03534</a>) was built
+to capture, on the grounds that missing reasoning steps and unresolved
+conflicts between passages cannot be detected by scoring passages one at
+a time.</p>
+<h3 id="recommendation-2">Recommendation</h3>
+<p>Use F1 as a summary line and never as your primary optimization
+target, and never print it without precision and recall beside it.
+Choose β deliberately by writing down the cost ratio between a false
+positive and a false negative in your domain, in whatever units you
+actually care about, whether that is dollars, minutes or risk, and then
+derive β from that ratio rather than accepting the default.</p>
+<p>If you cannot state that cost ratio, the problem is not the metric.
+Define what the system is for, and β will follow.</p>
+<h3 id="failure-mode-to-watch-2">Failure mode to watch</h3>
+<p><img src="assets/diagrams/fig-024-the-f1-plateau.png"
+class="diagram-figure" style="width:96.0%" alt="The F1 Plateau" /></p>
+<p>Four quarters of a real-looking dashboard. In Q1, precision 0.50 and
+recall 0.50 give F1 of 0.50. In Q2, precision 0.60 and recall 0.42 give
+0.49. In Q3, precision 0.70 and recall 0.36 give 0.48. In Q4, precision
+0.80 and recall 0.31 give 0.45. Looking at F1 alone, the team concludes
+they have plateaued.</p>
+<p>They have not plateaued. They have spent a year trading recall away
+for precision, and F1 concealed the entire trade because the two changes
+were pulling the number in opposite directions. A slow-moving F1 can
+mean nothing is changing or it can mean two large changes are cancelling
+out, and only precision and recall printed separately can tell you
+which.</p>
+<hr />
+<h2 id="precisionk">4.4 Precision@K</h2>
+<p><strong>One-line:</strong> Precision computed over only the top K
+results.</p>
+<p><strong>Formula:</strong>
+<code>P@K = (relevant documents in top K) / K</code></p>
+<p><strong>Facets:</strong> Correctness | query | ref | R | ESTABLISHED
+VERIFIED <em>(Manning Ch. 8)</em></p>
+<h3 id="the-problem-it-solves-3">The problem it solves</h3>
+<p>Plain precision assumes your system hands back a set, and real
+systems hand back a list that somebody reads from the top and stops
+partway down. A person looking at a phone sees about three results, and
+a language model receives however many chunks the prompt has room for.
+Scoring the whole returned list therefore measures an experience nobody
+is having. P@K fixes this in the crudest possible way, by ignoring
+everything past position K.</p>
+<h3 id="the-idea-3">The idea</h3>
+<p>Count the relevant documents in the top K positions and divide by K.
+The cutoff is a hard one, so a document at position K counts fully and a
+document at position K+1 counts not at all, and K is a decision about
+your interface rather than a property of your system.</p>
+<p><img
+src="assets/diagrams/fig-025-the-cutoff-is-an-interface-decision.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Cutoff Is An Interface Decision" /></p>
+<p>The figure ranks ten results with relevant documents at positions 1,
+3, 5, 8 and 10. Cut at 3 and you have 2 relevant out of 3, so P@3 is
+0.67. Cut at 10 and you have 5 out of 10, so P@10 is 0.50. Both are
+correct, they are simply about different readers, and the question of
+which to report is settled by asking how many results your interface
+shows. If the answer is three, then P@10 describes an experience no
+human being using your system has ever had.</p>
+<h3 id="worked-example-3">Worked example</h3>
+<p>A RAG pipeline retrieves 10 chunks and passes the top 3 into the
+prompt, because that is all the context budget allows. The relevant
+chunks sit at positions 1, 3, 5, 8 and 10.</p>
+<p><img
+src="assets/diagrams/fig-026-relevant-chunks-at-positions-1-3-5-8-10.png"
+class="diagram-figure" style="width:96.0%"
+alt="Relevant chunks at positions: 1, 3, 5, 8, 10" /></p>
+<p>At the top 3 there are 2 relevant chunks, so P@3 is 2 divided by 3,
+which is 0.67, and that is what the generator actually sees. At the top
+5 there are 3, so P@5 is 0.60. At the top 10 there are 5, so P@10 is
+0.50, and that describes what the retriever produced.</p>
+<p>The number that determines the quality of the final answer is P@3.
+The number most teams report is P@10.</p>
+<h3 id="advantages-3">Advantages</h3>
+<ul>
+<li><strong>Matches how systems are actually consumed.</strong> Both
+human attention and context windows are truncated, and P@K is truncated
+in the same place.</li>
+<li><strong>No need for full corpus labels.</strong> You judge K
+documents per query, which is an annotation budget you can plan and
+afford.</li>
+<li><strong>Directly actionable.</strong> If P@3 is low while P@10 is
+healthy, the problem is your reranker rather than your recall, and you
+know where to look.</li>
+<li><strong>Composable with the context budget.</strong> Setting K to
+the number of chunks your prompt holds turns P@K into a genuine measure
+of what the generator receives.</li>
+</ul>
+<h3 id="disadvantages-3">Disadvantages</h3>
+<ul>
+<li><strong>Rank-blind inside the window.</strong> For P@10, relevant
+documents at positions 1, 2 and 3 score identically to relevant
+documents at positions 8, 9 and 10, although users experience those as
+completely different result pages.</li>
+<li><strong>The arbitrary cutoff creates a cliff.</strong> A document at
+position K+1 contributes nothing while one at position K contributes
+fully, so a tiny change in ranking can move the metric sharply for no
+meaningful reason.</li>
+<li><strong>Not comparable across different K.</strong> P@3 and P@10 are
+two different metrics rather than two precisions of the same thing, so
+you cannot compare a team reporting one against a team reporting the
+other.</li>
+<li><strong>Insensitive to how many relevant documents exist.</strong>
+If only one relevant document exists in the whole collection, P@10
+cannot exceed 0.1 no matter how perfectly the system performed.
+R-Precision was invented to fix exactly this, and Chapter 6 covers
+it.</li>
+</ul>
+<h3 id="domain-examples-3">Domain examples</h3>
+<p><strong>Mobile e-commerce.</strong> Use P@3 or P@4, matched to what
+fits on the screen. Anything deeper is measuring scrolling behaviour
+that most sessions never produce.</p>
+<p><strong>RAG with a tight context budget.</strong> Set K to the number
+of chunks you actually inject. If you inject five chunks of 1,024 tokens
+each, P@5 is your operative precision. RAG-X used k=3 with 1,024-token
+chunks, and the fact that they stated the configuration explicitly
+matters as much as the particular value they chose.</p>
+<p><strong>Enterprise document search with expert users.</strong> A
+deeper K is legitimate here, because a financial analyst working through
+filings will genuinely scan twenty results, which makes P@20 a real
+measurement of their experience rather than a theoretical one.</p>
+<h3 id="recommendation-3">Recommendation</h3>
+<p>Choose K from your interface or your context window, and then never
+change it quietly. If you do have to change K, report both the old and
+the new value for at least one release cycle, and expect the metric to
+move for reasons that have nothing to do with quality.</p>
+<p>Report at least two depths: a shallow one matching what is consumed,
+and a deeper one matching what is retrieved. The gap between those two
+numbers is the headroom available to your reranker.</p>
+<h3 id="failure-mode-to-watch-3">Failure mode to watch</h3>
+<p><img src="assets/diagrams/fig-027-the-phantom-depth.png"
+class="diagram-figure" style="width:96.0%"
+alt="The Phantom Depth" /></p>
+<p>Trace a real pipeline. The retriever is configured to return the top
+50. The reranker cuts those 50 down to 10. The prompt builder, written
+by somebody else eighteen months ago, injects the top 4, and nobody
+currently on the team remembers that. The dashboard reports P@10 of 0.70
+and everyone is satisfied, while six of those ten documents never reach
+the model at all.</p>
+<p>The dashboard is measuring a stage of the pipeline that does not
+determine the output. Trace your actual injection count before you
+choose K.</p>
+<hr />
+<h2 id="chapter-4-summary-card">4.5 Chapter 4 summary card</h2>
+<p><img src="assets/diagrams/fig-028-decision-map.png"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>The four metrics in one page. Precision asks whether what you
+returned was good, and it is gamed by returning less. Recall asks
+whether you returned what was good, it is gamed by returning more, and
+its denominator is usually unknowable. F1 and Fβ combine the two
+harmonically with a priority you choose, they should never be reported
+without precision and recall beside them, and β should come from a real
+cost ratio. P@K asks whether the part the reader actually saw was good,
+K should come from your interface or your context budget, and it is
+blind to rank inside the window.</p>
+<p>Two limitations apply to all four. Every one of them is rank-blind,
+and every one of them assumes relevance is a yes or no property. Chapter
+5 fixes both.</p>
+<p>There is also a warning specific to RAG. These metrics score passages
+independently of one another, and evidence sufficiency is a property of
+the set as a whole. Two individually relevant passages can be jointly
+redundant, and two individually weak ones can be jointly sufficient to
+answer the question. Nothing in this chapter can see either case, which
+is what SURE-RAG (<a
+href="https://arxiv.org/abs/2605.03534">arXiv:2605.03534</a>) was built
+for.</p>
+<hr />
+</body>
+</html>

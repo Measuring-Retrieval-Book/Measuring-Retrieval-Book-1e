@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="366" viewBox="0 0 720 366">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="366" rx="10" fill="#E8F7FA"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">o &quot;τ = 0.94. Very stable.&quot;</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;τ = 0.94. Very stable.&quot;</text><text x="46" y="88" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="108" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="128" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="148" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;Where were the disagreements?&quot;</text><text x="46" y="168" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="188" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="208" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="228" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;Ranks 1 and 2 swapped.&quot;</text><text x="46" y="248" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="268" fill="#D94C42" class="mono" xml:space="preserve">       / \   &quot;So the top result changed and your</text><text x="46" y="288" fill="#162438" class="mono" xml:space="preserve">              metric called it 94% stable. τ cannot</text><text x="46" y="308" fill="#162438" class="mono" xml:space="preserve">              see that ranks 1-2 matter more.&quot;</text>
+</svg>

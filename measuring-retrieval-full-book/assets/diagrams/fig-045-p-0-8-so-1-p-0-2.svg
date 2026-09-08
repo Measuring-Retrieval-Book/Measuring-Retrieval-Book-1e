@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="426" viewBox="0 0 720 426">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="426" rx="10" fill="#202541"/>
+<rect width="720" height="8" rx="4" fill="#5264C8"/>
+<text x="34" y="39" fill="#FFFFFF" class="title">p = 0.8, so (1-p) = 0.2</text>
+<text x="686" y="37" text-anchor="end" fill="#E86850" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#EDF5F7" class="mono" xml:space="preserve">   p = 0.8,  so (1-p) = 0.2</text><text x="46" y="88" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#EDF5F7" class="mono" xml:space="preserve">   rank  rel   p^(d-1)   contribution</text><text x="46" y="128" fill="#5264C8" class="mono" xml:space="preserve">   ────  ───   ───────   ────────────</text><text x="46" y="148" fill="#E86850" class="mono" xml:space="preserve">    1     1     1.000      0.2000</text><text x="46" y="168" fill="#E86850" class="mono" xml:space="preserve">    2     0     0.800      0.0000</text><text x="46" y="188" fill="#E86850" class="mono" xml:space="preserve">    3     1     0.640      0.1280</text><text x="46" y="208" fill="#EDF5F7" class="mono" xml:space="preserve">    4     ?     0.512        --      &lt;- UNJUDGED</text><text x="46" y="228" fill="#E86850" class="mono" xml:space="preserve">    5     1     0.410      0.0819</text><text x="46" y="248" fill="#5264C8" class="mono" xml:space="preserve">                          ────────</text><text x="46" y="268" fill="#EDF5F7" class="mono" xml:space="preserve">              RBP (lower) = 0.4099</text><text x="46" y="288" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="308" fill="#EDF5F7" class="mono" xml:space="preserve">   Residual from rank 4 alone: 0.2 × 0.512 = 0.1024</text><text x="46" y="328" fill="#EDF5F7" class="mono" xml:space="preserve">   Plus all unjudged ranks beyond 5.</text><text x="46" y="348" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="368" fill="#EDF5F7" class="mono" xml:space="preserve">   Report: RBP = 0.41 [+0.10]</text>
+</svg>

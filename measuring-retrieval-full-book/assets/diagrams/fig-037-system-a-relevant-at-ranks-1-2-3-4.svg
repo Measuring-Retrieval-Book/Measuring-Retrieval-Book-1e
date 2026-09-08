@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="266" viewBox="0 0 720 266">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="266" rx="10" fill="#FFF6DE"/>
+<rect width="720" height="8" rx="4" fill="#D98B00"/>
+<text x="34" y="39" fill="#2A2518" class="title">SYSTEM A: relevant at ranks 1, 2, 3, 4</text>
+<text x="686" y="37" text-anchor="end" fill="#168C78" class="label">FORMULA</text>
+<text x="46" y="68" fill="#2A2518" class="mono" xml:space="preserve">   SYSTEM A: relevant at ranks 1, 2, 3, 4</text><text x="46" y="88" fill="#2A2518" class="mono" xml:space="preserve">     AP = (1/1 + 2/2 + 3/3 + 4/4)/4 = (1+1+1+1)/4 = 1.000</text><text x="46" y="108" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#2A2518" class="mono" xml:space="preserve">   SYSTEM B: relevant at ranks 1, 5, 9, 13</text><text x="46" y="148" fill="#2A2518" class="mono" xml:space="preserve">     AP = (1/1 + 2/5 + 3/9 + 4/13)/4</text><text x="46" y="168" fill="#2A2518" class="mono" xml:space="preserve">        = (1.000 + 0.400 + 0.333 + 0.308)/4 = 0.510</text><text x="46" y="188" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#2A2518" class="mono" xml:space="preserve">   Same recall (4/4). Half the AP.</text>
+</svg>

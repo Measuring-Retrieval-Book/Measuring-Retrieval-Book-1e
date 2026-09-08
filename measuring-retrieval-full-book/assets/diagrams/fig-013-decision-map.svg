@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="366" viewBox="0 0 720 366">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="366" rx="10" fill="#FFF0ED"/>
+<rect width="720" height="8" rx="4" fill="#E45E4F"/>
+<text x="34" y="39" fill="#342127" class="title">Decision map</text>
+<text x="686" y="37" text-anchor="end" fill="#197FA2" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#7B5960" class="mono" xml:space="preserve">   ┌────────────────────────────────────────────────┐</text><text x="46" y="88" fill="#342127" class="mono" xml:space="preserve">   │  IS IT A METRIC?                               │</text><text x="46" y="108" fill="#342127" class="mono" xml:space="preserve">   │                                                │</text><text x="46" y="128" fill="#342127" class="mono" xml:space="preserve">   │  Q: Could I put this number in a quarterly     │</text><text x="46" y="148" fill="#342127" class="mono" xml:space="preserve">   │     report as evidence the system is good?     │</text><text x="46" y="168" fill="#342127" class="mono" xml:space="preserve">   │                                                │</text><text x="46" y="188" fill="#7B5960" class="mono" xml:space="preserve">   │  &quot;Our nDCG@10 is 0.71&quot;          ──▶ METRIC     │</text><text x="46" y="208" fill="#7B5960" class="mono" xml:space="preserve">   │  &quot;Our BM25 b is 0.75&quot;           ──▶ knob       │</text><text x="46" y="228" fill="#7B5960" class="mono" xml:space="preserve">   │  &quot;Our mean cosine sim is 0.83&quot;  ──▶ signal     │</text><text x="46" y="248" fill="#342127" class="mono" xml:space="preserve">   │                                                │</text><text x="46" y="268" fill="#342127" class="mono" xml:space="preserve">   │  If the honest follow-up is &quot;...and?&quot;,         │</text><text x="46" y="288" fill="#342127" class="mono" xml:space="preserve">   │  it is not a metric.                           │</text><text x="46" y="308" fill="#7B5960" class="mono" xml:space="preserve">   └────────────────────────────────────────────────┘</text>
+</svg>

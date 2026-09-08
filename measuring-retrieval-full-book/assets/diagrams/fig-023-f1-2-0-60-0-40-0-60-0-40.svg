@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="386" viewBox="0 0 720 386">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="386" rx="10" fill="#FFF0ED"/>
+<rect width="720" height="8" rx="4" fill="#E45E4F"/>
+<text x="34" y="39" fill="#342127" class="title">F1 = 2(0.60)(0.40) / (0.60 + 0.40</text>
+<text x="686" y="37" text-anchor="end" fill="#197FA2" class="label">FORMULA</text>
+<text x="46" y="68" fill="#342127" class="mono" xml:space="preserve">   F1 = 2(0.60)(0.40) / (0.60 + 0.40)</text><text x="46" y="88" fill="#342127" class="mono" xml:space="preserve">      = 0.48 / 1.00</text><text x="46" y="108" fill="#342127" class="mono" xml:space="preserve">      = 0.48</text><text x="46" y="128" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="148" fill="#342127" class="mono" xml:space="preserve">   Now suppose it&#x27;s e-discovery, where misses are 4× worse</text><text x="46" y="168" fill="#342127" class="mono" xml:space="preserve">   than wasted reading. Use β = 2:</text><text x="46" y="188" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#342127" class="mono" xml:space="preserve">   F2 = (1 + 4)(0.60)(0.40) / (4·0.60 + 0.40)</text><text x="46" y="228" fill="#342127" class="mono" xml:space="preserve">      = 5(0.24) / (2.4 + 0.4)</text><text x="46" y="248" fill="#342127" class="mono" xml:space="preserve">      = 1.20 / 2.80</text><text x="46" y="268" fill="#342127" class="mono" xml:space="preserve">      = 0.43</text><text x="46" y="288" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="308" fill="#342127" class="mono" xml:space="preserve">   F2 &lt; F1 because this system&#x27;s weakness IS recall,</text><text x="46" y="328" fill="#342127" class="mono" xml:space="preserve">   and F2 weights recall more heavily.</text>
+</svg>

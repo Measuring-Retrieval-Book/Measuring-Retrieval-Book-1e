@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="246" viewBox="0 0 720 246">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="246" rx="10" fill="#EAF7F1"/>
+<rect width="720" height="8" rx="4" fill="#168C63"/>
+<text x="34" y="39" fill="#183029" class="title">MRR user stops at the first hit</text>
+<text x="686" y="37" text-anchor="end" fill="#E39A21" class="label">FORMULA</text>
+<text x="46" y="68" fill="#527368" class="mono" xml:space="preserve">   MRR    ── user stops at the first hit</text><text x="46" y="88" fill="#527368" class="mono" xml:space="preserve">   nDCG   ── attention declines logarithmically</text><text x="46" y="108" fill="#527368" class="mono" xml:space="preserve">   ERR    ── user satisfices probabilistically</text><text x="46" y="128" fill="#527368" class="mono" xml:space="preserve">   RBP    ── user continues with probability p</text><text x="46" y="148" fill="#527368" class="mono" xml:space="preserve">   TBG    ── user has a time budget</text><text x="46" y="168" fill="#527368" class="mono" xml:space="preserve">   sDCG   ── user reformulates</text><text x="46" y="188" fill="#527368" class="mono" xml:space="preserve">   UDCG   ── the &quot;user&quot; is a language model</text>
+</svg>

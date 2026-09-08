@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="748" height="226" viewBox="0 0 748 226">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="748" height="226" rx="10" fill="#FFF6DE"/>
+<rect width="748" height="8" rx="4" fill="#D98B00"/>
+<text x="34" y="39" fill="#2A2518" class="title">RBO(S, T) = (1 - p) · Σ_{d=1}^{∞} p^{d-1} · |S_{1:d} ∩ T_{1:d}| / d</text>
+<text x="714" y="37" text-anchor="end" fill="#168C78" class="label">FORMULA</text>
+<text x="46" y="68" fill="#2A2518" class="mono" xml:space="preserve">   RBO(S, T) = (1 - p) · Σ_{d=1}^{∞}  p^{d-1} · |S_{1:d} ∩ T_{1:d}| / d</text><text x="46" y="88" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#2A2518" class="mono" xml:space="preserve">     where  S_{1:d}  = top d items of list S</text><text x="46" y="128" fill="#2A2518" class="mono" xml:space="preserve">            |·∩·|/d  = AGREEMENT at depth d</text><text x="46" y="148" fill="#2A2518" class="mono" xml:space="preserve">            p        = persistence / patience</text><text x="46" y="168" fill="#2A2518" class="mono" xml:space="preserve">                       (larger p = more weight on deeper ranks)</text>
+</svg>

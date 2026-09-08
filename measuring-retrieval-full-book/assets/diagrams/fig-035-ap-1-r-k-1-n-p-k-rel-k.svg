@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="721" height="246" viewBox="0 0 721 246">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="721" height="246" rx="10" fill="#202541"/>
+<rect width="721" height="8" rx="4" fill="#5264C8"/>
+<text x="34" y="39" fill="#FFFFFF" class="title">AP = (1/R) · Σ_{k=1}^{n} P@k · rel(k</text>
+<text x="687" y="37" text-anchor="end" fill="#E86850" class="label">FORMULA</text>
+<text x="46" y="68" fill="#EDF5F7" class="mono" xml:space="preserve">   AP  = (1/R) · Σ_{k=1}^{n} P@k · rel(k)</text><text x="46" y="88" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#EDF5F7" class="mono" xml:space="preserve">     where  R      = total number of relevant documents</text><text x="46" y="128" fill="#EDF5F7" class="mono" xml:space="preserve">            rel(k) = 1 if the document at rank k is relevant, else 0</text><text x="46" y="148" fill="#EDF5F7" class="mono" xml:space="preserve">            P@k    = precision at cutoff k</text><text x="46" y="168" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="188" fill="#EDF5F7" class="mono" xml:space="preserve">   MAP = mean of AP over all queries</text>
+</svg>

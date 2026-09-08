@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="146" viewBox="0 0 720 146">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="146" rx="10" fill="#E8F7FA"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">Tp = 6, Fp = 4</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">FORMULA</text>
+<text x="46" y="68" fill="#162438" class="mono" xml:space="preserve">   TP = 6,  FP = 4</text><text x="46" y="88" fill="#162438" class="mono" xml:space="preserve">   P = 6 / (6 + 4) = 0.60</text>
+</svg>

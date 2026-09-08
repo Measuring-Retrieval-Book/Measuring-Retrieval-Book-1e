@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="426" viewBox="0 0 720 426">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="426" rx="10" fill="#E8F7FA"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">The Confident Liar</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#00A6C7" class="mono" xml:space="preserve">   THE CONFIDENT LIAR</text><text x="46" y="88" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#C43C32" class="mono" xml:space="preserve">   Retrieved doc: a well-written, on-topic, WRONG passage</text><text x="46" y="128" fill="#162438" class="mono" xml:space="preserve">   Model without it:  &quot;I&#x27;m not sure, possibly X?&quot;   conf 0.35</text><text x="46" y="148" fill="#162438" class="mono" xml:space="preserve">   Model with it:     &quot;It is definitely Y.&quot;          conf 0.95</text><text x="46" y="168" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="188" fill="#162438" class="mono" xml:space="preserve">   DIG = 0.60   &lt;- the highest-scoring document in the set</text><text x="46" y="208" fill="#162438" class="mono" xml:space="preserve">   Answer = wrong</text><text x="46" y="228" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;DIG ranked our worst document first.&quot;</text><text x="46" y="268" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="288" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="308" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="328" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;DIG ranked your most PERSUASIVE document first.</text><text x="46" y="348" fill="#D94C42" class="mono" xml:space="preserve">       /|\     It never claimed to rank the most correct one.&quot;</text><text x="46" y="368" fill="#D94C42" class="mono" xml:space="preserve">       / \</text>
+</svg>

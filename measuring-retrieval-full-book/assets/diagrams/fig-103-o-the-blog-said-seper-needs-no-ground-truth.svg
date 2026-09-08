@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="246" viewBox="0 0 720 246">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="246" rx="10" fill="#FFF0ED"/>
+<rect width="720" height="8" rx="4" fill="#E45E4F"/>
+<text x="34" y="39" fill="#342127" class="title">o &quot;The blog said SePer needs no ground truth.&quot;</text>
+<text x="686" y="37" text-anchor="end" fill="#197FA2" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;The blog said SePer needs no ground truth.&quot;</text><text x="46" y="88" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="108" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="128" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="148" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;Step 3b: &#x27;Identify C_{a*}, matching the</text><text x="46" y="168" fill="#D94C42" class="mono" xml:space="preserve">       /|\     reference answer.&#x27; Read the algorithm,</text><text x="46" y="188" fill="#D94C42" class="mono" xml:space="preserve">       / \     not the summary of the algorithm.&quot;</text>
+</svg>

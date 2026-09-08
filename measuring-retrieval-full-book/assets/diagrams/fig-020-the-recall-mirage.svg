@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="386" viewBox="0 0 720 386">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="386" rx="10" fill="#202541"/>
+<rect width="720" height="8" rx="4" fill="#5264C8"/>
+<text x="34" y="39" fill="#FFFFFF" class="title">The Recall Mirage</text>
+<text x="686" y="37" text-anchor="end" fill="#E86850" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#E86850" class="mono" xml:space="preserve">   THE RECALL MIRAGE</text><text x="46" y="88" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#62D6A8" class="mono" xml:space="preserve">   Reported:  Recall@50 = 0.92    ✓ looks great</text><text x="46" y="128" fill="#EDF5F7" class="mono" xml:space="preserve">   Passed to generator:  top 5</text><text x="46" y="148" fill="#EDF5F7" class="mono" xml:space="preserve">   Actual Recall@5:      0.61</text><text x="46" y="168" fill="#EDF5F7" class="mono" xml:space="preserve">   Lost in the middle of those 5:  ~unknown</text><text x="46" y="188" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#FF9D8A" class="mono" xml:space="preserve">        o     &quot;Our retriever has 92% recall.&quot;</text><text x="46" y="228" fill="#FF9D8A" class="mono" xml:space="preserve">       /|\</text><text x="46" y="248" fill="#FF9D8A" class="mono" xml:space="preserve">       / \</text><text x="46" y="268" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="288" fill="#FF9D8A" class="mono" xml:space="preserve">        o     &quot;Your GENERATOR has 61% recall,</text><text x="46" y="308" fill="#FF9D8A" class="mono" xml:space="preserve">       /|\      and that&#x27;s the number that</text><text x="46" y="328" fill="#FF9D8A" class="mono" xml:space="preserve">       / \      determines the answer.&quot;</text>
+</svg>

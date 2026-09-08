@@ -1,0 +1,32 @@
+---
+pagetitle: "Measuring Retrieval"
+author: "Madhava Gaikwad"
+lang: en-US
+documentclass: book
+classoption:
+  - openany
+  - oneside
+fontsize: 10pt
+geometry:
+  - paperwidth=7in
+  - paperheight=10in
+  - top=0.72in
+  - bottom=0.78in
+  - inner=0.72in
+  - outer=0.62in
+  - headheight=15pt
+  - headsep=18pt
+  - footskip=28pt
+mainfont: "Charter"
+sansfont: "Avenir Next"
+monofont: "Menlo"
+colorlinks: true
+linkcolor: MRBlue
+urlcolor: MRCyan
+toc-depth: 2
+top-level-division: chapter
+fig-pos: H
+header-includes:
+  - |
+    \input{assets/book-header.tex}
+---

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="306" viewBox="0 0 720 306">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="306" rx="10" fill="#EAF7F1"/>
+<rect width="720" height="8" rx="4" fill="#168C63"/>
+<text x="34" y="39" fill="#183029" class="title">UDCG_θ(q, C) = σ( Σᵢ₌1ᵏ αᵢ uᵢ⁺ + Σᵢ₌1ᵏ βᵢ uᵢ⁻ </text>
+<text x="686" y="37" text-anchor="end" fill="#E39A21" class="label">FORMULA</text>
+<text x="46" y="68" fill="#183029" class="mono" xml:space="preserve">   UDCG_θ(q, C) = σ( Σᵢ₌1ᵏ αᵢ uᵢ⁺  +  Σᵢ₌1ᵏ βᵢ uᵢ⁻ )</text><text x="46" y="88" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#183029" class="mono" xml:space="preserve">   where</text><text x="46" y="128" fill="#183029" class="mono" xml:space="preserve">     uᵢ⁺, uᵢ⁻   positive and negative parts of passage utility uᵢ</text><text x="46" y="148" fill="#183029" class="mono" xml:space="preserve">     αᵢ, βᵢ      positional weights for relevance and distraction</text><text x="46" y="168" fill="#183029" class="mono" xml:space="preserve">     σ(x)        sigmoid, bounding the metric to [0,1]</text><text x="46" y="188" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#183029" class="mono" xml:space="preserve">   2k learnable parameters, fitted with a linear model on</text><text x="46" y="228" fill="#183029" class="mono" xml:space="preserve">   feature vectors [u1⁺ … uₖ⁺, u1⁻ … uₖ⁻] trained to predict</text><text x="46" y="248" fill="#183029" class="mono" xml:space="preserve">   end-to-end answer accuracy.</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="776" height="426" viewBox="0 0 776 426">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="776" height="426" rx="10" fill="#FFF0ED"/>
+<rect width="776" height="8" rx="4" fill="#E45E4F"/>
+<text x="34" y="39" fill="#342127" class="title">CLASSICAL LABELS and eRAG LABELS</text>
+<text x="742" y="37" text-anchor="end" fill="#197FA2" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#342127" class="mono" xml:space="preserve">   CLASSICAL LABELS and eRAG LABELS</text><text x="46" y="88" fill="#7B5960" class="mono" xml:space="preserve">   ═══════════════════════════════</text><text x="46" y="108" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#E45E4F" class="mono" xml:space="preserve">   CLASSICAL:</text><text x="46" y="148" fill="#7B5960" class="mono" xml:space="preserve">      human ──▶ &quot;doc 3 is relevant&quot; ──▶ nDCG</text><text x="46" y="168" fill="#342127" class="mono" xml:space="preserve">        o</text><text x="46" y="188" fill="#D94C42" class="mono" xml:space="preserve">       /|\   &quot;It&#x27;s about the right topic.&quot;</text><text x="46" y="208" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="228" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#342127" class="mono" xml:space="preserve">   eRAG:</text><text x="46" y="268" fill="#7B5960" class="mono" xml:space="preserve">      doc 3 alone ──▶ LLM ──▶ answer ──▶ score and truth ──▶ label ──▶ nDCG</text><text x="46" y="288" fill="#342127" class="mono" xml:space="preserve">                              │</text><text x="46" y="308" fill="#7B5960" class="mono" xml:space="preserve">                              └── &quot;Could the model actually</text><text x="46" y="328" fill="#342127" class="mono" xml:space="preserve">                                   ANSWER using only this?&quot;</text><text x="46" y="348" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="368" fill="#342127" class="mono" xml:space="preserve">   Same nDCG formula. Completely different input.</text>
+</svg>

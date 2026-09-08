@@ -1,0 +1,52 @@
+:root { --ink:#162438; --blue:#1e466e; --cyan:#008eac; --gold:#d98b00; --coral:#d94c42; --green:#087a54; --paper:#f7f9fa; }
+html { color:var(--ink); font-family:"Source Serif Pro", Georgia, serif; line-height:1.45; }
+body { margin:0 auto; max-width:52rem; padding:2rem 2.25rem 5rem; background:white; }
+h1,h2,h3,h4 { font-family:"Source Sans Pro", Avenir, sans-serif; color:var(--blue); letter-spacing:0; }
+h1 { border-top:4px solid var(--cyan); padding-top:.55rem; }
+h2 { margin-top:2rem; }
+a { color:var(--cyan); }
+table { border-collapse:collapse; width:100%; font-family:"Source Sans Pro", Avenir, sans-serif; font-size:.88rem; }
+th { text-align:left; background:#eaf2f5; color:var(--blue); }
+th,td { border-bottom:1px solid #ccd8de; padding:.38rem .45rem; vertical-align:top; }
+blockquote { border-left:4px solid var(--cyan); background:#eef6f8; margin:1.2rem 0; padding:.7rem 1rem; }
+img.diagram-figure { display:block; width:96%; margin:1.2rem auto; }
+.book-part { min-height:70vh; padding:8vh 7vw; color:white; display:flex; flex-direction:column; justify-content:center; }
+.book-part h1 { color:white; border:0; font-size:3rem; }
+.book-part.cyan { background:#1e466e; } .book-part.gold { background:#b87400; }
+.book-part.coral { background:#b9433a; } .book-part.emerald { background:#087a54; }
+.book-part.indigo { background:#454fa1; }
+.cover { position:relative; min-height:92vh; overflow:hidden; color:white; }
+.cover > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
+.cover-copy { padding:12vh 7vw; max-width:60%; } .cover-copy h1 { color:white; border:0; font-size:4rem; }
+.cover-copy .author { margin-top:2.5rem; font-family:"Source Sans Pro", Avenir, sans-serif; font-size:1.35rem; font-weight:700; }
+.back-cover { color:var(--ink); } .back-copy { padding:16vh 8vw 0 42%; }
+.back-copy .author { margin-top:2.5rem; font-family:"Source Sans Pro", Avenir, sans-serif; font-weight:700; color:var(--blue); }
+@media print { body { max-width:none; padding:0; } .book-part,.cover { break-after:page; } a { color:inherit; text-decoration:none; } }
+
+/* ---- HTML edition: table of contents ---- */
+#TOC {
+  margin: 2.5rem auto 4rem;
+  max-width: 44rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid rgba(22, 36, 56, 0.15);
+  border-radius: 6px;
+  background: rgba(22, 36, 56, 0.02);
+}
+#TOC::before {
+  content: "Contents";
+  display: block;
+  font-family: "Avenir Next", "Source Sans 3", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5a6a80;
+  margin-bottom: 1rem;
+}
+#TOC ul { list-style: none; margin: 0; padding-left: 0; }
+#TOC ul ul { padding-left: 1.25rem; }
+#TOC li { margin: 0.3rem 0; line-height: 1.45; }
+#TOC > ul > li { margin: 0.6rem 0; }
+#TOC > ul > li > a { font-weight: 600; }
+#TOC a { text-decoration: none; }
+#TOC a:hover { text-decoration: underline; }

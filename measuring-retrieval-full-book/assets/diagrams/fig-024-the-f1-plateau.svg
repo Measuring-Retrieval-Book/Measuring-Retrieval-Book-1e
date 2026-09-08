@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="446" viewBox="0 0 720 446">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="446" rx="10" fill="#EAF7F1"/>
+<rect width="720" height="8" rx="4" fill="#168C63"/>
+<text x="34" y="39" fill="#183029" class="title">The F1 Plateau</text>
+<text x="686" y="37" text-anchor="end" fill="#E39A21" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#168C63" class="mono" xml:space="preserve">   THE F1 PLATEAU</text><text x="46" y="88" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#183029" class="mono" xml:space="preserve">   Q1:  P=0.50 R=0.50  F1=0.50</text><text x="46" y="128" fill="#183029" class="mono" xml:space="preserve">   Q2:  P=0.60 R=0.42  F1=0.49</text><text x="46" y="148" fill="#183029" class="mono" xml:space="preserve">   Q3:  P=0.70 R=0.36  F1=0.48</text><text x="46" y="168" fill="#183029" class="mono" xml:space="preserve">   Q4:  P=0.80 R=0.31  F1=0.45</text><text x="46" y="188" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;F1 is basically flat. We&#x27;ve plateaued.&quot;</text><text x="46" y="228" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="248" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="268" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="288" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;You haven&#x27;t plateaued. You&#x27;ve been trading</text><text x="46" y="308" fill="#D94C42" class="mono" xml:space="preserve">       /|\     recall for precision for a year and F1</text><text x="46" y="328" fill="#D94C42" class="mono" xml:space="preserve">       / \     hid the whole trade from you.&quot;</text><text x="46" y="348" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="368" fill="#183029" class="mono" xml:space="preserve">   F1 moving slowly can mean &#x27;no change&#x27; or it can mean</text><text x="46" y="388" fill="#183029" class="mono" xml:space="preserve">   &#x27;large opposing changes&#x27;. Only P and R can tell you which.</text>
+</svg>

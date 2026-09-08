@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="748" height="246" viewBox="0 0 748 246">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="748" height="246" rx="10" fill="#E8F7FA"/>
+<rect width="748" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">ERR = Σ_{r=1}^{n} (1/r) · R_r · Π_{i=1}^{r-1} (1 - R_i</text>
+<text x="714" y="37" text-anchor="end" fill="#F0A62E" class="label">FORMULA</text>
+<text x="46" y="68" fill="#162438" class="mono" xml:space="preserve">   ERR = Σ_{r=1}^{n}  (1/r) · R_r · Π_{i=1}^{r-1} (1 - R_i)</text><text x="46" y="88" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#162438" class="mono" xml:space="preserve">     where  R_i = (2^{g_i} - 1) / 2^{g_max}</text><text x="46" y="128" fill="#162438" class="mono" xml:space="preserve">            g_i = graded relevance of document at rank i</text><text x="46" y="148" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="168" fill="#162438" class="mono" xml:space="preserve">   R_i is the probability the user is satisfied by document i.</text><text x="46" y="188" fill="#162438" class="mono" xml:space="preserve">   The product term is the probability they were NOT satisfied earlier.</text>
+</svg>
