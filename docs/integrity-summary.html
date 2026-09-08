@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B.6 Integrity - the summary card - Measuring Retrieval</title>
+<meta name="description" content="The drift work worth doing this week, this quarter, and the two problems to accept as unsolved.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/integrity-summary.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="B.6 Integrity - the summary card - Measuring Retrieval">
+<meta property="og:description" content="The drift work worth doing this week, this quarter, and the two problems to accept as unsolved.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/integrity-summary.html">
+<meta property="og:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Measuring Retrieval, first edition, September 2026, by Madhava Gaikwad">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="twitter:title" content="B.6 Integrity - the summary card - Measuring Retrieval">
+<meta name="twitter:description" content="The drift work worth doing this week, this quarter, and the two problems to accept as unsolved.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "B.6 Integrity - the summary card", "description": "The drift work worth doing this week, this quarter, and the two problems to accept as unsolved.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/integrity-summary.html", "position": 26, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Measuring Retrieval", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/"}, {"@type": "ListItem", "position": 2, "name": "B.6 Integrity - the summary card", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/integrity-summary.html"}]}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; B.6 Integrity - the summary card</p><div class="nav"><span class="navlinks">[ <a href="llm-judge-drift.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="correctness-and-grounding-in-rag.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="b.6-integrity---the-summary-card" class="level1">
+<h1>B.6 Integrity - the summary card</h1>
+<p><img src="assets/diagrams/fig-126-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>Three things are worth doing this week, and together they cost about
+an afternoon while unlocking everything else in this part. Freeze a
+baseline of 500 queries with their top-k results stored. Pin your judge
+model to a dated snapshot. Freeze a 100-item anchor set carrying human
+labels.</p>
+<p>Four things belong in the quarter. Compute Jaccard and RankSimilarity
+against your baseline monthly. Run CKA whenever you change embedder.
+Build a 50-question version-sensitive set using the VersionQA template
+from §B.3. And run the comparison between RAG and no-RAG, which is the
+test almost nobody runs and the one that reveals whether retrieval is
+helping at all.</p>
+<p>Two things should be accepted as unsolved rather than worked around.
+Judge drift has no metric, so use the protocol in §B.5 instead. Recency
+weighting does not transfer between corpora, and the published evidence
+has it moving from 1.00 to 0.00 when a tuned parameter is carried
+across.</p>
+<p>The one number to fear is implicit change detection, where baselines
+score between 0% and 10%. If your corpus is versioned in any sense, your
+system almost certainly cannot tell you that a document changed.</p>
+<hr />
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="llm-judge-drift.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="correctness-and-grounding-in-rag.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#162438"/>
+  <circle cx="1075" cy="120" r="190" fill="#24354f"/>
+  <circle cx="1120" cy="560" r="105" fill="#e0a54a"/>
+  <text x="80" y="150" fill="#e0a54a" font-family="Avenir Next, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="7">FIRST EDITION &#183; SEPTEMBER 2026</text>
+  <text x="80" y="290" fill="#ffffff" font-family="Georgia, Times New Roman, serif" font-size="92" font-weight="700">Measuring Retrieval</text>
+  <text x="80" y="360" fill="#c3ccda" font-family="Georgia, Times New Roman, serif" font-size="36" font-style="italic">Metrics, evidence, and evaluation design</text>
+  <rect x="80" y="410" width="150" height="3" fill="#e0a54a"/>
+  <text x="80" y="480" fill="#9fb0c6" font-family="Avenir Next, Helvetica, Arial, sans-serif" font-size="28">Information retrieval and RAG &#183; 70 metrics &#183; 292 pages</text>
+  <text x="80" y="545" fill="#ffffff" font-family="Avenir Next, Helvetica, Arial, sans-serif" font-size="30" font-weight="600">Madhava Gaikwad</text>
+</svg>

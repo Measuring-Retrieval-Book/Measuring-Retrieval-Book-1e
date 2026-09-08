@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D.2 Index-time metrics - Measuring Retrieval</title>
+<meta name="description" content="Index-time metrics, and why timing a full rebuild is the number that gates every drift policy you have.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/index-time-metrics.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="D.2 Index-time metrics - Measuring Retrieval">
+<meta property="og:description" content="Index-time metrics, and why timing a full rebuild is the number that gates every drift policy you have.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/index-time-metrics.html">
+<meta property="og:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Measuring Retrieval, first edition, September 2026, by Madhava Gaikwad">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="twitter:title" content="D.2 Index-time metrics - Measuring Retrieval">
+<meta name="twitter:description" content="Index-time metrics, and why timing a full rebuild is the number that gates every drift policy you have.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "D.2 Index-time metrics", "description": "Index-time metrics, and why timing a full rebuild is the number that gates every drift policy you have.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/index-time-metrics.html", "position": 38, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Measuring Retrieval", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/"}, {"@type": "ListItem", "position": 2, "name": "D.2 Index-time metrics", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/index-time-metrics.html"}]}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; D.2 Index-time metrics</p><div class="nav"><span class="navlinks">[ <a href="rag-cost-centres.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="query-latency-and-ttft.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="d.2-index-time-metrics" class="level1">
+<h1>D.2 Index-time metrics</h1>
+<p><strong>Source:</strong> the four metrics below are the ones
+identified in the Brehme, Ströhle &amp; Breu systematic review as the
+standard set for database performance evaluation, being upload time,
+indexing time, retrieval speed and throughput (<a
+href="https://arxiv.org/abs/2504.20119">arXiv:2504.20119</a>).</p>
+<p>The review’s summary of current practice is itself a finding. The
+indexing component is evaluated primarily on performance measures such
+as indexing and retrieval speed, and other factors are assessed only
+indirectly through overall system performance. Put plainly, nobody is
+measuring whether your indexing choices, meaning chunk size, overlap and
+embedding model, are any good.</p>
+<section id="d.2.1-the-metrics" class="level2">
+<h2>D.2.1 The metrics</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Unit</th>
+<th>What it tells you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Upload time</strong></td>
+<td>corpus</td>
+<td>Ingestion pipeline throughput</td>
+</tr>
+<tr>
+<td><strong>Indexing time</strong></td>
+<td>corpus</td>
+<td>Cost of a full rebuild - the number that determines whether
+re-embedding is feasible</td>
+</tr>
+<tr>
+<td><strong>Retrieval speed</strong></td>
+<td>query</td>
+<td>Per-query latency at the vector store</td>
+</tr>
+<tr>
+<td><strong>Throughput</strong></td>
+<td>system</td>
+<td>Concurrent query capacity</td>
+</tr>
+<tr>
+<td><strong>Index size</strong></td>
+<td>corpus</td>
+<td>Storage cost; also a proxy for memory pressure</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="d.2.2-the-metric-that-changes-decisions-rebuild-cost"
+class="level2">
+<h2>D.2.2 The metric that changes decisions: rebuild cost</h2>
+<p><img
+src="assets/diagrams/fig-150-why-indexing-time-is-a-drift-metric-in-disguise.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Why Indexing Time Is A Drift Metric In Disguise" /></p>
+<p>Supplement A §B.2 recommends re-embedding whenever the embedder
+changes. That recommendation is free if a full rebuild takes two hours
+and it is a project if a rebuild takes three weeks, so the same sentence
+means two entirely different things depending on a number most teams
+have never measured.</p>
+<p>The exchange in the figure is the one worth having. A team plans to
+re-index quarterly. Asked whether they have timed a full rebuild, they
+have not. In that case they do not have a drift policy, they have a
+drift aspiration.</p>
+<p>Concrete evidence that architecture choice dominates here: VersionRAG
+requires 97% fewer tokens during indexing than GraphRAG, which the
+authors note is what makes it practical at large scale (<a
+href="https://arxiv.org/abs/2510.08109">arXiv:2510.08109</a>). A
+thirtyfold difference in indexing cost is the difference between a
+system you can refresh and one you cannot.</p>
+</section>
+<section id="d.2.3-recommendation" class="level2">
+<h2>D.2.3 Recommendation</h2>
+<p>Time a full rebuild once and write the number down. It is the single
+most decision-relevant efficiency number in this part and almost nobody
+has it, and every drift and freshness policy in Supplement A is gated on
+it.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="rag-cost-centres.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="query-latency-and-ttft.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

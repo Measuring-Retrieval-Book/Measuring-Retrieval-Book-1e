@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B.2 Representation Drift - the CKA family - Measuring Retrieval</title>
+<meta name="description" content="CKA, Jaccard and rank similarity for embedding model comparison, and why every embedder swap is a high-risk change at RAG-typical k.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/embedding-model-drift-cka.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="B.2 Representation Drift - the CKA family - Measuring Retrieval">
+<meta property="og:description" content="CKA, Jaccard and rank similarity for embedding model comparison, and why every embedder swap is a high-risk change at RAG-typical k.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/embedding-model-drift-cka.html">
+<meta property="og:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Measuring Retrieval, first edition, September 2026, by Madhava Gaikwad">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="twitter:title" content="B.2 Representation Drift - the CKA family - Measuring Retrieval">
+<meta name="twitter:description" content="CKA, Jaccard and rank similarity for embedding model comparison, and why every embedder swap is a high-risk change at RAG-typical k.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "B.2 Representation Drift - the CKA family", "description": "CKA, Jaccard and rank similarity for embedding model comparison, and why every embedder swap is a high-risk change at RAG-typical k.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/embedding-model-drift-cka.html", "position": 22, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Measuring Retrieval", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/"}, {"@type": "ListItem", "position": 2, "name": "B.2 Representation Drift - the CKA family", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/embedding-model-drift-cka.html"}]}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; B.2 Representation Drift - the CKA family</p><div class="nav"><span class="navlinks">[ <a href="integrity-and-drift.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="corpus-and-version-drift-versionrag.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="b.2-representation-drift---the-cka-family" class="level1">
+<h1>B.2 Representation Drift - the CKA family</h1>
+<p><strong>One-line:</strong> Three complementary measures of whether
+two embedding models, or the same model at two points in time, actually
+behave the same way.</p>
+<p><strong>Facets:</strong> Integrity/Drift | corpus &amp; query | free
+| R | EMERGING VERIFIED <strong>Source:</strong> Caspari, Ghosh
+Dastidar, Zerhoudi, Mitrović &amp; Granitzer, <em>Beyond Benchmarks:
+Evaluating Embedding Model Similarity for RAG Systems</em>, CEUR-WS
+Vol-3784 · <a
+href="https://arxiv.org/abs/2407.08275">arXiv:2407.08275</a></p>
+<section id="the-problem-it-solves" class="level3">
+<h3>The problem it solves</h3>
+<p>Sooner or later you will want to change your embedding model, because
+a newer one scores better on a public leaderboard or because the one you
+are running is being deprecated. The question you need answered before
+you do it is whether the new model will retrieve the same things the old
+one did, and the honest answer is that most teams have no instrument for
+asking.</p>
+<p>Every practitioner blog on RAG drift recommends some version of
+tracking the mean cosine distance from a baseline centroid and alerting
+above 0.05. Those thresholds have no published validation behind them.
+They are folklore with a number attached. This section supplies the
+actual instruments.</p>
+</section>
+<section id="the-three-measures" class="level3">
+<h3>The three measures</h3>
+<p><img
+src="assets/diagrams/fig-118-three-questions-three-instruments.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Three Questions, Three Instruments" /></p>
+<p>CKA, meaning Centered Kernel Alignment, asks whether two embedders
+represent text similarly by comparing the geometry of the
+representations themselves. Jaccard asks whether they retrieve the same
+documents, by taking the overlap of the two result sets while ignoring
+order. RankSimilarity asks whether they retrieve those documents in the
+same order.</p>
+<p>The table in the figure works through the combinations. High on all
+three means the two models are genuinely the same. Low CKA with high
+Jaccard and high RankSimilarity means different underlying mathematics
+producing the same behaviour, which is safe to swap. High CKA with low
+Jaccard means similar geometry producing divergent results, which needs
+investigating. High CKA and high Jaccard with low RankSimilarity means
+the same documents arriving in a new order, which matters a great deal
+for RAG because position within the prompt affects how the material gets
+used.</p>
+<p>That third row is the one to internalize. Two embedders can be
+geometrically similar and behaviourally different, so representation
+similarity does not imply retrieval similarity, which is exactly why one
+number is not enough.</p>
+</section>
+<section id="b.2.1-what-the-measurements-actually-show" class="level2">
+<h2>B.2.1 What the measurements actually show</h2>
+<p>The study behind these instruments covered 19 embedding models across
+five BEIR datasets, using CKA for pairwise comparison of the embeddings
+themselves and Jaccard and rank similarity for the retrieval behaviour
+they produce at top-k. It was built to help with model selection, by
+identifying clusters of similar models, and its results carry a warning
+for anyone planning a migration.</p>
+<blockquote>
+<p>Comparing embeddings with CKA generally showed intra- and
+inter-family clusters across datasets. These clusters also appeared when
+evaluating top-k retrieval similarity with <strong>large k
+values</strong>. <strong>Scores for low k values, which would commonly
+be chosen in RAG systems, show high variance and much lower similarity,
+especially on larger datasets.</strong></p>
+</blockquote>
+<p>More starkly, on the two larger datasets, FiQA-2018 and TREC-COVID,
+most models retrieve almost completely distinct text chunks. Only one
+cluster, made up of bge, UAE and mxbai, retained notable similarity, and
+the rest showed moderate to low similarity at best.</p>
+<p><img
+src="assets/diagrams/fig-129-what-i-implied-vs-what-the-paper-found.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Embedder similarity depends on k" /></p>
+<p>The common assumption is that high Jaccard and RankSimilarity make a
+migration low risk. What the measurements show is that at the small k
+RAG actually uses, similarity is low and unstable, with different models
+retrieving largely different chunks. The curve in the figure makes the
+shape clear: Jaccard similarity is near zero and highly variable at k
+values of 3 and 10, rises through k of 50 and 100, and only approaches
+1.0 out past k of 500. RAG lives at the left-hand end of that curve, in
+the high-variance, low-similarity region.</p>
+<p>So a model with high CKA is not a safe swap, because similarity at
+the level of the embedding geometry does not imply similar retrieval at
+k=3.</p>
+<p>The authors add a caveat that strengthens the conclusion rather than
+weakening it. Their datasets are comparatively small, while real RAG
+systems operate over millions of embeddings, so if larger datasets
+produce lower retrieval similarity then real-world divergence may exceed
+what they were able to measure.</p>
+</section>
+<section id="b.2.2-what-to-do-about-it" class="level2">
+<h2>B.2.2 What to do about it</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Instinct</th>
+<th>What to do instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read high Jaccard/RankSimilarity as a low-risk migration</td>
+<td><strong>Expect low similarity at RAG-typical k. Low similarity is
+the default, not the alarm.</strong></td>
+</tr>
+<tr>
+<td>Use the three measures as a generic drift stack</td>
+<td>Calibrate against <em>your own</em> baseline, since cross-model
+similarity is inherently low</td>
+</tr>
+<tr>
+<td>Treat CKA as the primary instrument</td>
+<td><strong>Jaccard and RankSimilarity at your production k are the
+operative measures.</strong> CKA describes representation geometry,
+which does not transfer to retrieval behaviour at small k</td>
+</tr>
+</tbody>
+</table>
+<p>Every embedder swap is therefore a high-risk change by default, so do
+not reason from leaderboard proximity or from CKA. Measure Jaccard and
+RankSimilarity at your actual k, on your actual corpus, before migrating
+anything, because two models that look interchangeable on MTEB may
+retrieve almost completely distinct chunks for your queries.</p>
+<p>This is also the strongest argument for freezing a baseline now,
+while you still can.</p>
+</section>
+<section id="b.2.3-a-consequence-for-everything-downstream"
+class="level2">
+<h2>B.2.3 A consequence for everything downstream</h2>
+<p>If different embedders retrieve largely different chunks at small k,
+then any evaluation number computed under one embedder is not comparable
+to the same number computed under another. That applies to drift
+metrics, to faithfulness, to the CUE quadrants and to every downstream
+measure in this book. Embedder version therefore belongs in your
+experiment metadata alongside judge version.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="integrity-and-drift.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="corpus-and-version-drift-versionrag.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

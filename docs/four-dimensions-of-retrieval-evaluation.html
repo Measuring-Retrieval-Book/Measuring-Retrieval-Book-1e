@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 - The Four Dimensions - Measuring Retrieval</title>
+<meta name="description" content="The four questions every retrieval metric answers: correctness, alignment, integrity and efficiency, and why four green metrics is not coverage.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/four-dimensions-of-retrieval-evaluation.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="Chapter 1 - The Four Dimensions - Measuring Retrieval">
+<meta property="og:description" content="The four questions every retrieval metric answers: correctness, alignment, integrity and efficiency, and why four green metrics is not coverage.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/four-dimensions-of-retrieval-evaluation.html">
+<meta property="og:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Measuring Retrieval, first edition, September 2026, by Madhava Gaikwad">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="twitter:title" content="Chapter 1 - The Four Dimensions - Measuring Retrieval">
+<meta name="twitter:description" content="The four questions every retrieval metric answers: correctness, alignment, integrity and efficiency, and why four green metrics is not coverage.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "Chapter 1 - The Four Dimensions", "description": "The four questions every retrieval metric answers: correctness, alignment, integrity and efficiency, and why four green metrics is not coverage.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/four-dimensions-of-retrieval-evaluation.html", "position": 3, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Measuring Retrieval", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/"}, {"@type": "ListItem", "position": 2, "name": "Chapter 1 - The Four Dimensions", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/four-dimensions-of-retrieval-evaluation.html"}]}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; Chapter 1 - The Four Dimensions</p><div class="nav"><span class="navlinks">[ <a href="how-to-read-this-book.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="facet-system-unit-supervision-stage.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="chapter-1---the-four-dimensions" class="level1">
+<h1>Chapter 1 - The Four Dimensions</h1>
+<section id="why-dimensions-at-all" class="level2">
+<h2>1.1 Why dimensions at all</h2>
+<p>A list of ninety metrics is not a catalogue, it is a menu, and menus
+encourage the worst habits in evaluation. Given a menu, people pick the
+metrics that are cheapest to compute, report all of them, and leave the
+reader to assume that a long list of green numbers adds up to a healthy
+system.</p>
+<p>Sorting metrics into dimensions imposes a useful discipline, because
+it forces you to say which single question a metric answers before you
+are allowed to put it on a dashboard. There are four such questions in
+this book, and they are worth memorising, since almost everything that
+follows is an attempt to answer one of them properly.</p>
+<p>Correctness asks whether the thing is right. Alignment asks whether
+the parts of the system cooperate with each other. Integrity, sometimes
+called drift, asks whether it is still right six months from now.
+Efficiency asks what being right cost you.</p>
+<p><img src="assets/diagrams/fig-002-the-four-questions.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Four Questions" /></p>
+<p>The trap the figure is pointing at is that a team can have four green
+metrics that are all answering the first question. Four metrics is not
+the same as four different metrics, and having a full dashboard is not
+the same as having coverage.</p>
+</section>
+<section id="dimension-i---correctness" class="level2">
+<h2>1.2 Dimension I - Correctness</h2>
+<p><strong>The question:</strong> is the retrieved or generated content
+actually right, relevant, grounded, and cited correctly?</p>
+<p>This is the dimension everyone starts with, and it is the one most
+teams never leave. It covers precision, recall, nDCG, faithfulness,
+citation accuracy and hallucination rate, which is to say most of the
+apparatus you have already heard of.</p>
+<p>Correctness is seductive because it can be checked one item at a
+time. You can take a single query, a single document, or a single
+sentence of a generated answer, and give a yes or no verdict on it
+without needing to know anything about the rest of the system. That
+makes it easy to instrument, easy to explain to people who are not
+engineers, and consequently easy to trust more than it deserves.</p>
+<p>What a correctness score cannot see:</p>
+<ul>
+<li>Whether the right answer arrived for the wrong reason, which is the
+Accuracy Fallacy described in §1.3</li>
+<li>Whether your search component and your language model are working at
+cross purposes</li>
+<li>Whether today’s 0.91 means the same thing as last quarter’s
+0.91</li>
+<li>What that 0.91 cost you in waiting time and in money</li>
+</ul>
+<p><img
+src="assets/diagrams/fig-003-correctness-is-a-photograph-not-a-film.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Correctness Is A Photograph, Not A Film" /></p>
+<p>The figure makes the point with a single query. The system was asked
+something, it answered “Bern”, the truth was “Bern”, and the item is
+marked correct. Repeat that four thousand times and you can announce
+that you are 91% correct, which sounds conclusive until someone asks the
+follow-up questions: correct on which set of queries, using documents
+retrieved from where, compared against results measured when, and at
+what cost per answer. A correctness score is a photograph of one moment,
+and the other three dimensions exist because a system is a film.</p>
+</section>
+<section id="dimension-ii---alignment" class="level2">
+<h2>1.3 Dimension II - Alignment</h2>
+<p><strong>The question:</strong> do retrieval and generation actually
+cooperate?</p>
+<p>This dimension does not exist in classical search, because classical
+search had only one component to measure. It appears the moment you put
+a language model downstream of a search component, since you now have
+two parts that can each be working correctly while the system they form
+together still fails.</p>
+<p>To make the rest of this section readable, two terms. The retriever
+is the part that searches the collection and hands back a ranked list of
+documents, best first. The generator is the language model that reads
+those documents and writes the answer. The whole point of the
+arrangement is that the generator should build its answer out of what
+the retriever found.</p>
+<p>It very often does not. RAG-E (Randl et al., <a
+href="https://arxiv.org/abs/2601.21803">arXiv:2601.21803</a>) measured
+how frequently this breaks down and found that on somewhere between
+47.4% and 66.7% of queries, the generator ignored the document the
+retriever had ranked first. Between 48.1% and 65.9% of the time it
+leaned mainly on a document the retriever had judged less relevant. The
+paper names the two ways this goes wrong. Wasted retrieval is when the
+retriever found exactly the right document and the generator walked past
+it. Noise distraction is when the generator built its answer out of a
+passage the retriever had ranked near the bottom.</p>
+<p><img src="assets/diagrams/fig-004-the-alignment-problem.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Alignment Problem" /></p>
+<p>The figure shows what that looks like on a dashboard. The retriever
+hands over four documents in confidence order and its own quality score,
+nDCG, comes out at 0.89, which is very good. The generator picks the
+third document, writes its answer from that, and its faithfulness score
+comes out at 0.84, which is also very good, because faithfulness only
+asks whether the answer matches the document it was based on. Both
+components report excellent numbers, the system is quietly broken, and
+no dashboard in the building is showing it.</p>
+<p>The sharpest published illustration of this is the Accuracy Fallacy,
+from RAG-X (Sivakumar, Sugumaran &amp; Qiang, <a
+href="https://arxiv.org/abs/2603.03541">arXiv:2603.03541</a>). On a
+medical question set called GuidelineQA, their best pipeline answered
+71% of questions correctly. When they broke that 71% down by asking
+separately whether the retriever had found the right document and
+whether the generator had used it, the number came apart.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Quadrant</th>
+<th>Share</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effective Use</td>
+<td>49.2%</td>
+<td>Retriever found it, generator used it - genuine grounding</td>
+</tr>
+<tr>
+<td>Lucky Guess</td>
+<td>33.9%</td>
+<td>Retriever missed, generator was right anyway from parametric
+memory</td>
+</tr>
+<tr>
+<td>Information Blindness</td>
+<td>8.5%</td>
+<td>Retriever found it, generator ignored it</td>
+</tr>
+<tr>
+<td>Correct Rejection</td>
+<td>~8.4%</td>
+<td>Retriever missed, generator correctly showed low adherence</td>
+</tr>
+</tbody>
+</table>
+<p>The second row is the one that should worry you. Parametric memory
+means the facts the language model absorbed during its own training, so
+a lucky guess is an answer the model produced from memory while the
+retrieval step contributed nothing. Roughly a third of this pipeline’s
+correct answers were of that kind, which means the retrieval half of the
+system could have been switched off for those queries without changing
+the result.</p>
+<p>Worse, the same pipeline scored 0.84 on context adherence, so it
+looked highly faithful while a third of its correct answers had no
+retrieved support at all. The paper calls that the Adherence Paradox,
+and the reason it happens is straightforward once you see it: adherence
+is only measured on the answers where there was something to adhere
+to.</p>
+<blockquote>
+<p><strong>The single most important sentence in this chapter:</strong>
+a faithfulness score is meaningless unless the retrieval hit rate is
+printed next to it. Faithfulness measures whether the answer matches the
+retrieved context. It says nothing about whether the retrieved context
+contained the answer in the first place.</p>
+</blockquote>
+</section>
+<section id="dimension-iii---integrity-and-drift" class="level2">
+<h2>1.4 Dimension III - Integrity and drift</h2>
+<p><strong>The question:</strong> is the ground under the system still
+trustworthy as time passes?</p>
+<p>Correctness and alignment are both measured at a single instant.
+Integrity asks whether that instant still describes the system next
+month, on a collection of documents that has since been edited, using an
+evaluation setup that may have changed without anyone announcing it.</p>
+<p>Four separate things drift, and treating them as one thing is the
+most common mistake in this dimension.</p>
+<p><img
+src="assets/diagrams/fig-005-four-things-that-drift-and-they-are-not-the-same-thing.svg"
+class="diagram-figure" style="width:96.0%"
+alt="FOUR THINGS THAT DRIFT (and they are NOT the same thing" /></p>
+<p>The first is the corpus, which is the collection of documents you
+search over. Documents get edited, policies get revised, and the correct
+answer to a question changes even though the question did not.</p>
+<p>The second is the embedder, which is the model that converts text
+into the numeric vectors your search index is built from. When you
+upgrade it, the vectors mean something different than they did before,
+so distances computed under the old model and the new one are not
+comparable.</p>
+<p>The third is the queries. Users gradually start asking about things
+that did not exist when you launched, so a test set assembled at launch
+slowly stops representing what the system is actually being asked.</p>
+<p>The fourth is the judge, which is the language model you use to score
+your own outputs. This one is invisible by design. If your faithfulness
+numbers come from a judge model and that model is silently updated by
+its provider, nothing on your dashboard changes color, and every
+comparison you make against your historical numbers has quietly become
+invalid. Brehme et al. raise exactly this problem, pointing out that
+model advances can invalidate previous evaluation results and that
+nobody has yet established a way to keep an evaluation standard
+consistent across model versions.</p>
+<p>For the corpus case there are hard numbers, and they are worse than
+most teams assume. VersionRAG (Huwiler, Stockinger &amp; Fürst, <a
+href="https://arxiv.org/abs/2510.08109">arXiv:2510.08109</a>) tested
+pipelines on questions about technical documentation where the answer
+depends on which version of the document you are looking at. A standard
+RAG pipeline answered 58% of them correctly and a graph-based one
+answered 64%, against 90% for a pipeline that had been told to track
+versions. On the harder task of noticing that a document had changed
+without being told, the baseline pipelines scored between 0% and
+10%.</p>
+</section>
+<section id="dimension-iv---efficiency-and-cost" class="level2">
+<h2>1.5 Dimension IV - Efficiency and cost</h2>
+<p><strong>The question:</strong> what did being right cost you?</p>
+<p>An earlier version of the catalogue behind this book filed waiting
+time, throughput, index size and query cost under a label meaning “not a
+real dimension”. That was wrong, and the field has since settled the
+other way, with Gan et al.’s survey treating computational efficiency as
+an equal axis alongside performance, factual accuracy and safety.</p>
+<p>Efficiency has to be its own dimension because it trades directly
+against correctness, and you cannot reason about a trade-off when you
+only have a number for one side of it.</p>
+<p><img src="assets/diagrams/fig-006-the-dial-nobody-labels.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Dial Nobody Labels" /></p>
+<p>The figure draws that trade-off as a dial. Turn it toward retrieving
+more and correctness goes up, cost goes up, and redundancy goes up with
+them. Turn it toward retrieving less and all three come down together.
+The settings that control the dial are the number of documents you
+retrieve, usually written k, how deep you rerank, and how large your
+text chunks are, and in most systems those numbers were chosen once,
+early, by copying a tutorial, and never revisited.</p>
+<p>RAG-X supplies the concrete cost of leaving the dial alone. In their
+pipeline, 22% of the top-ranked contexts were near-duplicates of each
+other, meaning the same content was purchased twice. Their Exclusive Hit
+Rate at rank 2, which measures how often the second document contributed
+something the first one had not already supplied, was 6.8%. Rank two was
+almost always redundant. A fifth of the context budget was being paid
+for and thrown away, and no correctness metric will ever surface
+that.</p>
+</section>
+<section id="the-dimension-selection-rule" class="level2">
+<h2>1.6 The dimension selection rule</h2>
+<p>Before you add any metric to a dashboard, put it through three
+questions.</p>
+<p><img src="assets/diagrams/fig-007-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>First, which one dimension does this metric primarily answer? Second,
+do you already have a metric covering that dimension? Third, if you do,
+does this new one measure something the existing one genuinely cannot?
+If you cannot answer the third question, you are adding noise to the
+dashboard instead of signal.</p>
+<p>A dashboard carrying one strong metric per dimension is more
+informative than a dashboard carrying nine correctness metrics, because
+the nine will move together and their agreement will feel like
+confirmation when it is really one measurement wearing nine different
+hats. Volume II gives a concrete example of this. eRAG, Gain, DIG and
+ΔSePer are four separately published metrics that all estimate how much
+a passage contributed by running the model with and without that passage
+and comparing the results. They are the same measurement four times
+over, and reporting all four does not give you four times the
+evidence.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="how-to-read-this-book.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="facet-system-unit-supervision-stage.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

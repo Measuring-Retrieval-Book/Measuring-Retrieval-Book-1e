@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D.4 Token economics - the wasted-context problem - Measuring Retrieval</title>
+<meta name="description" content="Pairwise redundancy and exclusive hit rate. Duplicated context is bought at full token price and contributes no grounding.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/token-economics-and-redundancy.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="D.4 Token economics - the wasted-context problem - Measuring Retrieval">
+<meta property="og:description" content="Pairwise redundancy and exclusive hit rate. Duplicated context is bought at full token price and contributes no grounding.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/token-economics-and-redundancy.html">
+<meta property="og:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Measuring Retrieval, first edition, September 2026, by Madhava Gaikwad">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="twitter:title" content="D.4 Token economics - the wasted-context problem - Measuring Retrieval">
+<meta name="twitter:description" content="Pairwise redundancy and exclusive hit rate. Duplicated context is bought at full token price and contributes no grounding.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "D.4 Token economics - the wasted-context problem", "description": "Pairwise redundancy and exclusive hit rate. Duplicated context is bought at full token price and contributes no grounding.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/token-economics-and-redundancy.html", "position": 40, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Measuring Retrieval", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/"}, {"@type": "ListItem", "position": 2, "name": "D.4 Token economics - the wasted-context problem", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/token-economics-and-redundancy.html"}]}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; D.4 Token economics - the wasted-context problem</p><div class="nav"><span class="navlinks">[ <a href="query-latency-and-ttft.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="cost-of-evaluation.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="d.4-token-economics---the-wasted-context-problem"
+class="level1">
+<h1>D.4 Token economics - the wasted-context problem</h1>
+<p>This is where efficiency stops being an infrastructure concern and
+becomes a quality concern, because a duplicated chunk occupies space
+that a genuinely new chunk could have used.</p>
+<section id="d.4.1-the-measurable-waste" class="level2">
+<h2>D.4.1 The measurable waste</h2>
+<p>RAG-X supplies the concrete numbers (<a
+href="https://arxiv.org/abs/2603.03541">arXiv:2603.03541</a>), and they
+are worse than intuition suggests. On their best-performing pipeline, at
+MAP 0.44 over GuidelineQA:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pairwise Redundancy</strong> (contexts 1 &amp; 2)</td>
+<td><strong>22.0%</strong></td>
+<td>A fifth of the context overlaps</td>
+</tr>
+<tr>
+<td><strong>Exclusive Hit Rate @ rank 2</strong></td>
+<td><strong>6.8%</strong></td>
+<td>Rank 2 almost never adds anything new</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>57.6%</td>
+<td>“Adequate coverage”</td>
+</tr>
+</tbody>
+</table>
+<p>The paper finds adequate standard recall sitting alongside
+overlapping evidence that wastes retrieval capacity, and prescribes
+Maximum Marginal Relevance for diversity together with diverse reranking
+as the fix.</p>
+<p><img
+src="assets/diagrams/fig-152-what-you-pay-for-vs-what-you-get.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Token cost and retrieved utility" /></p>
+<p>The figure prices it. You budget three chunks of 1,024 tokens each,
+so you buy 3,072 tokens. Chunk 2 carries a substantial overlap with
+chunk 1, so the effective distinct information is closer to 2.3 chunks,
+meaning roughly 2,350 of those tokens are carrying new information and
+the rest are carrying material you already had.</p>
+<p>A team reporting recall of 57.6% has measured how much relevant
+material was returned. Their distinct recall is lower than that, and
+they paid full price for the duplicates.</p>
+</section>
+<section id="d.4.2-the-metrics-to-adopt" class="level2">
+<h2>D.4.2 The metrics to adopt</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pairwise Redundancy</strong></td>
+<td>Overlap between top-ranked contexts</td>
+<td>RAG-X VERIFIED</td>
+</tr>
+<tr>
+<td><strong>Exclusive Hit Rate (EHR@k)</strong></td>
+<td>% of queries where ground truth appears in <strong>only one</strong>
+retrieved context</td>
+<td>RAG-X VERIFIED</td>
+</tr>
+<tr>
+<td><strong>Prompt tokens per query</strong></td>
+<td>Direct cost</td>
+<td>standard</td>
+</tr>
+<tr>
+<td><strong>Wasted-context ratio</strong></td>
+<td>Tokens in passages with zero attribution</td>
+<td><em>proposed</em> - approximate with WARG or EHR</td>
+</tr>
+</tbody>
+</table>
+<p>Exclusive Hit Rate is the diagnostic one, and it reads
+counterintuitively, so it is worth working through both directions.</p>
+<p>On GuidelineQA, RAG-X observed the best retriever’s EHR@1 dropping to
+0.1 at its highest-recall setting, which means high recall was being
+achieved by returning the same answer in several different chunks. On
+MedQuAD-GHR, EHR@1 reached 0.30, indicating a single-source-of-truth
+pattern where the generator’s success depends entirely on attending to
+the first retrieved passage.</p>
+<p>Those two readings imply opposite engineering responses. The first
+says to add diversity because you are buying duplicates. The second says
+to protect rank 1 at all costs because nothing else is carrying the
+answer. One metric, two corpora, two strategies.</p>
+</section>
+<section id="d.4.3-recommendation" class="level2">
+<h2>D.4.3 Recommendation</h2>
+<p>Add Pairwise Redundancy to your dashboard. It is cheap, requiring no
+language model calls and only a similarity comparison between chunks,
+and it is the only efficiency metric that directly reveals waste that is
+also costing you quality.</p>
+<p>If redundancy is running above roughly 20%, implement Maximum
+Marginal Relevance before you increase k, because increasing k while
+redundancy is high buys you more duplicates at full token price.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="query-latency-and-ttft.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="cost-of-evaluation.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

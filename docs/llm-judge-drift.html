@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B.5 The open problem - judge drift - Measuring Retrieval</title>
+<meta name="description" content="There is no metric for LLM judge drift. The interim protocol: pin the snapshot, freeze an anchor set, track Krippendorff&#x27;s alpha.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/llm-judge-drift.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="B.5 The open problem - judge drift - Measuring Retrieval">
+<meta property="og:description" content="There is no metric for LLM judge drift. The interim protocol: pin the snapshot, freeze an anchor set, track Krippendorff&#x27;s alpha.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/llm-judge-drift.html">
+<meta property="og:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Measuring Retrieval, first edition, September 2026, by Madhava Gaikwad">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/assets/og-card.png">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="twitter:title" content="B.5 The open problem - judge drift - Measuring Retrieval">
+<meta name="twitter:description" content="There is no metric for LLM judge drift. The interim protocol: pin the snapshot, freeze an anchor set, track Krippendorff&#x27;s alpha.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "B.5 The open problem - judge drift", "description": "There is no metric for LLM judge drift. The interim protocol: pin the snapshot, freeze an anchor set, track Krippendorff's alpha.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/llm-judge-drift.html", "position": 25, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Measuring Retrieval", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/"}, {"@type": "ListItem", "position": 2, "name": "B.5 The open problem - judge drift", "item": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/llm-judge-drift.html"}]}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; B.5 The open problem - judge drift</p><div class="nav"><span class="navlinks">[ <a href="retrieval-robustness-metrics.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="integrity-summary.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="b.5-the-open-problem---judge-drift" class="level1">
+<h1>B.5 The open problem - judge drift</h1>
+<p>There is no metric for this, and that absence is the finding.</p>
+<p><img src="assets/diagrams/fig-124-the-invisible-drift.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Invisible Drift" /></p>
+<p>The figure shows what the failure looks like from the outside. A
+faithfulness score reads 0.87 in January, 0.87 in March, 0.87 in June
+and 0.87 in September. Somewhere between March and June the judge model
+was silently updated by its provider. Nothing on the dashboard changed
+colour, and every comparison spanning that line is void.</p>
+<p>A team looking at that series will say faithfulness has been stable
+all year. What has actually happened is that faithfulness has been
+measured by two different instruments all year, and there is no way to
+tell from the numbers where one stopped and the other began.</p>
+<section id="the-evidence" class="level3">
+<h3>The evidence</h3>
+<p>The Brehme, Ströhle and Breu systematic review of 63 RAG evaluation
+papers (<a href="https://arxiv.org/abs/2504.20119">arXiv:2504.20119</a>)
+states the problem directly. Rapid model development means advances
+could render previous evaluation results invalid, since a new model
+might produce entirely different outcomes, and it remains open how to
+adapt prior results or establish an evaluation standard that stays
+consistent independently of model version.</p>
+<p>The same review supplies the number that makes this urgent. Of the 63
+papers, 41 used language models as judges and only six compared those
+judges against human judges. Those six found a positive correlation,
+which is a weak bar to clear. The review also flags the circularity
+problem, noting it is unresolved whether evaluation quality is
+compromised when one model generates the questions, answers them, and
+then evaluates its own output.</p>
+</section>
+<section id="the-interim-protocol" class="level3">
+<h3>The interim protocol</h3>
+<p>Until somebody publishes a metric, follow this.</p>
+<p><img src="assets/diagrams/fig-125-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>First, pin the judge model version explicitly, meaning the dated
+snapshot rather than a moving label like “gpt-4o”. Second, freeze an
+anchor set of 100 to 200 items carrying human labels. Third, on every
+judge change, re-run that anchor set and record the agreement between
+judge and human using Krippendorff’s α rather than Cohen’s κ, since you
+will have more than two raters. Fourth, if α moves materially, your
+historical series is broken, so say so in the report and reset the
+historical line rather than pretending the numbers still connect. Fifth,
+never let the same model generate your synthetic test data and also
+judge the results.</p>
+<p>Step 5 is the one most commonly violated, usually without anyone
+realizing, by teams that adopted a single framework for both synthetic
+test generation and evaluation.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="retrieval-robustness-metrics.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="integrity-summary.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>
