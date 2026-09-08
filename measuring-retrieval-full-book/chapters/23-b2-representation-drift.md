@@ -4,9 +4,9 @@
 two points in time, actually behave the same way.
 
 **Facets:** Integrity/Drift | corpus & query | free | R | EMERGING VERIFIED
-**Source:** Caspari, Dastidar, Zerhoudi, Mitrovic & Granitzer, *Beyond Benchmarks: Evaluating
-Embedding Model Similarity for RAG Systems* · [arXiv:2407.08275](https://arxiv.org/abs/2407.08275)
-OPEN Read at method-summary level via the Brehme survey's account plus the paper's abstract.
+**Source:** Caspari, Ghosh Dastidar, Zerhoudi, Mitrović & Granitzer, *Beyond Benchmarks:
+Evaluating Embedding Model Similarity for RAG Systems*, CEUR-WS Vol-3784 ·
+[arXiv:2407.08275](https://arxiv.org/abs/2407.08275)
 
 ### The problem it solves
 
@@ -40,29 +40,13 @@ That third row is the one to internalize. Two embedders can be geometrically sim
 behaviourally different, so representation similarity does not imply retrieval similarity, which
 is exactly why one number is not enough.
 
-## Correction incorporated into this edition
+## B.2.1 What the measurements actually show
 
-**Previously:** OPEN ABSTRACT-ONLY, presented in Supplement A §B.2 as a drift stack, with an
-interpretation table implying that high similarity means an embedder swap is safe.
-
-**Now:** VERIFIED Read at conclusion and results level. The paper's central finding inverts that
-framing.
-
-**Source:** Caspari, Ghosh Dastidar, Zerhoudi, Mitrović & Granitzer, CEUR-WS Vol-3784 (short
-paper) · [arXiv:2407.08275](https://arxiv.org/abs/2407.08275)
-
-## AD.2.1 What the paper actually studied
-
-The study covered 19 embedding models across five BEIR datasets, using CKA for pairwise embedding
-comparison plus Jaccard and rank similarity for retrieval behaviour at top-k. Its purpose was
-model selection, meaning the identification of clusters of similar models so that choosing one
-becomes easier, rather than drift monitoring.
-
-The Supplement A framing extended that work to temporal drift, and it flagged the extension as an
-extension at the time, which was right. What it did not flag, because the results had not been
-read, is the finding below.
-
-## AD.2.2 The finding that was got wrong
+The study behind these instruments covered 19 embedding models across five BEIR datasets, using
+CKA for pairwise comparison of the embeddings themselves and Jaccard and rank similarity for the
+retrieval behaviour they produce at top-k. It was built to help with model selection, by
+identifying clusters of similar models, and its results carry a warning for anyone planning a
+migration.
 
 > Comparing embeddings with CKA generally showed intra- and inter-family clusters across datasets.
 > These clusters also appeared when evaluating top-k retrieval similarity with **large k values**.
@@ -73,45 +57,42 @@ More starkly, on the two larger datasets, FiQA-2018 and TREC-COVID, most models 
 completely distinct text chunks. Only one cluster, made up of bge, UAE and mxbai, retained notable
 similarity, and the rest showed moderate to low similarity at best.
 
-![Corrected CKA guidance](assets/diagrams/fig-129-what-i-implied-vs-what-the-paper-found.png){.diagram-figure width=96%}
+![Embedder similarity depends on k](assets/diagrams/fig-129-what-i-implied-vs-what-the-paper-found.png){.diagram-figure width=96%}
 
-The figure sets the two claims against each other. Supplement A implied that high Jaccard and
-RankSimilarity meant a low-risk migration. The paper found that at the small k RAG actually uses,
-similarity is low and unstable, with different models retrieving largely different chunks. The
-curve underneath makes the shape clear: Jaccard similarity is near zero and highly variable at k
-values of 3 and 10, rises through k of 50 and 100, and only approaches 1.0 out past k of 500. RAG
-lives at the left-hand end of that curve, in the high-variance, low-similarity region.
+The common assumption is that high Jaccard and RankSimilarity make a migration low risk. What the
+measurements show is that at the small k RAG actually uses, similarity is low and unstable, with
+different models retrieving largely different chunks. The curve in the figure makes the shape
+clear: Jaccard similarity is near zero and highly variable at k values of 3 and 10, rises through
+k of 50 and 100, and only approaches 1.0 out past k of 500. RAG lives at the left-hand end of that
+curve, in the high-variance, low-similarity region.
 
 So a model with high CKA is not a safe swap, because similarity at the level of the embedding
-geometry does not imply similar retrieval at k=3, and that is the paper's point.
+geometry does not imply similar retrieval at k=3.
 
 The authors add a caveat that strengthens the conclusion rather than weakening it. Their datasets
 are comparatively small, while real RAG systems operate over millions of embeddings, so if larger
 datasets produce lower retrieval similarity then real-world divergence may exceed what they were
 able to measure.
 
-## AD.2.3 Corrected guidance
+## B.2.2 What to do about it
 
-| Supplement A said | Corrected |
+| Instinct | What to do instead |
 |---|---|
-| High Jaccard/RankSimilarity -> low-risk migration | **Expect low similarity at RAG-typical k. Low similarity is the default, not the alarm.** |
-| Use the three measures as a drift stack | Calibrate against *your own* baseline, since cross-model similarity is inherently low |
-| CKA as the primary instrument | **Jaccard and RankSimilarity at your production k are the operative measures.** CKA describes representation geometry, which does not transfer to retrieval behaviour at small k |
+| Read high Jaccard/RankSimilarity as a low-risk migration | **Expect low similarity at RAG-typical k. Low similarity is the default, not the alarm.** |
+| Use the three measures as a generic drift stack | Calibrate against *your own* baseline, since cross-model similarity is inherently low |
+| Treat CKA as the primary instrument | **Jaccard and RankSimilarity at your production k are the operative measures.** CKA describes representation geometry, which does not transfer to retrieval behaviour at small k |
 
-The practical upshot is stronger rather than weaker. Every embedder swap is a high-risk change by
-default, so do not reason from leaderboard proximity or from CKA. Measure Jaccard and
-RankSimilarity at your actual k, on your actual corpus, before migrating anything, because two
-models that look interchangeable on MTEB may retrieve almost completely distinct chunks for your
-queries.
+Every embedder swap is therefore a high-risk change by default, so do not reason from leaderboard
+proximity or from CKA. Measure Jaccard and RankSimilarity at your actual k, on your actual corpus,
+before migrating anything, because two models that look interchangeable on MTEB may retrieve
+almost completely distinct chunks for your queries.
 
-This also reinforces the Supplement A recommendation that mattered most, which is to freeze a
-baseline now. Its value has just gone up, because the thing you are guarding against turns out to
-be larger than the original framing represented.
+This is also the strongest argument for freezing a baseline now, while you still can.
 
-## AD.2.4 A second-order consequence for §B.5
+## B.2.3 A consequence for everything downstream
 
 If different embedders retrieve largely different chunks at small k, then any evaluation number
-computed under embedder A is not comparable to the same number computed under embedder B. That
+computed under one embedder is not comparable to the same number computed under another. That
 applies to drift metrics, to faithfulness, to the CUE quadrants and to every downstream measure in
 this book. Embedder version therefore belongs in your experiment metadata alongside judge version.
 

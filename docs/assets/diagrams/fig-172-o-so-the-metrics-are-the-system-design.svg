@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="266" viewBox="0 0 720 266">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="266" rx="10" fill="#FFF6DE"/>
+<rect width="720" height="8" rx="4" fill="#D98B00"/>
+<text x="34" y="39" fill="#2A2518" class="title">o &quot;So the metrics ARE the system design.&quot;</text>
+<text x="686" y="37" text-anchor="end" fill="#168C78" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;So the metrics ARE the system design.&quot;</text><text x="46" y="88" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="108" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="128" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="148" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;The metrics are the only part of the</text><text x="46" y="168" fill="#D94C42" class="mono" xml:space="preserve">       /|\     design that you can still change after</text><text x="46" y="188" fill="#D94C42" class="mono" xml:space="preserve">       / \     you&#x27;ve shipped. Choose them like it</text><text x="46" y="208" fill="#2A2518" class="mono" xml:space="preserve">              matters.&quot;</text>
+</svg>

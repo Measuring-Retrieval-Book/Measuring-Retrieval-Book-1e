@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="286" viewBox="0 0 720 286">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="286" rx="10" fill="#FFF0ED"/>
+<rect width="720" height="8" rx="4" fill="#E45E4F"/>
+<text x="34" y="39" fill="#342127" class="title">RBP = (1 - p) · Σ_{d=1}^{∞} r_d · p^{d-1</text>
+<text x="686" y="37" text-anchor="end" fill="#197FA2" class="label">FORMULA</text>
+<text x="46" y="68" fill="#342127" class="mono" xml:space="preserve">   RBP = (1 - p) · Σ_{d=1}^{∞}  r_d · p^{d-1}</text><text x="46" y="88" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#342127" class="mono" xml:space="preserve">     where  r_d ∈ {0,1} is the relevance at rank d</text><text x="46" y="128" fill="#342127" class="mono" xml:space="preserve">            p  ∈ [0,1)  is user PERSISTENCE</text><text x="46" y="148" fill="#342127" class="mono" xml:space="preserve">                        (probability of continuing to rank d+1)</text><text x="46" y="168" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="188" fill="#342127" class="mono" xml:space="preserve">   p = 0.5  -&gt; impatient user, top-heavy</text><text x="46" y="208" fill="#342127" class="mono" xml:space="preserve">   p = 0.8  -&gt; moderate</text><text x="46" y="228" fill="#342127" class="mono" xml:space="preserve">   p = 0.95 -&gt; very persistent, near-uniform over depth</text>
+</svg>

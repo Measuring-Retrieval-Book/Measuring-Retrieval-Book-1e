@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="426" viewBox="0 0 720 426">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="426" rx="10" fill="#102A3A"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#FFFFFF" class="title">Two Systems, Same Total Latency</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">SUMMARY</text>
+<text x="46" y="68" fill="#F0A62E" class="mono" xml:space="preserve">   TWO SYSTEMS, SAME TOTAL LATENCY</text><text x="46" y="88" fill="#00A6C7" class="mono" xml:space="preserve">   ═══════════════════════════════</text><text x="46" y="108" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#00A6C7" class="mono" xml:space="preserve">   SYSTEM A:  [────── 4s silence ──────][burst]</text><text x="46" y="148" fill="#EDF5F7" class="mono" xml:space="preserve">              TTFT 4.0s    total 4.2s</text><text x="46" y="168" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="188" fill="#EDF5F7" class="mono" xml:space="preserve">   SYSTEM B:  [0.6s][t-o-k-e-n-s-s-t-r-e-a-m-i-n-g]</text><text x="46" y="208" fill="#EDF5F7" class="mono" xml:space="preserve">              TTFT 0.6s    total 4.2s</text><text x="46" y="228" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#FF9D8A" class="mono" xml:space="preserve">        o    &quot;Identical latency.&quot;</text><text x="46" y="268" fill="#FF9D8A" class="mono" xml:space="preserve">       /|\</text><text x="46" y="288" fill="#FF9D8A" class="mono" xml:space="preserve">       / \</text><text x="46" y="308" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="328" fill="#FF9D8A" class="mono" xml:space="preserve">        o    &quot;System A feels broken. System B feels fast.</text><text x="46" y="348" fill="#FF9D8A" class="mono" xml:space="preserve">       /|\     Your dashboard cannot tell them apart.&quot;</text><text x="46" y="368" fill="#FF9D8A" class="mono" xml:space="preserve">       / \</text>
+</svg>

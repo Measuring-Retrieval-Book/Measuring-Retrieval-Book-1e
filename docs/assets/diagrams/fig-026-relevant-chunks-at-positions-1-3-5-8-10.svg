@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="266" viewBox="0 0 720 266">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="266" rx="10" fill="#E8F7FA"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">Relevant chunks at positions: 1, 3, 5, 8, 10</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">FORMULA</text>
+<text x="46" y="68" fill="#162438" class="mono" xml:space="preserve">   Relevant chunks at positions: 1, 3, 5, 8, 10</text><text x="46" y="88" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#162438" class="mono" xml:space="preserve">   P@3  = 2/3  = 0.67   &lt;- what the GENERATOR sees</text><text x="46" y="128" fill="#162438" class="mono" xml:space="preserve">   P@5  = 3/5  = 0.60</text><text x="46" y="148" fill="#162438" class="mono" xml:space="preserve">   P@10 = 5/10 = 0.50   &lt;- what the RETRIEVER produced</text><text x="46" y="168" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="188" fill="#162438" class="mono" xml:space="preserve">   The number that determines answer quality is P@3.</text><text x="46" y="208" fill="#162438" class="mono" xml:space="preserve">   The number most teams report is P@10.</text>
+</svg>

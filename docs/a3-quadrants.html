@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A.3 Family 3 - The Quadrant Metrics - Measuring Retrieval</title>
+<meta name="description" content="One-line: Cross-reference did the retriever find it? against did the generator adhere to it? and sort every query into one of four diagnostic quadrants.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/a3-quadrants.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="A.3 Family 3 - The Quadrant Metrics - Measuring Retrieval">
+<meta property="og:description" content="One-line: Cross-reference did the retriever find it? against did the generator adhere to it? and sort every query into one of four diagnostic quadrants.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/a3-quadrants.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A.3 Family 3 - The Quadrant Metrics - Measuring Retrieval">
+<meta name="twitter:description" content="One-line: Cross-reference did the retriever find it? against did the generator adhere to it? and sort every query into one of four diagnostic quadrants.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "A.3 Family 3 - The Quadrant Metrics", "description": "One-line: Cross-reference did the retriever find it? against did the generator adhere to it? and sort every query into one of four diagnostic quadrants.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/a3-quadrants.html", "position": 18, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; A.3 Family 3 - The Quadrant Metrics</p><div class="nav"><span class="navlinks">[ <a href="a2-contribution.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="a4-machine-utility.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="a.3-family-3---the-quadrant-metrics" class="level1">
+<h1>A.3 Family 3 - The Quadrant Metrics</h1>
+<section id="a.3.1-cue---context-utilization-efficiency" class="level2">
+<h2>A.3.1 CUE - Context Utilization Efficiency</h2>
+<p><strong>One-line:</strong> Cross-reference <em>did the retriever find
+it?</em> against <em>did the generator adhere to it?</em> and sort every
+query into one of four diagnostic quadrants.</p>
+<p><strong>Facets:</strong> Alignment | query | judge | E2E | EMERGING
+VERIFIED <strong>Source:</strong> Sivakumar, Sugumaran &amp; Qiang,
+RAG-X · <a
+href="https://arxiv.org/abs/2603.03541">arXiv:2603.03541</a></p>
+<section id="the-problem-it-solves" class="level3">
+<h3>The problem it solves</h3>
+<p>A single accuracy number tells you what fraction of questions the
+system got right and nothing about how. Two systems can post identical
+accuracy while one of them is genuinely reading the documents it
+retrieved and the other is answering from memory with the retrieval step
+contributing nothing. Those two situations call for completely different
+work, and no scalar metric distinguishes them.</p>
+</section>
+<section id="the-construction" class="level3">
+<h3>The construction</h3>
+<p>CUE builds two binary axes and crosses them. The first is retrieval
+success, determined by a cascading relevance function that tries an
+exact substring match, then token-level overlap of at least 0.80, then
+sentence-level semantic similarity of at least 0.75. The second is
+generator context adherence, which is judged by a language model and
+thresholded at 0.7 or above.</p>
+<p><img src="assets/diagrams/fig-109-generator-adheres-to-context.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Generator Adheres To Context?" /></p>
+<p>Crossing the two axes gives four boxes. If the retriever found the
+material and the generator adhered to it, that is Effective Use, and it
+is the only genuine success. If the retriever found it and the generator
+did not adhere, that is Information Blindness, meaning you had the
+answer and the model missed it. If the retriever missed and the
+generator adhered anyway, that is a Lucky Guess, meaning a right answer
+with no supporting evidence, and it is the dangerous box. If the
+retriever missed and the generator did not adhere, that is Correct
+Rejection, meaning the model knew it did not know.</p>
+<p>Measured on GuidelineQA using Llama-3.1-8B with Qwen3-Embedding-8B,
+the four came out at Effective Use 49.2%, Lucky Guess 33.9%, Information
+Blindness 8.5% and Correct Rejection about 8.4%. A third of the system’s
+behaviour was in the Lucky Guess box.</p>
+</section>
+<section id="the-adherence-paradox" class="level3">
+<h3>The Adherence Paradox</h3>
+<p>That same pipeline scored 0.84 on context adherence, so the generator
+looked highly faithful while a third of its correct answers had no
+retrieved support at all. The paper’s diagnosis is that a high adherence
+score incorrectly attributes parametric answers to the context, which
+produces a false sense of grounding.</p>
+<p><img src="assets/diagrams/fig-110-the-14-gap-state-it-correctly.svg"
+class="diagram-figure" style="width:96.0%"
+alt="THE 14% GAP (state it correctly" /></p>
+<p>The figure exists because two different gaps get quoted
+interchangeably and they are not the same quantity. Accuracy was 71.0%
+and the context hit rate was 57.6%, so that gap is 13.4%, which rounds
+to the 14% the paper reports. Accuracy of 71.0% against Effective Use of
+49.2% gives a gap of 21.8%, which is a different quantity measuring a
+different thing. Do not merge them, because they will not reconcile.</p>
+</section>
+<section id="advantages" class="level3">
+<h3>Advantages</h3>
+<ul>
+<li><strong>Mutually exclusive and jointly exhaustive.</strong> Every
+query lands in exactly one box, so the percentages sum to 100 and can be
+read directly.</li>
+<li><strong>Localizes the fix.</strong> A high Lucky Guess rate means
+improve retriever coverage, and a high Information Blindness rate means
+refine the generation prompt. The paper supplies exactly those
+prescriptions.</li>
+<li><strong>Exposes the Adherence Paradox,</strong> which no single
+scalar metric can.</li>
+<li><strong>Treats Correct Rejection as a first-class outcome</strong>
+rather than a failure, and very few metrics reward a model for
+appropriate ignorance.</li>
+</ul>
+</section>
+<section id="disadvantages" class="level3">
+<h3>Disadvantages</h3>
+<ul>
+<li><strong>Requires ground truth</strong> for the retrieval-success
+axis.</li>
+<li><strong>Two thresholds are involved,</strong> being 0.80 and 0.75
+for relevance and 0.7 for adherence, and moving any of them moves the
+quadrants, so report them.</li>
+<li><strong>Uses a language model as judge on the adherence
+axis,</strong> which brings judge drift and judge cost along with
+it.</li>
+<li><strong>Binary axes discard gradation.</strong> A passage scoring
+0.69 on adherence and one scoring 0.01 both count as a plain no.</li>
+<li><strong>Validated in one domain so far,</strong> which is medical
+question answering.</li>
+</ul>
+</section>
+<section id="domain-examples" class="level3">
+<h3>Domain examples</h3>
+<p><strong>Clinical decision support.</strong> The origin domain, and
+Lucky Guess is a patient-safety category here rather than an efficiency
+one, because a clinically correct answer with no traceable source cannot
+be audited, defended or corrected.</p>
+<p><strong>Legal research.</strong> Directly transferable, since an
+unsupported but correct citation can survive review and therefore
+creates a risk that only surfaces later.</p>
+<p><strong>Consumer chat.</strong> Lower stakes, and a Lucky Guess may
+be perfectly acceptable. Track the number anyway, because if a third of
+your answers come from the model’s own memory then your retrieval system
+is doing considerably less work than your invoice suggests.</p>
+</section>
+<section id="recommendation" class="level3">
+<h3>Recommendation</h3>
+<p>If you adopt one alignment metric from this entire supplement, adopt
+CUE. It subsumes the diagnostic value of a faithfulness score, it fixes
+faithfulness’s central flaw, and its output points at which component to
+work on next.</p>
+<p>Report all four quadrants and never a single derived number, because
+the decomposition is the entire point.</p>
+<hr />
+</section>
+</section>
+<section id="a.3.2-mirages-four-metrics" class="level2">
+<h2>A.3.2 MIRAGE’s four metrics</h2>
+<p><strong>One-line:</strong> Four mutually exhaustive metrics of RAG
+<em>adaptability</em>, computed by comparing model behaviour across
+closed-book, oracle-context, and mixed-context conditions.</p>
+<p><strong>Facets:</strong> Alignment | query | ref | E2E | EMERGING
+VERIFIED <strong>Source:</strong> Park, Moon, Park &amp; Lim,
+<strong>Findings of NAACL 2025</strong>, pp. 2883-2900 · <a
+href="https://arxiv.org/abs/2504.17137">arXiv:2504.17137</a></p>
+<blockquote>
+<p><strong>A note on the name.</strong> Four unrelated pieces of work
+are called MIRAGE, so always pair the name with an arXiv identifier when
+you cite it or search for it.</p>
+</blockquote>
+<section id="the-problem-it-solves-1" class="level3">
+<h3>The problem it solves</h3>
+<p>CUE tells you what is happening on your traffic and does not tell you
+whether the cause lies in the retriever or in the model itself. If
+Information Blindness is high, you still do not know whether a better
+retriever would help or whether this particular model simply ignores
+context. Answering that requires running the same questions under
+conditions you control.</p>
+</section>
+<section id="the-construction-1" class="level3">
+<h3>The construction</h3>
+<p>Each question is run through three setups.</p>
+<table>
+<thead>
+<tr>
+<th>Setup</th>
+<th>Context given</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Base</strong></td>
+<td>Closed-book - query only</td>
+</tr>
+<tr>
+<td><strong>Oracle</strong></td>
+<td>The correct context</td>
+</tr>
+<tr>
+<td><strong>Mixed</strong></td>
+<td>Correct <em>and</em> noisy contexts - the realistic case</td>
+</tr>
+</tbody>
+</table>
+<p>The dataset is 7,560 curated instances drawn over a 37,800-entry
+retrieval pool assembled from IfQA, NaturalQA, TriviaQA, DROP and
+PopQA.</p>
+</section>
+<section id="the-four-metrics" class="level3">
+<h3>The four metrics</h3>
+<p><img src="assets/diagrams/fig-111-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>Noise Vulnerability measures how susceptible the model is to noise in
+the context. Context Acceptability measures its ability to use provided
+context to reach an accurate answer. Context Insensitivity measures how
+often it fails to use the context at all. Context Misinterpretation
+measures how often it uses the context and gets it wrong anyway.</p>
+</section>
+<section id="the-finding-that-makes-this-worth-adopting" class="level3">
+<h3>The finding that makes this worth adopting</h3>
+<p>This is the part no abstract-level reading gives you, and it is why
+MIRAGE earns a place beside CUE.</p>
+<blockquote>
+<p><strong>Noise Vulnerability and Context Acceptability change
+drastically with retriever performance. Context Insensitivity and
+Context Misinterpretation are consistent for a given model regardless of
+shots or retriever - they depend solely on the LLM’s
+capabilities.</strong></p>
+</blockquote>
+<p><img
+src="assets/diagrams/fig-112-the-four-metrics-split-into-two-diagnostic-halves.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Four Metrics Split Into Two Diagnostic Halves" /></p>
+<p>So the four numbers split into two halves that answer different
+questions. Noise Vulnerability and Context Acceptability are
+retriever-sensitive, so you change the retriever to move them. Context
+Insensitivity and Context Misinterpretation are intrinsic to the
+language model, so you change the model or the prompt to move them.</p>
+<p>The practical consequence is immediate. If Context Insensitivity
+rises, a new retriever is not the explanation, because that half does
+not move with the retriever, and something has changed about your
+generator instead.</p>
+<p>That is a genuine causal decomposition, where two of your four
+numbers tell you to work on retrieval and the other two tell you to
+change models or prompts. Very few evaluation frameworks offer anything
+like it.</p>
+<p>The paper also notes that this explains why overall performance falls
+short of perfect even in the Oracle setting, since the model-intrinsic
+failures persist when the context is known to be correct.</p>
+</section>
+<section id="advantages-1" class="level3">
+<h3>Advantages</h3>
+<ul>
+<li><strong>Mutually exhaustive,</strong> in the same way CUE is, so the
+four metrics account for all the behaviour rather than sampling parts of
+it.</li>
+<li><strong>Separates retriever-fixable from model-fixable
+failures,</strong> which is the single most valuable property in this
+part.</li>
+<li><strong>Efficient by design.</strong> The 37,800-chunk pool is
+roughly 1% of a full wiki dump, which cuts the computational cost while
+staying relevant to large benchmarks such as MTEB.</li>
+<li><strong>Public dataset and code,</strong> so results are
+reproducible.</li>
+</ul>
+</section>
+<section id="disadvantages-1" class="level3">
+<h3>Disadvantages</h3>
+<ul>
+<li><strong>It is a Wikipedia-domain benchmark,</strong> and your domain
+is not Wikipedia, so the findings transfer as guidance rather than as
+your numbers.</li>
+<li><strong>Requires the oracle condition,</strong> meaning
+known-correct context, so it needs a labelled dataset and cannot run on
+live traffic.</li>
+<li><strong>Three inference runs per question,</strong> covering Base,
+Oracle and Mixed, so generation cost is tripled.</li>
+<li><strong>Noise is treated as present or absent rather than
+graded.</strong> A later critique notes that MIRAGE does not allow
+granular control over noise levels, so if you need a dose-response curve
+showing how performance degrades as noise increases, this will not give
+you one.</li>
+</ul>
+</section>
+<section id="domain-examples-1" class="level3">
+<h3>Domain examples</h3>
+<p><strong>Model selection for a RAG deployment.</strong> The ideal use.
+Run MIRAGE across your candidate models and read the model-intrinsic
+half, which gives a clean comparison uncontaminated by which retriever
+you happened to pair them with.</p>
+<p><strong>Retriever selection.</strong> Equally valid using the other
+half, which makes this the rare framework that supports both decisions
+from a single run.</p>
+<p><strong>Domain-specific production monitoring.</strong> A poor fit,
+since it requires oracle labels and three runs per question.</p>
+</section>
+<section id="recommendation-1" class="level3">
+<h3>Recommendation</h3>
+<p>Use MIRAGE as an offline procurement instrument rather than a
+monitoring one. Before you commit to a retriever and model pairing, run
+it and read the two halves separately. If Context Insensitivity is high
+on your preferred model, no amount of retrieval investment will fix it,
+and that is the paper’s central practical message.</p>
+<p>Pair it with CUE, since MIRAGE tells you which component is weak in
+general and CUE tells you what is happening on your actual traffic.</p>
+<hr />
+</section>
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="a2-contribution.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="a4-machine-utility.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

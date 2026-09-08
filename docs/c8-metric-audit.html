@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C.8 TriFEX, PKP, and PR - the metric that audits other metrics - Measuring Retrieval</title>
+<meta name="description" content="One-line: Attributes each generated claim to its origin - query, context, or reference - and isolates genuinely internalized knowledge from prompt leakage.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/c8-metric-audit.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="C.8 TriFEX, PKP, and PR - the metric that audits other metrics - Measuring Retrieval">
+<meta property="og:description" content="One-line: Attributes each generated claim to its origin - query, context, or reference - and isolates genuinely internalized knowledge from prompt leakage.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/c8-metric-audit.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C.8 TriFEX, PKP, and PR - the metric that audits other metrics - Measuring Retrieval">
+<meta name="twitter:description" content="One-line: Attributes each generated claim to its origin - query, context, or reference - and isolates genuinely internalized knowledge from prompt leakage.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "C.8 TriFEX, PKP, and PR - the metric that audits other metrics", "description": "One-line: Attributes each generated claim to its origin - query, context, or reference - and isolates genuinely internalized knowledge from prompt leakage.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/c8-metric-audit.html", "position": 34, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; C.8 TriFEX, PKP, and PR - the metric that audits other metrics</p><div class="nav"><span class="navlinks">[ <a href="c7-trust-score.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="c9-sufficiency.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section
+id="c.8-trifex-pkp-and-pr---the-metric-that-audits-other-metrics"
+class="level1">
+<h1>C.8 TriFEX, PKP, and PR - the metric that audits other metrics</h1>
+<p><strong>One-line:</strong> Attributes each generated claim to its
+origin - query, context, or reference - and isolates genuinely
+internalized knowledge from prompt leakage.</p>
+<p><strong>Facets:</strong> Correctness | claim | human-validated | G |
+EMERGING VERIFIED <strong>Source:</strong> Oestreich, Bley, Binder,
+Müller, Sydorenko &amp; Alcalde · <a
+href="https://arxiv.org/abs/2603.23047">arXiv:2603.23047</a></p>
+<section id="the-problem-it-solves" class="level3">
+<h3>The problem it solves</h3>
+<p>When a model states a fact, that fact could have come from three
+places: it was in the question, it was in the retrieved context, or the
+model knew it already. Most metrics do not distinguish those, which
+means a metric intended to measure what the model knows can be measuring
+what was handed to it in the prompt.</p>
+</section>
+<section id="c.8.1-the-construction" class="level2">
+<h2>C.8.1 The construction</h2>
+<p>TriFEX is a human-validated evaluation pipeline built on triples,
+which attributes each generated claim to its origin among the user
+query, the context and the reference. PKP, meaning Parametric Knowledge
+Precision, isolates genuinely internalized knowledge by filtering out
+the claims that leaked in through the prompt.</p>
+<p><img src="assets/diagrams/fig-143-claim-origin-attribution.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Claim Origin Attribution" /></p>
+<p>The figure shows the routing. For each generated claim, ask whether
+it appeared in the query, in which case it leaked. Ask whether it
+appeared in the context, in which case it was retrieved. If neither, it
+came from the model’s own parameters. PKP scores the correctness of that
+third bucket only, and PR, the Parametric Rate, counts how often the
+third bucket is used at all.</p>
+</section>
+<section
+id="c.8.2-the-finding-that-should-change-how-you-read-every-other-metric"
+class="level2">
+<h2>C.8.2 The finding that should change how you read every other
+metric</h2>
+<p>The paper demonstrates that an existing knowledge-internalization
+metric is retrieval-sensitive, with roughly 75% of its variance across
+conditions driven by changes in how often internal knowledge is
+expressed rather than by how correct that knowledge is.</p>
+<p><img src="assets/diagrams/fig-144-the-variance-decomposition.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Variance Decomposition" /></p>
+<p>The figure works the consequence. You observe a metric moving from
+0.61 to 0.74 and conclude the model got better. Decomposed, about 75% of
+that movement was PR, meaning the model expressed its internal knowledge
+more often, and about 25% was PKP, meaning that knowledge became more
+correct.</p>
+<p>So three quarters of the apparent improvement was a change in how
+frequently the model behaved a certain way rather than a change in how
+well it behaved, and the composite metric conflated the two.</p>
+<p>The paper also reports that ROUGE and BERTScore fail to detect
+factual differences that the triple-based evaluation reveals, which is a
+direct warning against relying on surface-similarity metrics anywhere in
+RAG.</p>
+</section>
+<section id="c.8.3-generalizing-the-lesson-the-metric-confounding-audit"
+class="level2">
+<h2>C.8.3 Generalizing the lesson: the metric confounding audit</h2>
+<p>The finding is not really about PKP. It is a general method you
+should apply to any composite metric before you trust a comparison
+across conditions.</p>
+<p><img src="assets/diagrams/fig-145-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>Before reporting that a metric improved, ask three questions. Can the
+metric be decomposed into a rate term and a quality term? If it can,
+decompose the variance between them. If most of the movement sits in the
+rate term, then what you have measured is a change in behaviour rather
+than a change in quality.</p>
+<p>Three candidates in this supplement have that shape. Self-Knowledge
+is a rate of use multiplied by a correctness. Faithfulness is a claim
+count multiplied by a support rate. Hallucination is verbosity
+multiplied by an error rate.</p>
+<p>That last one deserves emphasis. Hallucination rate is a proportion,
+so a model that simply says less will score better on it without having
+become any more truthful. RAGChecker reports the average number of
+response claims alongside its metrics for exactly this reason, and most
+teams drop that column when they build the dashboard.</p>
+</section>
+<section id="c.8.4-recommendation" class="level2">
+<h2>C.8.4 Recommendation</h2>
+<p>You will probably not adopt PKP itself, since it is specific to the
+electronic design automation domain it was built for. Adopt the method
+instead: decompose any metric that multiplies a rate by a quality before
+reporting a change in it, and always report claim counts alongside
+metrics expressed as claim proportions.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="c7-trust-score.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="c9-sufficiency.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

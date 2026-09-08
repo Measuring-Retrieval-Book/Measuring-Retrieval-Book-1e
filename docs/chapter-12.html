@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 12 - Efficiency, Cost, and Time - Measuring Retrieval</title>
+<meta name="description" content="Chapter 1 promoted efficiency and cost from a footnote to a full dimension. This chapter is the classical half of that promotion, and Supplement B Part D is the RAG half.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/chapter-12.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="Chapter 12 - Efficiency, Cost, and Time - Measuring Retrieval">
+<meta property="og:description" content="Chapter 1 promoted efficiency and cost from a footnote to a full dimension. This chapter is the classical half of that promotion, and Supplement B Part D is the RAG half.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/chapter-12.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 12 - Efficiency, Cost, and Time - Measuring Retrieval">
+<meta name="twitter:description" content="Chapter 1 promoted efficiency and cost from a footnote to a full dimension. This chapter is the classical half of that promotion, and Supplement B Part D is the RAG half.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "Chapter 12 - Efficiency, Cost, and Time", "description": "Chapter 1 promoted efficiency and cost from a footnote to a full dimension. This chapter is the classical half of that promotion, and Supplement B Part D is the RAG half.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/chapter-12.html", "position": 14, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; Chapter 12 - Efficiency, Cost, and Time</p><div class="nav"><span class="navlinks">[ <a href="chapter-11.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="classical-conclusion.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="chapter-12---efficiency-cost-and-time" class="level1">
+<h1>Chapter 12 - Efficiency, Cost, and Time</h1>
+<section id="reclaiming-a-dimension" class="level2">
+<h2>12.0 Reclaiming a dimension</h2>
+<p>Chapter 1 promoted efficiency and cost from a footnote to a full
+dimension. This chapter is the classical half of that promotion, and
+Supplement B Part D is the RAG half.</p>
+<p>The classical measures themselves are unglamorous and thoroughly
+understood.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Source</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Query response time / latency</td>
+<td>Manning Ch. 8 VERIFIED</td>
+<td>The user-facing number</td>
+</tr>
+<tr>
+<td>Query throughput</td>
+<td>Manning Ch. 4 VERIFIED</td>
+<td>Capacity</td>
+</tr>
+<tr>
+<td>Indexing throughput</td>
+<td>Manning Ch. 4 VERIFIED</td>
+<td>Gates your refresh policy</td>
+</tr>
+<tr>
+<td>Index size</td>
+<td>Manning Ch. 5 VERIFIED</td>
+<td>Storage and memory pressure</td>
+</tr>
+<tr>
+<td>Query-processing cost</td>
+<td>Manning Ch. 7 VERIFIED</td>
+<td>Per-query compute</td>
+</tr>
+<tr>
+<td>Crawl throughput</td>
+<td>Manning Ch. 20 VERIFIED</td>
+<td>Ingestion capacity</td>
+</tr>
+</tbody>
+</table>
+<p>Re-listing those is not the contribution of this chapter. The
+contribution is establishing that time is not simply a cost sitting
+alongside quality, because for a reader with a finite budget time is
+part of the quality measurement itself.</p>
+<hr />
+</section>
+<section id="time-biased-gain" class="level2">
+<h2>12.1 Time-Biased Gain</h2>
+<p><strong>One-line:</strong> Gain accumulated as a function of <em>time
+spent</em>, discounted by the probability the user is still reading.</p>
+<p><strong>Formula (structure):</strong></p>
+<p><img src="assets/diagrams/fig-088-tbg-g-t-d-t-dt.svg"
+class="diagram-figure" style="width:96.0%"
+alt="TBG = ∫ G(t) · D(t) dt" /></p>
+<p><strong>Facets:</strong> Efficiency/Cost + Correctness | session |
+ref | E2E | ESTABLISHED VERIFIED <strong>Source:</strong> Smucker &amp;
+Clarke, <em>Time-Based Calibration of Effectiveness Measures</em>,
+<strong>SIGIR 2012, pp. 95-104</strong>, doi 10.1145/2348283.2348300 -
+<strong>SIGIR 2012 Best Paper</strong></p>
+<section id="the-problem-it-solves" class="level3">
+<h3>The problem it solves</h3>
+<p>Every metric in Chapters 5 through 8 discounts by rank, which quietly
+assumes that two documents at the same position cost the reader the same
+amount. They do not. A result with a clear snippet that takes three
+seconds to assess and a result with a poor snippet attached to a
+400-page PDF occupy the same rank and consume wildly different amounts
+of the reader’s budget, and no rank-based metric can express the
+difference.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3>The idea</h3>
+<p>Time-biased gain replaces the rank discount with a time discount.
+Reading the formula, G(t) is the gain the reader has accumulated by time
+t, and D(t) is a decay function giving the probability that they are
+still reading at time t, starting at D(0) = 1 and falling from there.
+The measure integrates the two together, so gain that arrives after the
+reader has left contributes nothing.</p>
+<p>The authors’ motivation makes the point concrete. Summaries are
+designed to speed up the rate at which users find relevant documents,
+and they do, so a metric ought to reflect the value a good summary adds
+by using a user model that accounts for the time required. Rank-based
+metrics are blind to snippet quality by construction, because a snippet
+does not change anybody’s rank.</p>
+<p><img src="assets/diagrams/fig-089-rank-discount-vs-time-discount.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Rank discount and time discount" /></p>
+<p>The figure compares two result lists with identical nDCG. List A has
+a relevant document at rank 1 with a good snippet that takes three
+seconds to judge, and another at rank 2 on the same terms. List B has a
+relevant document at rank 1 with a bad snippet attached to a 40-page PDF
+that takes ninety seconds to judge, and another the same at rank 2.</p>
+<p>nDCG scores them identically because the same documents were
+retrieved in the same order. Time-biased gain scores list A far higher,
+because the user gave up partway through the first item of list B.
+Retrieval was identical and the experience was not.</p>
+<p>The decay curve in the lower panel is the mechanism. It starts at 1.0
+and falls away over the first minute or two, so gain arriving at ninety
+seconds is worth a fraction of gain arriving at three, and rank has no
+way of representing that.</p>
+</section>
+<section id="advantages" class="level3">
+<h3>Advantages</h3>
+<ul>
+<li><strong>Unifies quality and cost in a single number,</strong> which
+no other metric in this volume does.</li>
+<li><strong>Captures snippet quality and document-length
+effects</strong> that every rank-based metric ignores by
+construction.</li>
+<li><strong>Grounded in observed behaviour,</strong> with decay
+functions calibrated from user studies rather than assumed.</li>
+<li><strong>Best-paper recognition and a substantial follow-on
+literature,</strong> including <em>Stochastic Simulation of Time-Biased
+Gain</em> (CIKM 2012, pp. 2040-2044) VERIFIED and <em>Modeling User
+Variance in Time-Biased Gain</em> (HCIR 2012) VERIFIED.</li>
+</ul>
+</section>
+<section id="disadvantages" class="level3">
+<h3>Disadvantages</h3>
+<ul>
+<li><strong>Requires time estimates per document,</strong> covering
+document length, snippet quality and load time, which is instrumentation
+most teams do not have.</li>
+<li><strong>The decay function has to be calibrated,</strong> ideally
+against your own users, because a borrowed D(t) is a borrowed user model
+and carries somebody else’s assumptions.</li>
+<li><strong>Harder to compute and to explain</strong> than nDCG.</li>
+<li><strong>Rarely reported,</strong> so there is nothing external to
+compare against.</li>
+</ul>
+</section>
+<section id="domain-examples" class="level3">
+<h3>Domain examples</h3>
+<p><strong>Enterprise document search.</strong> An excellent fit and
+badly underused, because corpora with wildly varying document lengths,
+such as a two-page memo sitting beside a 400-page manual, are exactly
+where rank-based metrics mislead.</p>
+<p><strong>Mobile search.</strong> Time costs are large and variable, so
+TBG’s framing is the right one.</p>
+<p><strong>RAG.</strong> CAUTION The user’s reading time is spent on a
+single generated answer, so the direct translation does not work. The
+useful analogue is the model’s budget, meaning tokens consumed and
+whether the gain arrives inside the context window or past the point
+where attention has fallen off. <em>Lost in the Middle</em> effectively
+suggests a D(t) for language models, in the form of a decay function
+over position within the context. A formal time-biased measure for RAG
+remains an open opportunity.</p>
+</section>
+<section id="recommendation" class="level3">
+<h3>Recommendation</h3>
+<p>If your corpus has highly variable document lengths, or your snippets
+vary in quality, TBG will tell you something nDCG structurally
+cannot.</p>
+<p>Start cheaply by logging time-to-judgment inside your annotation
+tool. You will collect the input data as a by-product of work you are
+already doing, and you can decide later whether to compute the full
+measure.</p>
+<hr />
+</section>
+</section>
+<section id="session-metrics" class="level2">
+<h2>12.2 Session metrics</h2>
+<section id="sdcg" class="level3">
+<h3>12.2.1 sDCG</h3>
+<p><strong>One-line:</strong> DCG extended across the multiple queries
+of a single search session, with later queries discounted.</p>
+<p><strong>Facets:</strong> Correctness | session | ref | R |
+ESTABLISHED VERIFIED <strong>Source:</strong> Järvelin, Price, Delcambre
+&amp; Nielsen, <em>Discounted Cumulated Gain Based Evaluation of
+Multiple-Query IR Sessions</em>, <strong>ECIR 2008, LNCS 4956,
+pp. 4-15</strong>, doi 10.1007/978-3-540-78646-7_4</p>
+</section>
+<section id="the-problem-it-solves-1" class="level3">
+<h3>The problem it solves</h3>
+<p>The paper’s premise is a direct criticism of everything in Chapters 4
+through 8: assuming one query per topic and per session is a poor
+representation of what people actually do. Real users search, look at
+the results, rephrase, and search again, and a metric that scores each
+of those queries independently cannot tell the difference between a
+system that answered immediately and one that took three attempts.</p>
+</section>
+<section id="the-idea-1" class="level3">
+<h3>The idea</h3>
+<p>sDCG applies a second discount across the queries in a session, on
+top of DCG’s existing discount across ranks within each query. A
+relevant result that arrives in a later reformulation is worth less than
+the same result in the first query, because the user paid the effort of
+rephrasing to get there.</p>
+<p><img src="assets/diagrams/fig-090-two-nested-discounts.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Two Nested Discounts" /></p>
+<p>The figure draws the nesting. A session contains query 1 at full
+weight, with its ranks discounted internally by the usual 1/log2(k+1).
+Query 2 sits below it, discounted because the user had to reformulate to
+reach it, with its own internal rank discounts. Query 3 is discounted
+further still.</p>
+<p>Asked why later queries should be penalized when the user did
+eventually find what they wanted, the answer is that they found it after
+three attempts. A system that answered on the first attempt is better,
+and single-query metrics score the two identically.</p>
+</section>
+<section id="advantages-and-disadvantages" class="level3">
+<h3>Advantages and disadvantages</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Advantages</th>
+<th>Disadvantages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Models real multi-query behaviour</td>
+<td>Requires session-level judgments and logs</td>
+</tr>
+<tr>
+<td>Rewards answering early in the session</td>
+<td>Two discount parameters to set and report</td>
+</tr>
+<tr>
+<td>Captures reformulation cost, which no single-query metric can</td>
+<td>Rarely implemented; little tooling</td>
+</tr>
+<tr>
+<td>Graded relevance throughout</td>
+<td>Session boundaries are ambiguous in practice</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="srbp---the-session-analogue-of-rbp" class="level3">
+<h3>12.2.2 SRBP - the session analogue of RBP</h3>
+<p><strong>Source:</strong> Lipani, Carterette &amp; Yilmaz, <em>From a
+User Model for Query Sessions to Session Rank Biased Precision
+(SRBP)</em>, <strong>ICTIR 2019</strong> VERIFIED</p>
+<p>This completes a pattern the book has now traced three separate
+times.</p>
+<p><img src="assets/diagrams/fig-091-the-rbp-family.svg"
+class="diagram-figure" style="width:96.0%" alt="The Rbp Family" /></p>
+<p>RBP from §5.5 measures quality within a single ranking, from Moffat
+and Zobel in 2008. RBO from §7.2 compares two rankings, from Webber et
+al. in 2010. NRBP from §8.3.1 adds novelty, from Clarke et al. in 2009.
+SRBP measures quality across a session, from Lipani et al. in 2019. One
+user model, being geometric persistence with an explicit residual,
+extended in four directions.</p>
+<p>The practical consequence is that learning RBP properly gets you the
+other three nearly for free, which makes it the best return on
+conceptual investment anywhere in classical retrieval.</p>
+</section>
+<section id="recommendation-1" class="level3">
+<h3>Recommendation</h3>
+<p>Use sDCG or SRBP if your users reformulate, which for enterprise
+search and conversational RAG they overwhelmingly do. For conversational
+RAG in particular, your unit of analysis is the session rather than the
+query, which means every metric in Chapters 4 through 8 is measuring the
+wrong unit when you apply it there.</p>
+<p>This is a real and largely unaddressed gap. Multi-turn RAG evaluation
+almost always reports per-turn metrics, and a per-turn metric cannot see
+that turn 3 was only necessary because turns 1 and 2 failed.</p>
+<hr />
+</section>
+</section>
+<section id="the-cost-quality-frontier" class="level2">
+<h2>12.3 The cost-quality frontier</h2>
+<p>The practical synthesis of the chapter.</p>
+<p><img src="assets/diagrams/fig-092-you-are-always-on-a-frontier.svg"
+class="diagram-figure" style="width:96.0%"
+alt="You Are Always On A Frontier" /></p>
+<p>The figure plots quality against cost as k rises through 1, 3, 5, 10,
+20 and 50. The curve climbs steeply at first and then flattens into
+diminishing returns, which is the shape RAGChecker measured directly:
+moderately increasing the number and size of chunks improves recall and
+therefore F1 with minimal effort, and the effect saturates because the
+total amount of relevant information available is fixed.</p>
+<p>Asked where their own system sits on that curve, most teams do not
+know, because almost nobody plots it. They pick k from a tutorial and
+never revisit the choice.</p>
+<section id="the-experiment-worth-running" class="level3">
+<h3>The experiment worth running</h3>
+<p><img src="assets/diagrams/fig-093-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>For k in {1, 3, 5, 10, 20, 50}, record five things: Recall@k, your
+primary quality metric, Pairwise Redundancy, the prompt tokens consumed
+per query, and time-to-first-token at the median and the 95th
+percentile. Then plot quality against tokens and find the knee.</p>
+<p>It costs an afternoon, almost nobody does it, and it is the single
+highest-value experiment in this volume.</p>
+<p>Two published data points anchor what to expect. RAGChecker observed
+faithfulness rising from 88.1 to 92.2 as k moved from 5 to 20, so more
+context made the generator more faithful rather than less. RAG-X
+measured 22.0% pairwise redundancy at its best configuration, so more
+context also bought duplicated material. A sweep measures both effects
+as they occur in your system rather than in somebody else’s.</p>
+<hr />
+</section>
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="chapter-11.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="classical-conclusion.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

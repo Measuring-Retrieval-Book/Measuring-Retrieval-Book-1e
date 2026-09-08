@@ -108,9 +108,8 @@ behaviour across closed-book, oracle-context, and mixed-context conditions.
 **Source:** Park, Moon, Park & Lim, **Findings of NAACL 2025**, pp. 2883-2900 ·
 [arXiv:2504.17137](https://arxiv.org/abs/2504.17137)
 
-> **Catalogue correction:** the companion catalogue lists this as "NAACL'25" when it is *Findings
-> of NAACL 2025*. Note also the name collision documented in the catalogue, where four unrelated
-> artefacts are all called MIRAGE, so always pair the name with the arXiv identifier.
+> **A note on the name.** Four unrelated pieces of work are called MIRAGE, so always pair the name
+> with an arXiv identifier when you cite it or search for it.
 
 ### The problem it solves
 

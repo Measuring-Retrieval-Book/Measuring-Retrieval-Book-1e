@@ -243,8 +243,8 @@ Two of these carry the 2008 warning explicitly. Abandonment and reformulation ar
 signals, useful for noticing that something has broken, and they are not quality measures, so do
 not build a comparison on them.
 
-Two entries carry OPEN status, meaning the citation was asserted from memory rather than checked
-against the source during this pass. A later evidence pass resolves both.
+Two entries carry OPEN status, meaning the underlying method was not available in enough detail to
+characterize it here.
 
 ## 10.4.1 The implicit-feedback foundation
 

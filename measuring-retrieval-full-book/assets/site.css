@@ -1,0 +1,189 @@
+/* Measuring Retrieval - HTML edition.
+   A deliberately plain document-web look: serif text, classic link colours,
+   bracketed navigation, rules instead of boxes. Nothing moves. */
+
+:root {
+  --bg: #ffffff;
+  --ink: #1a1a1a;
+  --dim: #555555;
+  --rule: #999999;
+  --link: #0000ee;
+  --visited: #551a8b;
+  --panel: #f4f4f0;
+  --edge: #c8c8c0;
+}
+html.dark {
+  --bg: #15161a;
+  --ink: #d8d6d1;
+  --dim: #9a978f;
+  --rule: #4a4c53;
+  --link: #8ab4ff;
+  --visited: #c39bea;
+  --panel: #1d1f25;
+  --edge: #33353c;
+}
+
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 17px;
+  line-height: 1.62;
+  margin: 0;
+  padding: 0 1.1rem 3rem;
+}
+.page { max-width: 41rem; margin: 0 auto; }
+
+a { color: var(--link); }
+a:visited { color: var(--visited); }
+a:hover { background: var(--panel); }
+
+/* ---- navigation ---- */
+.nav {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.86rem;
+  margin: 0.9rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.navlinks a { text-decoration: none; }
+.navlinks a:hover { text-decoration: underline; }
+.off { color: var(--dim); }
+.mode {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 0;
+  padding: 0.15rem 0.6rem;
+  cursor: pointer;
+}
+.mode:hover { border-color: var(--rule); }
+
+.crumb {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  color: var(--dim);
+  margin: 1.4rem 0 0;
+}
+.crumb a { color: var(--dim); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0.9rem 0 1.6rem;
+}
+
+/* ---- headings ---- */
+h1, h2, h3, h4 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  line-height: 1.28;
+  margin: 2.2rem 0 0.8rem;
+}
+h1 { font-size: 1.72rem; border-bottom: 2px solid var(--rule); padding-bottom: 0.4rem; margin-top: 0.6rem; }
+h2 { font-size: 1.3rem; border-bottom: 1px solid var(--edge); padding-bottom: 0.25rem; }
+h3 { font-size: 1.08rem; }
+h4 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+p { margin: 0 0 1.05rem; }
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+ul, ol { margin: 0 0 1.1rem; padding-left: 1.5rem; }
+li { margin: 0.35rem 0; }
+
+blockquote {
+  margin: 1.3rem 0;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--ink);
+}
+
+code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9em;
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  padding: 0.8rem 1rem;
+  overflow-x: auto;
+}
+
+/* ---- figures ---- */
+img { max-width: 100%; height: auto; display: block; margin: 1.5rem auto; }
+
+/* ---- tables ---- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.3rem 0;
+  font-size: 0.94rem;
+  display: block;
+  overflow-x: auto;
+}
+th, td {
+  border: 1px solid var(--edge);
+  padding: 0.42rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: var(--panel); font-family: Georgia, serif; }
+
+/* ---- title page ---- */
+.title { text-align: center; padding: 2.6rem 0 0.5rem; }
+.title h1 {
+  font-size: 2.4rem;
+  letter-spacing: 0.02em;
+  border: 0;
+  margin: 0 0 0.4rem;
+  padding: 0;
+}
+.title .sub { font-style: italic; color: var(--dim); margin: 0 0 1.4rem; }
+.title .by { margin: 0; font-size: 1.05rem; }
+.title .ed {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+  color: var(--dim);
+  margin: 0.3rem 0 1.6rem;
+}
+.title .nav { justify-content: center; }
+
+.dedication {
+  text-align: center;
+  font-style: italic;
+  color: var(--dim);
+  margin: 2.2rem 0;
+}
+
+/* ---- contents ---- */
+.toc { border: 1px solid var(--edge); background: var(--panel); padding: 1.1rem 1.4rem; }
+.toc ol { padding-left: 1.6rem; margin: 0; }
+.toc > ol > li { margin: 0.5rem 0; }
+.toc ul { list-style: none; padding-left: 0.9rem; margin: 0.3rem 0 0.6rem; }
+.toc ul li { margin: 0.12rem 0; font-size: 0.9rem; }
+.toc ul li::before { content: "- "; color: var(--dim); }
+
+.foot {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.76rem;
+  color: var(--dim);
+  text-align: center;
+  margin: 1.6rem 0 0;
+}
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .title h1 { font-size: 1.8rem; }
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="767" height="426" viewBox="0 0 767 426">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="767" height="426" rx="10" fill="#EAF7F1"/>
+<rect width="767" height="8" rx="4" fill="#168C63"/>
+<text x="34" y="39" fill="#183029" class="title">The Ci Gate</text>
+<text x="733" y="37" text-anchor="end" fill="#E39A21" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#168C63" class="mono" xml:space="preserve">   THE CI GATE</text><text x="46" y="88" fill="#527368" class="mono" xml:space="preserve">   ═══════════</text><text x="46" y="108" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#527368" class="mono" xml:space="preserve">   every commit  ──▶  ref + free metrics      (fast, deterministic)</text><text x="46" y="148" fill="#183029" class="mono" xml:space="preserve">                          │</text><text x="46" y="168" fill="#527368" class="mono" xml:space="preserve">   nightly       ──▶  judge metrics           (slow, costs money, drifts)</text><text x="46" y="188" fill="#183029" class="mono" xml:space="preserve">                          │</text><text x="46" y="208" fill="#527368" class="mono" xml:space="preserve">   per release   ──▶  human anchor set        (slow, expensive, truth)</text><text x="46" y="228" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#D94C42" class="mono" xml:space="preserve">        o   &quot;We run the full eval suite on every PR.&quot;</text><text x="46" y="268" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="288" fill="#D94C42" class="mono" xml:space="preserve">       / \  &quot;Including the LLM judge?&quot;</text><text x="46" y="308" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="328" fill="#D94C42" class="mono" xml:space="preserve">        o   &quot;...that&#x27;s why the bill is like that.&quot;</text><text x="46" y="348" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="368" fill="#D94C42" class="mono" xml:space="preserve">       / \</text>
+</svg>

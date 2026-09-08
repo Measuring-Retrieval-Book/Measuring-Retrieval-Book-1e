@@ -5,6 +5,7 @@ NODE_PATH ?= /Users/madhavagaikwad/.cache/codex-runtimes/codex-primary-runtime/d
 BOOK = measuring-retrieval-full.pdf
 HTML = measuring-retrieval-full.html
 FILES = cover.md \
+	chapters/00-dedication.md \
 	chapters/00-preface.md \
 	chapters/00a-part-classical.md \
 	chapters/01-chapter-00.md \
@@ -64,13 +65,12 @@ FILES = cover.md \
 	chapters/50-closing.md \
 	appendices/appendix-a-catalogue.md \
 	appendices/appendix-b-evidence.md \
-	appendices/appendix-c-visual-synthesis.md \
-	appendices/appendix-d-figure-archive.md \
+	appendices/appendix-c-figure-archive.md \
 	back-cover.md
 
-.PHONY: all diagrams pdf html lint clean
+.PHONY: all diagrams pdf html site lint clean
 
-all: pdf html
+all: pdf html site
 
 diagrams:
 	$(PYTHON) scripts/polish_svg_text.py
@@ -84,9 +84,14 @@ html: diagrams
 	$(PYTHON) scripts/html_use_svg.py $(HTML)
 	cp $(HTML) index.html
 
+site: diagrams
+	rm -f ../docs/*.html ../docs/sitemap.xml
+	$(PYTHON) scripts/build_site.py
+
 lint:
 	$(PYTHON) scripts/style_lint.py
 
 clean:
 	find assets/diagrams -maxdepth 1 -type f -name '*.png' -delete
 	rm -f $(BOOK) $(HTML) index.html
+	rm -rf ../docs

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 7 - Comparing Two Rankings - Measuring Retrieval</title>
+<meta name="description" content="Chapters 4 through 6 all asked whether a ranking was good, and answering that question required somebody to have judged which documents were relevant. This chapter asks a different question entirely: are these two rankings the same? Answering that needs no relevance judgments at all, because you ...">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/chapter-07.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="Chapter 7 - Comparing Two Rankings - Measuring Retrieval">
+<meta property="og:description" content="Chapters 4 through 6 all asked whether a ranking was good, and answering that question required somebody to have judged which documents were relevant. This chapter asks a different question entirely: are these two rankings the same? Answering that needs no relevance judgments at all, because you ...">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/chapter-07.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 7 - Comparing Two Rankings - Measuring Retrieval">
+<meta name="twitter:description" content="Chapters 4 through 6 all asked whether a ranking was good, and answering that question required somebody to have judged which documents were relevant. This chapter asks a different question entirely: are these two rankings the same? Answering that needs no relevance judgments at all, because you ...">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "Chapter 7 - Comparing Two Rankings", "description": "Chapters 4 through 6 all asked whether a ranking was good, and answering that question required somebody to have judged which documents were relevant. This chapter asks a different question entirely: are these two rankings the same? Answering that needs no relevance judgments at all, because you ...", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/chapter-07.html", "position": 9, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; Chapter 7 - Comparing Two Rankings</p><div class="nav"><span class="navlinks">[ <a href="chapter-06.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="chapter-08.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="chapter-7---comparing-two-rankings" class="level1">
+<h1>Chapter 7 - Comparing Two Rankings</h1>
+<section id="a-different-question" class="level2">
+<h2>7.0 A different question</h2>
+<p>Chapters 4 through 6 all asked whether a ranking was good, and
+answering that question required somebody to have judged which documents
+were relevant. This chapter asks a different question entirely: are
+these two rankings the same? Answering that needs no relevance judgments
+at all, because you are comparing two lists against each other rather
+than against the truth.</p>
+<p><img src="assets/diagrams/fig-054-the-pivot.svg"
+class="diagram-figure" style="width:96.0%" alt="The Pivot" /></p>
+<p>The figure names the pivot. Asking whether a ranking is good needs
+labels, and that is what nDCG, MAP and RBP do, which makes them quality
+metrics. Asking whether a ranking is the same needs no labels, and that
+is what Kendall’s τ and RBO do, which makes them drift metrics.</p>
+<p>That property is why this chapter is the bridge into drift
+measurement. You cannot ask whether your retrieval is still good without
+labels somebody has to pay for. You can ask whether your retrieval is
+still doing what it did in January using nothing but two result lists
+you already have.</p>
+</section>
+<section id="kendalls-τ-and-spearmans-ρ" class="level2">
+<h2>7.1 Kendall’s τ and Spearman’s ρ</h2>
+<p><strong>One-line:</strong> Classical rank-correlation coefficients
+measuring how similarly two rankings order the same items.</p>
+<p><strong>Formula (Kendall’s τ):</strong></p>
+<p><img
+src="assets/diagrams/fig-055-concordant-pairs-discordant-pairs-total-pairs.svg"
+class="diagram-figure" style="width:96.0%"
+alt="τ = (concordant pairs - discordant pairs) / total pairs" /></p>
+<p><strong>Facets:</strong> Integrity/Drift | query | free | R |
+ESTABLISHED VERIFIED <em>(standard statistics)</em></p>
+<section id="the-problem-it-solves" class="level3">
+<h3>The problem it solves</h3>
+<p>Before anything specific to retrieval, there is a general statistical
+question: given two orderings of the same things, how similar are they?
+Kendall’s τ and Spearman’s ρ are the standard answers, they have been
+standard for most of a century, and they are implemented everywhere.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3>The idea</h3>
+<p>Take every possible pair of items and ask whether the two rankings
+agree about which one comes first. A pair the two rankings order the
+same way is concordant, and a pair they order differently is discordant.
+Kendall’s τ is the number of concordant pairs minus the number of
+discordant pairs, divided by the total number of pairs, so it reads as
+the extent to which the two lists agree about pairwise ordering. A τ of
+1 means identical ordering, 0 means the two rankings are independent of
+each other, and -1 means one is the exact reverse of the other.</p>
+</section>
+<section id="advantages" class="level3">
+<h3>Advantages</h3>
+<ul>
+<li><strong>Simple, well understood and universally
+implemented,</strong> so there is no argument about whether your
+implementation is right.</li>
+<li><strong>No labels required.</strong></li>
+<li><strong>Interpretable</strong> as a probability that the two
+rankings agree about any randomly chosen pair.</li>
+<li><strong>Standard for meta-evaluation,</strong> meaning the
+comparison of how two different <em>metrics</em> rank the same set of
+systems. This is how eRAG’s headline result is stated, as τ improvements
+of between 0.168 and 0.494.</li>
+</ul>
+</section>
+<section id="disadvantages" class="level3">
+<h3>Disadvantages</h3>
+<ul>
+<li><strong>Uniform weighting across ranks,</strong> which is the fatal
+problem for retrieval. A swap between positions 1 and 2 counts exactly
+as much as a swap between positions 999 and 1000.</li>
+<li><strong>Requires conjoint lists,</strong> meaning both rankings have
+to cover the same set of items. Two retrievers running over the same
+collection that return different top-10s do not satisfy this.</li>
+<li><strong>Undefined behaviour on truncated lists,</strong> which is
+the only kind of list you actually have.</li>
+</ul>
+<p><img src="assets/diagrams/fig-056-o-0-94-very-stable.svg"
+class="diagram-figure" style="width:96.0%"
+alt="o “τ = 0.94. Very stable.”" /></p>
+<p>The figure shows how the uniform weighting misleads. A team reports τ
+of 0.94 and calls the system very stable. Asked where the disagreements
+were, they answer that ranks 1 and 2 swapped. The top result changed,
+which is the single change users are most likely to notice, and the
+metric called the system 94% stable, because τ has no way of knowing
+that ranks 1 and 2 matter more than any other pair.</p>
+</section>
+<section id="recommendation" class="level3">
+<h3>Recommendation</h3>
+<p>Use τ for meta-evaluation, where you are comparing how two metrics
+rank a set of systems and uniform weighting is appropriate because every
+system in the comparison matters equally. Do not use it for retrieval
+drift, where the top of the list dominates what anyone experiences. Use
+RBO for that.</p>
+<p>There is a specialized alternative worth knowing about. Yilmaz, Aslam
+and Robertson’s AP-correlation (<strong>SIGIR 2008, pp. 587-594</strong>
+VERIFIED) is a top-weighted rank correlation built for information
+retrieval precisely because τ is not.</p>
+<hr />
+</section>
+</section>
+<section id="rbo---rank-biased-overlap" class="level2">
+<h2>7.2 RBO - Rank-Biased Overlap</h2>
+<p><strong>One-line:</strong> A top-weighted similarity measure for
+ranked lists that may be of different lengths and may not share the same
+items.</p>
+<p><strong>Formula:</strong></p>
+<p><img
+src="assets/diagrams/fig-057-rbo-s-t-1-p-d-1-p-d-1-s-1-d-t-1-d-d.svg"
+class="diagram-figure" style="width:96.0%" alt="RBO formula" /></p>
+<p><strong>Facets:</strong> Integrity/Drift | query | free | R |
+ESTABLISHED VERIFIED <strong>Source:</strong> Webber, Moffat &amp;
+Zobel, <em>A Similarity Measure for Indefinite Rankings</em>,
+<strong>ACM TOIS 28(4):20:1-20:38, 2010</strong></p>
+<section id="the-problem-it-solves-1" class="level3">
+<h3>The problem it solves</h3>
+<p>Two real retrieval result lists break every assumption Kendall’s τ
+makes. They are top-weighted, because nobody cares about position 400.
+They are usually different lengths. And they routinely contain different
+documents, so there is no shared item set to build pairs from. A metric
+for comparing retrieval results has to handle all three, and τ handles
+none of them.</p>
+</section>
+<section id="the-idea-1" class="level3">
+<h3>The idea</h3>
+<p>RBO was built for what its authors call indefinite rankings, meaning
+lists that are top-weighted, possibly of different lengths, and
+non-conjoint, which is the technical way of saying they need not contain
+the same items. That is an exact description of two retrieval result
+lists.</p>
+<p>Reading the formula, S and T are the two lists, S_{1:d} means the top
+d items of list S, and the intersection of the two top-d sets divided by
+d is the agreement at depth d. The parameter p is persistence again,
+exactly as in RBP, where a larger p puts more weight on deeper ranks. So
+mechanically you compute the overlap at each depth, divide by the depth
+to turn it into an agreement fraction, and take a geometrically weighted
+average of those agreements across all depths.</p>
+<p>The family resemblance to RBP in §5.5 is not a coincidence, since
+these are the same authors using the same persistence parameter and the
+same geometric weighting. RBO is RBP’s idea applied to comparison
+instead of to quality.</p>
+<p><img src="assets/diagrams/fig-058-agreement-at-each-depth.svg"
+class="diagram-figure" style="width:96.0%"
+alt="Agreement At Each Depth" /></p>
+<p>The figure works an example. List S from January holds doc-A, doc-B,
+doc-C, doc-D and doc-E in that order, and list T from June holds doc-A,
+doc-C, doc-B, doc-E and doc-F. At depth 1 both lists contain doc-A, so
+agreement is 1/1 = 1.00. At depth 2 the lists hold {A, B} and {A, C},
+which share only doc-A, so agreement is 1/2 = 0.50. At depth 3 both
+contain A, B and C in some order, so agreement returns to 3/3 = 1.00. At
+depth 4 they share three of four items, giving 0.75, and at depth 5 they
+share four of five, giving 0.80. RBO is the geometrically weighted
+average of that sequence, and with p set to 0.9 the shallow depths
+dominate the result.</p>
+<p>The figure also explains why this beats the obvious alternative.
+Jaccard similarity computes the size of the intersection divided by the
+size of the union at one fixed depth, which makes it blind to order and
+dependent on a cutoff you have to choose. RBO looks at every depth,
+weights them, and is sensitive to order. Consider two indexes returning
+the same ten documents in exactly reversed order: Jaccard reports 1.00
+and declares no change, while RBO reports roughly 0.5 and correctly
+raises the alarm.</p>
+</section>
+<section id="advantages-1" class="level3">
+<h3>Advantages</h3>
+<ul>
+<li><strong>Top-weighted,</strong> so it respects the fact that rank 1
+matters more than rank 50.</li>
+<li><strong>Handles non-conjoint lists,</strong> so the two lists need
+not contain the same documents, which is essential when comparing two
+retrievers or two versions of an index.</li>
+<li><strong>Handles different lengths,</strong> including the case of
+comparing a short ideal list against a long actual one.</li>
+<li><strong>No labels required,</strong> since it is pure
+comparison.</li>
+<li><strong>Has a residual,</strong> in the same way RBP does, so it can
+report bounds when the lists are truncated.</li>
+<li><strong>Tunable persistence through p,</strong> which lets you match
+the depth your consumer actually reads.</li>
+<li><strong>Widely adopted outside information retrieval,</strong> in
+search-engine comparison, machine learning and network analysis, so
+implementations are easy to find.</li>
+</ul>
+</section>
+<section id="disadvantages-1" class="level3">
+<h3>Disadvantages</h3>
+<ul>
+<li><strong>p must be chosen and reported,</strong> which is the same
+discipline RBP requires.</li>
+<li><strong>Comparative only.</strong> RBO tells you that two rankings
+differ and never which of them is better, so a consistently terrible
+retriever scores a perfect 1.0 against itself.</li>
+<li><strong>The infinite sum has to be truncated</strong> in practice,
+which brings an extrapolation assumption with it.</li>
+<li><strong>Less familiar than Jaccard,</strong> so you will spend time
+explaining it.</li>
+</ul>
+</section>
+<section id="domain-examples" class="level3">
+<h3>Domain examples</h3>
+<p><strong>Index drift monitoring.</strong> The headline use and the
+recommendation Supplement A made. Freeze 500 queries along with their
+top-k results, recompute monthly, and report RBO against the baseline. A
+falling RBO with no deployment to explain it means your corpus moved
+underneath you.</p>
+<p><strong>Embedder migration.</strong> CAUTION Read the correction in
+the Supplement A Addendum before you act on this one. Caspari et
+al. found that at the small values of k that RAG actually uses,
+different embedders retrieve almost completely distinct chunks on larger
+datasets. So a low RBO between two different models is the normal state
+rather than an alarm. The comparison that carries information is the
+same model over time, where RBO should sit near 1.0 unless something
+genuinely changed.</p>
+<p><strong>A/B comparison of rerankers.</strong> RBO between the list
+before reranking and the list after it quantifies how much work the
+reranker is actually doing, and a value near 1.0 means you deployed
+something that does nothing.</p>
+</section>
+<section id="recommendation-1" class="level3">
+<h3>Recommendation</h3>
+<p>RBO is the single most useful metric in this chapter for RAG
+practitioners, and it is almost never used in the field.</p>
+<p><img src="assets/diagrams/fig-059-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>The protocol in the figure is five steps. Freeze 500 representative
+queries. Record the top-k for each of them today, with the embedder
+version and the value of k stamped on the record. Every month, recompute
+and report RBO against that baseline, with p matched to your k. Alert on
+a sustained decline rather than on a single dip. Re-baseline
+deliberately after any intentional change, and keep the old baseline
+rather than discarding it.</p>
+<p>Setting this up costs about an afternoon and running it costs minutes
+per month, which makes it the cheapest real drift metric available to
+you.</p>
+</section>
+<section id="failure-mode" class="level3">
+<h3>Failure mode</h3>
+<p><img src="assets/diagrams/fig-060-the-self-satisfied-baseline.svg"
+class="diagram-figure" style="width:96.0%"
+alt="The Self-Satisfied Baseline" /></p>
+<p>A team reports RBO against baseline of 1.00 in January, 1.00 in March
+and 1.00 in June, and concludes the system is rock solid with no drift
+at all. Asked whether the corpus is still being updated, they discover
+the ingestion job failed in February.</p>
+<p>Perfect stability can mean the system is healthy or it can mean
+nothing is happening, and RBO cannot tell those apart. Pair it with a
+check that the corpus is still receiving fresh content.</p>
+<hr />
+</section>
+</section>
+<section id="chapter-7-summary" class="level2">
+<h2>7.3 Chapter 7 summary</h2>
+<p><img src="assets/diagrams/fig-061-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>Kendall’s τ and Spearman’s ρ use uniform weighting and require
+conjoint lists, which makes them right for meta-evaluation, meaning the
+question of whether two metrics rank systems the same way, and wrong for
+retrieval drift. AP-correlation from Yilmaz, Aslam and Robertson is the
+top-weighted alternative to τ, built specifically for information
+retrieval. RBO is top-weighted, works on non-conjoint lists of different
+lengths, carries a residual and needs no labels, which makes it the
+right tool for drift, embedder migration and measuring reranker impact,
+and it is the metric this book recommends most strongly relative to how
+rarely anyone uses it.</p>
+<p>There is a connection worth carrying forward. RBP from §5.5 and RBO
+from §7.2 are the same underlying idea, namely geometric persistence
+weighting with an explicit residual, applied once to quality and once to
+comparison, by the same authors. If you adopt one of them, adopt both,
+because the mental model transfers across for free.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="chapter-06.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="chapter-08.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

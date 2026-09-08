@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preface - Measuring Retrieval</title>
+<meta name="description" content="When you build a search system, or a system that feeds search results to a language model, you eventually have to answer a simple question: is it any good? The usual way to answer it is to compute a number, put the number on a dashboard, and watch it. This book is about what those numbers actuall...">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/preface.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="Preface - Measuring Retrieval">
+<meta property="og:description" content="When you build a search system, or a system that feeds search results to a language model, you eventually have to answer a simple question: is it any good? The usual way to answer it is to compute a number, put the number on a dashboard, and watch it. This book is about what those numbers actuall...">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/preface.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Preface - Measuring Retrieval">
+<meta name="twitter:description" content="When you build a search system, or a system that feeds search results to a language model, you eventually have to answer a simple question: is it any good? The usual way to answer it is to compute a number, put the number on a dashboard, and watch it. This book is about what those numbers actuall...">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "Preface", "description": "When you build a search system, or a system that feeds search results to a language model, you eventually have to answer a simple question: is it any good? The usual way to answer it is to compute a number, put the number on a dashboard, and watch it. This book is about what those numbers actuall...", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/preface.html", "position": 1, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; Preface</p><div class="nav"><span class="navlinks">[ <span class="off">&lt;&lt; Previous</span> | <a href="index.html">Contents</a> | <a href="chapter-00.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section class="dedication">
+  <p>For my mother.</p>
+</section>
+<section id="preface" class="level1 unnumbered">
+<h1 class="unnumbered">Preface</h1>
+<p>When you build a search system, or a system that feeds search results
+to a language model, you eventually have to answer a simple question: is
+it any good? The usual way to answer it is to compute a number, put the
+number on a dashboard, and watch it. This book is about what those
+numbers actually mean, because a number that is computed correctly can
+still be read wrongly, and a system that is measured wrongly tends to
+get built wrongly.</p>
+<p>Every metric in this book carries a set of assumptions with it. It
+assumes a particular kind of reader looking at the results, a particular
+thing being counted, a particular way of deciding what counts as a
+correct answer, and a particular point in the system where the
+measurement is taken. The number is useful when those assumptions match
+the system you are actually reviewing, and it quietly misleads you when
+they do not. Because choosing what to measure ends up shaping what gets
+built, evaluation turns out to be a design activity rather than a
+reporting one.</p>
+<p>This edition brings the classical information retrieval material and
+the newer RAG material together into a single book, keeping the worked
+calculations, the implementation guidance and the failure sketches
+throughout. One working rule decides whether a metric belongs here at
+all, which is that it has to answer an operational question no other
+metric already answers.</p>
+<section id="about-this-edition" class="level2">
+<h2>About this edition</h2>
+<p>This is the first edition, published in September 2026.</p>
+<p>Parts of this manuscript were drafted and edited with the help of AI
+language models. Every metric definition, statistic and citation in it
+was then checked by hand against its primary source, and the works those
+checks were made against are listed in Appendix B.</p>
+</section>
+<section id="reading-paths" class="level2">
+<h2>Reading paths</h2>
+<p>You do not have to read this book in order, although Chapters 0
+through 3 are worth reading first whatever your goal is, since
+everything later depends on the vocabulary they set up.</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Starting point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learn retrieval evaluation in sequence</td>
+<td>Chapter 0</td>
+</tr>
+<tr>
+<td>Diagnose a RAG pipeline</td>
+<td>Part II, then Part IV</td>
+</tr>
+<tr>
+<td>Choose a retriever or embedder</td>
+<td>Part III</td>
+</tr>
+<tr>
+<td>Choose a generator</td>
+<td>Chapters C.7 and A.3</td>
+</tr>
+<tr>
+<td>Build an evaluation set</td>
+<td>Chapter 14</td>
+</tr>
+<tr>
+<td>Select a production dashboard</td>
+<td>Chapter 15</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="diagram-system" class="level2">
+<h2>Diagram system</h2>
+<p>Every metric in this book gets a figure, and the figures are meant to
+be part of the argument rather than decoration. Each one is a sketch you
+could redraw on a whiteboard in about thirty seconds, which matters
+because a metric you can sketch quickly is a metric you can defend in a
+design review. The color coding is consistent throughout: cyan marks
+flow through a system, gold marks a decision, coral marks a failure,
+emerald marks the conditions under which something works, and indigo
+marks the structure of a system.</p>
+<p>The prose does not depend on the figures. Wherever a figure carries a
+calculation or a decision rule, the same content is worked through in
+the text as well, so you can follow the argument without stopping to
+study the picture.</p>
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <span class="off">&lt;&lt; Previous</span> | <a href="index.html">Contents</a> | <a href="chapter-00.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

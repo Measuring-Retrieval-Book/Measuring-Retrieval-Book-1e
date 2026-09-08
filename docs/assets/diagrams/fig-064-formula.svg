@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="869" height="126" viewBox="0 0 869 126">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="869" height="126" rx="10" fill="#EAF7F1"/>
+<rect width="869" height="8" rx="4" fill="#168C63"/>
+<text x="34" y="39" fill="#183029" class="title">Formula</text>
+<text x="835" y="37" text-anchor="end" fill="#E39A21" class="label">FORMULA</text>
+<text x="46" y="68" fill="#183029" class="mono" xml:space="preserve">   S-recall@k = |{ subtopics covered by the top k documents }| / |{ all subtopics }|</text>
+</svg>

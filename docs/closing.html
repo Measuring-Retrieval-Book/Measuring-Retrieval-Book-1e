@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Closing: What This Book Establishes - Measuring Retrieval</title>
+<meta name="description" content="Across this book and roughly 130 verified citations, one claim runs underneath everything else.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/closing.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="Closing: What This Book Establishes - Measuring Retrieval">
+<meta property="og:description" content="Across this book and roughly 130 verified citations, one claim runs underneath everything else.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/closing.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Closing: What This Book Establishes - Measuring Retrieval">
+<meta name="twitter:description" content="Across this book and roughly 130 verified citations, one claim runs underneath everything else.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "Closing: What This Book Establishes", "description": "Across this book and roughly 130 verified citations, one claim runs underneath everything else.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/closing.html", "position": 46, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; Closing: What This Book Establishes</p><div class="nav"><span class="navlinks">[ <a href="chapter-15.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="appendix-a-catalogue.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="closing-what-this-book-establishes" class="level1">
+<h1>Closing: What This Book Establishes</h1>
+<p>Across this book and roughly 130 verified citations, one claim runs
+underneath everything else.</p>
+<blockquote>
+<p><strong>Evaluation is not a reporting activity. It is a design
+activity.</strong></p>
+</blockquote>
+<p>Clarke et al. put it most sharply in 2008, observing that evaluation
+measures act as objective functions to be optimized. Whatever you
+measure, your system will be shaped toward, and whatever you fail to
+measure, it will be free to sacrifice in order to move the numbers you
+are watching.</p>
+<p>Redundancy reached 22% in a production medical RAG pipeline in 2026
+because nobody was measuring it. The reranker was doing its job
+correctly, optimizing the objectives it had been given, and duplication
+was not among them.</p>
+<p><img
+src="assets/diagrams/fig-172-o-so-the-metrics-are-the-system-design.svg"
+class="diagram-figure" style="width:96.0%"
+alt="o “So the metrics ARE the system design.”" /></p>
+<p>The figure states the conclusion as plainly as it can be stated. The
+metrics are the part of the design you can still change after you have
+shipped, which is why choosing them deserves the same care as choosing
+an architecture.</p>
+<section id="known-limits" class="level2">
+<h2>Known limits</h2>
+<p>This book has gaps, and naming them is more useful than concealing
+them.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The mutation-kill-rate gap</strong></td>
+<td>Named and unresolved</td>
+</tr>
+<tr>
+<td><strong>Judge drift</strong></td>
+<td>Operational protocol available; validated metric pending</td>
+</tr>
+<tr>
+<td><strong>Online RAG evaluation</strong></td>
+<td>Source interleaving is available; generated-answer methods remain
+incomplete</td>
+</tr>
+<tr>
+<td><strong>Multi-turn RAG</strong></td>
+<td>Session is the right unit; almost everything reports per-turn</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="chapter-15.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="appendix-a-catalogue.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

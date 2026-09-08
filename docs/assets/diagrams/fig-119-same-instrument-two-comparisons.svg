@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="386" viewBox="0 0 720 386">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="386" rx="10" fill="#EAF7F1"/>
+<rect width="720" height="8" rx="4" fill="#168C63"/>
+<text x="34" y="39" fill="#183029" class="title">Same Instrument, Two Comparisons</text>
+<text x="686" y="37" text-anchor="end" fill="#E39A21" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#168C63" class="mono" xml:space="preserve">   SAME INSTRUMENT, TWO COMPARISONS</text><text x="46" y="88" fill="#527368" class="mono" xml:space="preserve">   ════════════════════════════════</text><text x="46" y="108" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#168C63" class="mono" xml:space="preserve">   ACROSS MODELS              ACROSS TIME</text><text x="46" y="148" fill="#183029" class="mono" xml:space="preserve">   (did the swap change       (did the corpus drift</text><text x="46" y="168" fill="#183029" class="mono" xml:space="preserve">    what surfaces?)            under a fixed embedder?)</text><text x="46" y="188" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#527368" class="mono" xml:space="preserve">   embedder A ──┐             corpus @ Jan ──┐</text><text x="46" y="228" fill="#527368" class="mono" xml:space="preserve">                ├── CKA                       ├── Jaccard</text><text x="46" y="248" fill="#527368" class="mono" xml:space="preserve">   embedder B ──┘             corpus @ Jun ──┘   RankSimilarity</text><text x="46" y="268" fill="#183029" class="mono" xml:space="preserve"> </text><text x="46" y="288" fill="#183029" class="mono" xml:space="preserve">   The paper&#x27;s framing is the first.</text><text x="46" y="308" fill="#183029" class="mono" xml:space="preserve">   The second is the drift application, and it is</text><text x="46" y="328" fill="#183029" class="mono" xml:space="preserve">   a natural extension from the published result.</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="406" viewBox="0 0 720 406">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="406" rx="10" fill="#FFF6DE"/>
+<rect width="720" height="8" rx="4" fill="#D98B00"/>
+<text x="34" y="39" fill="#2A2518" class="title">Wasted Retrieval Noise Distraction</text>
+<text x="686" y="37" text-anchor="end" fill="#168C78" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#D98B00" class="mono" xml:space="preserve">   WASTED RETRIEVAL              NOISE DISTRACTION</text><text x="46" y="88" fill="#736747" class="mono" xml:space="preserve">   ════════════════              ═════════════════</text><text x="46" y="108" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#2A2518" class="mono" xml:space="preserve">   Retriever: &quot;#1 is best&quot;       Retriever: &quot;#4 is weak&quot;</text><text x="46" y="148" fill="#2A2518" class="mono" xml:space="preserve">   Generator: ignores #1          Generator: builds answer on #4</text><text x="46" y="168" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="188" fill="#736747" class="mono" xml:space="preserve">   ┌────────┐                    ┌────────┐</text><text x="46" y="208" fill="#2A2518" class="mono" xml:space="preserve">   │#1 ★★★★★│ &lt;- never used       │#1 ★★★★★│</text><text x="46" y="228" fill="#2A2518" class="mono" xml:space="preserve">   │#2 ★★★★ │ &lt;- used             │#2 ★★★★ │</text><text x="46" y="248" fill="#2A2518" class="mono" xml:space="preserve">   │#3 ★★★  │                    │#3 ★★★  │</text><text x="46" y="268" fill="#2A2518" class="mono" xml:space="preserve">   │#4 ★    │                    │#4 ★     │ &lt;- primary source</text><text x="46" y="288" fill="#736747" class="mono" xml:space="preserve">   └────────┘                    └────────┘</text><text x="46" y="308" fill="#2A2518" class="mono" xml:space="preserve"> </text><text x="46" y="328" fill="#2A2518" class="mono" xml:space="preserve">   You paid to retrieve gold      Your answer rests on</text><text x="46" y="348" fill="#2A2518" class="mono" xml:space="preserve">   and threw it away.             the weakest evidence.</text>
+</svg>

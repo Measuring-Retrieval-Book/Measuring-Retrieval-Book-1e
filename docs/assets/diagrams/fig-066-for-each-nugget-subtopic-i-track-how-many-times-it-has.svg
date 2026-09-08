@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="346" viewBox="0 0 720 346">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="346" rx="10" fill="#E8F7FA"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">For each nugget/subtopic i, track how many times it has</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">FORMULA</text>
+<text x="46" y="68" fill="#162438" class="mono" xml:space="preserve">   For each nugget/subtopic i, track how many times it has</text><text x="46" y="88" fill="#162438" class="mono" xml:space="preserve">   already been seen among the documents above rank k.</text><text x="46" y="108" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#162438" class="mono" xml:space="preserve">   gain(d_k) = Σ_i  rel(d_k, i) · (1 - α)^{count_i(k-1)}</text><text x="46" y="148" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="168" fill="#162438" class="mono" xml:space="preserve">   α-DCG@k = Σ_{k}  gain(d_k) / log2(k + 1)</text><text x="46" y="188" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="208" fill="#162438" class="mono" xml:space="preserve">   α-nDCG@k = α-DCG@k / ideal α-DCG@k</text><text x="46" y="228" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#162438" class="mono" xml:space="preserve">   α ∈ [0,1]  is the novelty penalty.</text><text x="46" y="268" fill="#162438" class="mono" xml:space="preserve">   α = 0  -&gt; reduces to ordinary nDCG (no novelty reward)</text><text x="46" y="288" fill="#162438" class="mono" xml:space="preserve">   α = 0.5 -&gt; each repeat is worth half the previous</text>
+</svg>

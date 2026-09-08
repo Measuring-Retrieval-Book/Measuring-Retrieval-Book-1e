@@ -24,16 +24,9 @@ This book has gaps, and naming them is more useful than concealing them.
 
 | Limit | Detail |
 |---|---|
-| **One OPEN remains** | Perçin et al. query-level robustness - method unavailable |
-| **Two of my own errors** | AIS venue; CKA interpretation. Both from describing unread work |
 | **The mutation-kill-rate gap** | Named and unresolved |
 | **Judge drift** | Operational protocol available; validated metric pending |
 | **Online RAG evaluation** | Source interleaving is available; generated-answer methods remain incomplete |
 | **Multi-turn RAG** | Session is the right unit; almost everything reports per-turn |
-
-The second row is worth dwelling on, because both errors came from the same cause. The AIS venue
-was wrong and the CKA interpretation was inverted, and in each case the mistake came from
-describing a paper I had read about rather than read. Appendix B records both corrections in full,
-and the verification tier from §2.4 exists because of them.
 
 ---

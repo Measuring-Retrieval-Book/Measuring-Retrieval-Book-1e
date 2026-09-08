@@ -14,13 +14,18 @@ actually reviewing, and it quietly misleads you when they do not. Because choosi
 measure ends up shaping what gets built, evaluation turns out to be a design activity rather
 than a reporting one.
 
-This edition brings the complete classical information retrieval material and the newer RAG
-material together into a single manuscript. It keeps the worked calculations, the
-implementation guidance, the evidence ledgers, and the failure sketches from the sources it
-was built from, and where a later correction revised an earlier section, the correction
-appears beside the section it revises. Throughout, one working rule decides whether a metric
-belongs in the book at all, which is that it has to answer an operational question no other
-metric already answers.
+This edition brings the classical information retrieval material and the newer RAG material
+together into a single book, keeping the worked calculations, the implementation guidance and the
+failure sketches throughout. One working rule decides whether a metric belongs here at all, which
+is that it has to answer an operational question no other metric already answers.
+
+## About this edition
+
+This is the first edition, published in September 2026.
+
+Parts of this manuscript were drafted and edited with the help of AI language models. Every metric
+definition, statistic and citation in it was then checked by hand against its primary source, and
+the works those checks were made against are listed in Appendix B.
 
 ## Reading paths
 
@@ -49,14 +54,6 @@ The prose does not depend on the figures. Wherever a figure carries a calculatio
 decision rule, the same content is worked through in the text as well, so you can follow the
 argument without stopping to study the picture.
 
-## Source policy
-
-The manuscript is built from nine Markdown sources and one PowerPoint deck, and it keeps two
-records of where its material came from. The source ledger lists every source file, its
-size, which chapters it fed, and how many figures came out of it, while the diagram ledger
-maps each figure back to the exact line of the source it was generated from. Appendix B goes
-further and records the verification status of roughly 130 citations, including two places
-where earlier versions of this material got something wrong and the correction that followed.
 
 ```{=latex}
 \mainmatter

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/sitemap.xml

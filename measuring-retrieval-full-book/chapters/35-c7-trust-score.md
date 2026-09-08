@@ -64,12 +64,8 @@ more useful and nobody publishes it, so you will have to build it yourself.
 
 ---
 
-## Component structure integrated from the final evidence pass
+## C.7.5 The components
 
-## Trust-Score - components, now specified VERIFIED
-
-**Source:** Song, Sim, Bhardwaj, Chieu, Majumder & Poria, ICLR 2025 **Oral** ·
-[arXiv:2409.11242](https://arxiv.org/abs/2409.11242)
 
 Trust-Score is a composite built over three dimensions, being response truthfulness, factual
 accuracy and attribution groundedness.
@@ -89,8 +85,8 @@ ALCE.
 
 The design property that matters is that by penalizing both incorrect refusals and incorrect
 non-refusals, F1_GR gives a balanced view of the model's over-responsiveness and its
-under-responsiveness at the same time. That is exactly the abstention-quality measurement §C.7
-described as missing, and it was inside the composite all along.
+under-responsiveness at the same time, which is the abstention-quality measurement that almost
+nothing else provides.
 
 The lineage is worth noting too. Trust-Score's attribution half is ALCE's citation precision and
 recall, so §C.5 and §C.7 describe two halves of a single measurement tradition rather than two

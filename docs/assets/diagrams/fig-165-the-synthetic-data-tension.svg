@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="346" viewBox="0 0 720 346">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="346" rx="10" fill="#202541"/>
+<rect width="720" height="8" rx="4" fill="#5264C8"/>
+<text x="34" y="39" fill="#FFFFFF" class="title">The Synthetic Data Tension</text>
+<text x="686" y="37" text-anchor="end" fill="#E86850" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#E86850" class="mono" xml:space="preserve">   THE SYNTHETIC DATA TENSION</text><text x="46" y="88" fill="#5264C8" class="mono" xml:space="preserve">   ══════════════════════════</text><text x="46" y="108" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="128" fill="#5264C8" class="mono" xml:space="preserve">   DIVERSITY ◀───────────────────▶ PRIVACY</text><text x="46" y="148" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="168" fill="#EDF5F7" class="mono" xml:space="preserve">   more varied questions           less risk of</text><text x="46" y="188" fill="#EDF5F7" class="mono" xml:space="preserve">   = better coverage               reproducing real</text><text x="46" y="208" fill="#EDF5F7" class="mono" xml:space="preserve">                                   sensitive content</text><text x="46" y="228" fill="#EDF5F7" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#5264C8" class="mono" xml:space="preserve">   Generate from your real corpus  ── high diversity,</text><text x="46" y="268" fill="#EDF5F7" class="mono" xml:space="preserve">                                      privacy risk</text><text x="46" y="288" fill="#5264C8" class="mono" xml:space="preserve">   Generate from templates         ── safe, low diversity</text>
+</svg>

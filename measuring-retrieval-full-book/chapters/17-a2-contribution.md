@@ -371,8 +371,9 @@ correct cluster, and the two teams compared two different metrics that happen to
 output, used to train middleware that aligns retriever and LLM preferences.
 
 **Facets:** Alignment | passage | free | E2E | EMERGING VERIFIED
-**Source:** Jiang et al., ACL'25 · [arXiv:2505.18710](https://arxiv.org/abs/2505.18710)
-OPEN Method read at abstract and framing level; full training detail not retrieved.
+**Source:** Jiang, Zhao, Li, Wang & Qin, *GainRAG: Preference Alignment in Retrieval-Augmented
+Generation through Gain Signal Synthesis*, ACL 2025 ·
+[arXiv:2505.18710](https://arxiv.org/abs/2505.18710)
 
 ### The problem it solves
 
@@ -439,9 +440,15 @@ relevant passage in those corpora is frequently the least usable one.
 
 ### Recommendation
 
-Treat gain as a training signal. Its diagnostic value to you is conceptual, which is to
-internalize the preference gap and stop assuming your relevance ordering is what the generator
-wants.
+Treat gain as a training signal. The method estimates gain signals and then trains a middleware
+selector that predicts which passages will provide a positive generation gain, which is how it
+gets past naive relevance and aligns the retriever's output with what actually benefits the
+generator. A pseudo-passage strategy mitigates degradation. It was trained on a small subset of
+HotpotQA and WebQuestions and generalizes across six datasets, with StandardRAG, Self-RAG and
+BGE-Reranker-base as baselines, all evaluated at top-1.
+
+Its diagnostic value to you is conceptual, which is to internalize the preference gap and stop
+assuming your relevance ordering describes what the generator needs.
 
 ---
 
@@ -565,25 +572,3 @@ measure genuinely different things, and their disagreement carries information i
 contribution family's agreement does not.
 
 ---
-
-## Method clarification integrated from the final evidence pass
-
-## GainRAG - method, now specified VERIFIED
-
-**Source:** Jiang, Zhao, Li, Wang & Qin, *GainRAG: Preference Alignment in Retrieval-Augmented
-Generation through Gain Signal Synthesis*, **ACL 2025 Long Papers**, Vienna ·
-[arXiv:2505.18710](https://arxiv.org/abs/2505.18710)
-
-The full title resolves the ambiguity that left this OPEN in §A.2.4, since this is gain signal
-synthesis rather than gain measurement.
-
-The method estimates gain signals and then trains a middleware selector that predicts which
-passages will provide a positive generation gain, which is how it gets past naive relevance and
-aligns the retriever's output with what actually benefits the generator. A pseudo-passage
-strategy mitigates degradation. It was trained on a small subset of HotpotQA and WebQuestions and
-generalizes across six datasets, with StandardRAG, Self-RAG and BGE-Reranker-base as baselines,
-all evaluated at top-1.
-
-This confirms the warning in §A.2.4. Gain is a training signal for a selector, so reporting it as
-a metric on a system that was trained with it is circular. Use a held-out generator, or better,
-report something else entirely.

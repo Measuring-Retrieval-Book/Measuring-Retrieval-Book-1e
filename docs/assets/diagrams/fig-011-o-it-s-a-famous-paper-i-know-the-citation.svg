@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="326" viewBox="0 0 720 326">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="326" rx="10" fill="#E8F7FA"/>
+<rect width="720" height="8" rx="4" fill="#00A6C7"/>
+<text x="34" y="39" fill="#162438" class="title">o &quot;It&#x27;s a famous paper, I know the citation.&quot;</text>
+<text x="686" y="37" text-anchor="end" fill="#F0A62E" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;It&#x27;s a famous paper, I know the citation.&quot;</text><text x="46" y="88" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="108" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="128" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="148" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;Famous is not the same as checked.&quot;</text><text x="46" y="168" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="188" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="208" fill="#162438" class="mono" xml:space="preserve"> </text><text x="46" y="228" fill="#162438" class="mono" xml:space="preserve">   [ Running total across four verification passes of the</text><text x="46" y="248" fill="#162438" class="mono" xml:space="preserve">     companion catalogue: 34 identifiers checked, 1 wrong.</text><text x="46" y="268" fill="#162438" class="mono" xml:space="preserve">     The wrong one came from the person most confident. ]</text>
+</svg>

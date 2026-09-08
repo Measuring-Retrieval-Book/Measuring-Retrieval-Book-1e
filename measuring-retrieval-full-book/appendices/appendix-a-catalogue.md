@@ -4,10 +4,9 @@
 
 # Appendix A: Consolidated Metric Catalogue
 
-**Changes from v1:** metrics separated from signals/parameters; `Efficiency/Cost` added as a fourth
-dimension (most former `NA` rows land here); three facet columns added (Unit, Supervision, Stage);
-confidence tier added; classical IR coverage extended (MRR, RBO, bpref, diversity, fairness, online);
-RAG anchors added (RAGAS, ALCE, FActScore, AIS); naming collisions flagged.
+Every metric in this book in one table, tagged by the dimension it answers and by the three facets
+from Chapter 2: the unit it counts, the supervision it needs, and the stage of the pipeline it
+looks at. Use it to find a metric; use the chapter for what the metric actually means.
 
 ---
 
@@ -20,9 +19,9 @@ RAG anchors added (RAGAS, ALCE, FActScore, AIS); naming collisions flagged.
 | **Integrity/Drift** | Is the substrate trustworthy *over time* (staleness, drift, test-set adequacy, corpus health)? |
 | **Efficiency/Cost** | What does the answer cost in latency, tokens, compute, and index maintenance? |
 
-`NA` is now reserved for genuine non-metrics only. Anything measuring latency, throughput, index
-size, or token spend moved to Efficiency/Cost - these trade off directly against Correctness
-(rerank depth, k, chunk size) and belong in the same table.
+Anything measuring latency, throughput, index size or token spend belongs under Efficiency/Cost,
+because those quantities trade directly against correctness through rerank depth, k and chunk
+size, and a trade-off cannot be reasoned about with one side missing from the table.
 
 ## Facets
 
@@ -37,8 +36,8 @@ size, or token spend moved to Efficiency/Cost - these trade off directly against
 
 ## 0. Signals & Parameters (NOT metrics - moved out of the metric tables)
 
-These are things you tune or compute with rather than things you report, and applying a quality
-dimension to them was the main structural error in v1.
+These are things you tune or compute with rather than things you report, which is why none of them
+carries a quality dimension. Chapter 3 sets out the distinction.
 
 | Item | Kind | Source |
 |---|---|---|
@@ -125,10 +124,10 @@ Fairness in RAG is barely instrumented: across 63 surveyed RAG-evaluation papers
 evaluated whether retrieved documents fairly represent protected groups. If fairness matters for
 your use case, you are close to the frontier and should expect to build the instrumentation.
 
-**Two v1 misclassifications corrected here.** PEER measures whether documents in different languages
+**Two metrics that are commonly misfiled.** PEER measures whether documents in different languages
 receive equal expected rank - a multilingual *fairness* criterion, not a relevance criterion. DUO
 measures *indexical bias*: whether a ranked list over-represents one side of a contested question.
-Both were filed under Correctness in v1, which would lead a reader to optimize them as quality
+Both are routinely filed under correctness, which leads people to optimize them as quality
 metrics. They are equity constraints, and their relationship to nDCG can be inverse.
 
 Redundancy control matters more in RAG than it did in classical retrieval, because a duplicated
@@ -173,8 +172,7 @@ These evaluation controls make the metrics above meaningful.
 
 ## 2. RAG-Era - Foundational Anchors *(new section)*
 
-Version 1 cited a great many derivative metrics without citing the work they descend from, so this
-section collects the ancestors.
+The papers the rest of the field descends from.
 
 | Metric / Framework | Dim | Unit | Sup | Stage | Tier | Citation |
 |---|---|---|---|---|---|---|
@@ -236,7 +234,7 @@ All arXiv IDs below re-verified against arXiv records.
 | **Exclusive Hit Rate (EHR@k)** (RAG-X) - % of queries where ground truth appears in only one retrieved context | Alignment | query | ref | R | EMERGING | same paper |
 | **No-Hit Rate / Context-k Hit Rate** (RAG-X) | Correctness | query | ref | R | EMERGING | same paper |
 
-### Three corrections to v1 entry semantics
+### Three entries that are commonly misread
 
 1. **SURE-RAG is not a hallucination detector.** The paper's own boundary-mapping experiment
    contrasts it with GPT-4o on HaluBench unsafe detection and finds the ranking *reverses*
@@ -278,7 +276,7 @@ Pending integration; each entry includes its purpose.
 | Lost-in-the-Middle positional sensitivity | Alignment | UDCG's "LLM positional discount" operationalizes this; cite the phenomenon | Liu et al., TACL'24 · arXiv:2307.03172 |
 | The Power of Noise | Alignment | Some irrelevant context *helps* - essential for interpreting Noise Sensitivity / Noise Vulnerability | Cuconasu, **Trappolini**, Siciliano, Filice, Campagnano, Maarek, Tonellotto & Silvestri, SIGIR'24 pp. 719-729 · arXiv:2401.14887 VERIFIED |
 | **Sufficient Context** | Correctness | Direct parallel to SURE-RAG. Key findings: **models abstain *less* with RAG and hallucinate more than they abstain**, and 55.4% of Musique instances have insufficient context | Joren, Zhang, Ferng, Juan, Taly & Rashtchian, ICLR'25 · [arXiv:2411.06037](https://arxiv.org/abs/2411.06037) VERIFIED |
-| BEIR - zero-shot retrieval transfer | Integrity/Drift | No domain-transfer measure anywhere in v1 | Thakur et al., NeurIPS D&B'21 · arXiv:2104.08663 VERIFIED |
+| BEIR - zero-shot retrieval transfer | Integrity/Drift | The domain-transfer measure this catalogue otherwise lacks | Thakur et al., NeurIPS D&B'21 · arXiv:2104.08663 VERIFIED |
 | MTEB - Massive Text Embedding Benchmark | Integrity/Drift | Embedding-model selection & version drift | Muennighoff et al., EACL · arXiv:2210.07316 VERIFIED |
 | FreshStack | Integrity/Drift | Realistic technical-document retrieval, freshness-aware | arXiv:2504.13128 |
 | RAGBench | Correctness | Explainable RAG benchmark w/ TRACe framework | arXiv:2407.11005 |
@@ -297,8 +295,8 @@ Pending integration; each entry includes its purpose.
 | BERGEN | NA (library) | Benchmarking library - reproducibility infrastructure | Rau et al. · arXiv:2407.01102 |
 | RAG-QA Arena | Correctness | Domain robustness, long-form | Han et al. · arXiv:2407.13998 |
 | CORAL | Correctness | Multi-turn conversational RAG | Cheng et al. · arXiv:2410.23090 |
-| **Agentic RAG**: retrieval calls per answer, redundant-query rate, search efficiency | Efficiency/Cost | v1 has no vocabulary for iterative/agentic retrieval | emerging |
-| Trustworthy-RAG survey (safety, privacy, robustness) | Integrity/Drift | Safety axis absent entirely from v1 | arXiv:2502.06872 |
+| **Agentic RAG**: retrieval calls per answer, redundant-query rate, search efficiency | Efficiency/Cost | Iterative and agentic retrieval have almost no measurement vocabulary | emerging |
+| Trustworthy-RAG survey (safety, privacy, robustness) | Integrity/Drift | Covers the safety axis, which this catalogue does not | arXiv:2502.06872 |
 
 ### Efficiency/Cost - RAG-specific *(new)*
 
@@ -340,10 +338,10 @@ Apply it in two directions. Across models, it asks whether swapping the embedder
 surfaces, and across time it asks whether the corpus drifted while the embedder stayed fixed. The
 instrument is the same in both cases and only the comparison axis differs.
 
-### Status of the v1 "open gap" claim - **upheld, with qualification**
+### The state of drift measurement
 
-No formal PSI/KL/ADWIN adaptation for retrieval sets has been published. Two academic anchors
-partially cover the space:
+No formal adaptation of the standard distribution-shift tests to retrieval sets has been
+published. Two works partially cover the space:
 
 - *Freshness and the Limits of Heuristic Trend Detection in Temporal RAG* (2509.19376) reports that
   freshness via a recency prior is partial and parameter-sensitive. It is a
@@ -401,11 +399,10 @@ wrong target.
 
 ## 7. Provenance & Confidence Notes
 
-- Everything marked o (practitioner-only) should not be reported alongside ESTABLISHED entries without a
-  visible tier label. Mixing peer-reviewed metrics with blog-post heuristics in one table is how
-  unvalidated thresholds acquire false authority.
-- **CUE - resolved.** Primary source located and verified: RAG-X (arXiv:2603.03541). It is a real
-  published metric family, not a blog artifact or fabrication. Reclassified o -> EMERGING, fully cited in §3.
+Anything marked o is practitioner-only, meaning it comes from industry writing rather than
+peer-reviewed work, and it should never be reported alongside an ESTABLISHED entry without that
+tier visible. Mixing peer-reviewed metrics with blog-post heuristics in one table is how
+unvalidated thresholds acquire an authority nobody granted them.
 
 ### The Accuracy Fallacy - and one arithmetic caution
 
@@ -428,118 +425,7 @@ Note also that Context Adherence scored **0.84** on the same pipeline - the gene
 faithful. A third of its correct answers were ungrounded. This is the **Adherence Paradox**,
 and it is the strongest single argument in the catalogue for why adherence/faithfulness scores must
 never be reported without a retrieval-hit denominator beside them.
-- v1 flagged 2406.15264 / 2408.12398 as one contribution in two versions. Retained; correct.
 
-## 8. Verification log (this revision)
-
-| ID | Status |
-|---|---|
-| 2510.00001 | VERIFIED real; abstract matches entry |
-| 2601.21803 | VERIFIED real; RAG-E / WARG / Randl et al. all correct |
-| 2603.23047 | VERIFIED real; v1's title + PR correction confirmed accurate |
-| 2605.03534 | VERIFIED real; Qiu, Han & Huang; added sufficiency ≠ hallucination caveat |
-| 2605.08838 | VERIFIED real; *Generating Leakage-Free Benchmarks for Robust RAG Evaluation* |
-| 2309.15217 | VERIFIED RAGAS; EACL'24 demos pp. 150-158 |
-| 2305.14627 | VERIFIED ALCE; EMNLP'23 pp. 6465-6488 |
-| 2504.14891 | VERIFIED Gan et al. RAG evaluation survey |
-
-### Second pass - all remaining v1 IDs now verified
-
-| ID | Status | Verified title / attribution | Action |
-|---|---|---|---|
-| 2405.00978 | VERIFIED | *Language Fairness in Multilingual Information Retrieval* - Eugene Yang et al., SIGIR'24 | CAUTION **reclassified** Correctness -> Fairness |
-| 2406.04298 | VERIFIED | *Measuring and Addressing Indexical Bias in Information Retrieval* - Caleb Ziems et al., ACL'24 | CAUTION **reclassified** Correctness -> Fairness |
-| 2406.16367 | VERIFIED | *On the Role of Long-tail Knowledge in Retrieval Augmented LLMs* - Dongyang Li et al., ACL'24 | venue + framing added |
-| 2406.19647 | VERIFIED | *Doc2Token: Bridging Vocabulary Gap…* - Kaihao Li et al., eCom@SIGIR'24 | first author corrected |
-| 2410.11217 | VERIFIED | Citation metrics removing over-penalization of excessive citations; Generate-then-Refine; WebGLM-QA/ASQA/ELI5 | confirmed |
-| 2412.18004 | VERIFIED | *Correctness is not Faithfulness in RAG Attributions* - Wallat, Heuss, de Rijke & Anand | confirmed; up to 57% of citations unfaithful |
-| 2505.21870 | VERIFIED | Retrieval robustness; 3 metrics, 1500 questions, 11 LLMs | confirmed |
-| 2507.06956 | VERIFIED | *Investigating the Robustness of RAG at the Query Level* - Sezen Perçin et al., 2025 | confirmed |
-| 2505.18710 | VERIFIED | GainRAG - Jiang et al. | CAUTION see note below |
-| 2509.12765 | VERIFIED | *InfoGain-RAG* - Zihan Wang et al., **EMNLP'25 Oral** | DIG definition added |
-| 2503.01478 | VERIFIED | *SePer* - Dai, Xu, Ye, Liu & Xiong, **ICLR'25 Spotlight** | confirmed |
-| 2510.21440 | VERIFIED | *Redefining Retrieval Evaluation in the Era of LLMs* - Trappolini et al., EACL | confirmed |
-| 2409.11242 | VERIFIED | *Measuring and Enhancing Trustworthiness of LLMs in RAG…* - Song et al., **ICLR'25 Oral** | CAUTION name is **Trust-Score**; covers refusal |
-| 2508.18929 | VERIFIED | *Diverse And Private Synthetic Datasets Generation for RAG evaluation* - Driouich et al., TRUST-AI@ECAI'25 | venue added |
-
-**Zero fabricated IDs across 22 checks.** Every arXiv identifier in v1 resolves to a real paper
-whose content matches the catalogue entry. The defects found were *classification* errors, not
-citation errors.
-
-### Third pass - previously un-ID'd entries now sourced
-
-| Entry | Was | Now |
-|---|---|---|
-| ARES | no ID | arXiv:2311.09476 |
-| VERA | "Ding et al., Aug 2024" | Ding et al., **Sep** 2024, arXiv:2409.03759 |
-| RAGEval | "Zhu et al. 2024" | Zhu et al., arXiv:2408.01262 - metrics: Completeness, Hallucination, Irrelevance VERIFIED matches v1 description |
-| MIRAGE (medical) | not in catalogue | arXiv:2402.13178 |
-| MultiHop-RAG | no ID | arXiv:2401.15391 |
-| FRAMES | no ID | arXiv:2409.12941 (*Fact, Fetch and Reason*), NAACL'25 |
-
-### Fourth pass - my own additions, verified
-
-I asserted these from recall in earlier passes. Now checked:
-
-| Entry | Claimed | Verified | Verdict |
-|---|---|---|---|
-| FActScore | Min et al., EMNLP'23, 2305.14251 | Min et al., EMNLP'23, *FActScore: Fine-grained Atomic Evaluation of Factual Precision* | VERIFIED |
-| Lost in the Middle | Liu et al., 2307.03172 | Nelson F. Liu et al., TACL, *How Language Models Use Long Contexts* | VERIFIED |
-| The Power of Noise | Cuconasu et al., SIGIR'24, 2401.14887 | Confirmed; SIGIR'24 pp. 719-729 | VERIFIED |
-| Sufficient Context | Joren et al., ICLR'25 | Joren, Zhang, Ferng, Juan, Taly & Rashtchian; **ID added: 2411.06037** | VERIFIED |
-| BEIR | 2104.08663 | Thakur et al., NeurIPS Datasets & Benchmarks 2021 | VERIFIED |
-| MTEB | 2210.07316 | Muennighoff et al., EACL | VERIFIED |
-| RAGTruth | Niu et al., ACL'24 | Confirmed; pp. 10862-10878, **ID added: 2401.00396** | VERIFIED |
-| VersionRAG | Huwiler, Stockinger & Fürst | Confirmed; **ID added: 2510.08109** | VERIFIED |
-| BenchmarkQED / AutoQ | "BenchmarkQED, 2025" | Microsoft Research tool suite (AutoQ / AutoE / AutoD), github.com/microsoft/benchmark-qed - **software, not a paper** | CAUTION recategorized |
-| **AIS** | **Rashkin et al., TACL'23** | **Rashkin et al., *Computational Linguistics* 49(4):777-840, 2023** | ERROR **my error** |
-| RULER | needle-in-haystack | not verified this pass | OPEN open |
-
-CAUTION **One error, and it was mine.** I cited AIS to TACL; it is *Computational Linguistics*. Both are
-MIT Press journals with overlapping ACL-adjacent scope, which is exactly the kind of near-miss that
-survives a confidence check and fails a lookup. Running total across four passes: **34 identifiers
-checked, one wrong - and the wrong one came from me, not from v1.**
-
-**Corollary for the catalogue's methodology:** the ESTABLISHED/EMERGING/o tier column tracks *how established* a
-metric is, not *how verified* the citation is. Those are independent axes. AIS is as established as
-anything here and still carried a bad venue. Consider a separate VERIFIED verification mark, as used in
-the tables above.
-
-### Two further surveys worth reading before finalizing
-
-| Survey | Coverage | Citation |
-|---|---|---|
-| Gan et al. | Most comprehensive; performance, factual accuracy, safety, efficiency | arXiv:2504.14891 |
-| Brehme, Ströhle & Breu | SLR of 63 papers; indexing + dataset generation + judge reliability | arXiv:2504.20119 |
-| Yu, Gan, Zhang, Tong, Liu & Liu | Earlier eval survey | arXiv:2405.07437 |
-
-### CAUTION GainRAG - "gain" is a training signal and a metric
-
-The paper defines gain to *align retriever and LLM preferences* by training a middleware on
-estimated gain signals. Reporting it as an evaluation metric on a system trained with it is
-circular. If you adopt it as a metric, compute it with a held-out generator.
-
-The paper's underlying claim is also worth carrying into §4: highly relevant passages can interfere
-with LLM reasoning when they contain complex or contradictory information. Indirectly related
-content can help by supplying suggestive information or logical clues. That is
-the same phenomenon as *The Power of Noise*, arrived at independently - and it is the strongest
-argument in the catalogue for why retrieval-only metrics cannot stand alone.
-
-### DIG, SePer, Gain and eRAG are four names for one idea
-
-All four measure a passage's contribution by differencing model behaviour with and without it:
-
-| Metric | Differenced quantity |
-|---|---|
-| eRAG | downstream task performance |
-| Gain (GainRAG) | contribution to correct output |
-| DIG (InfoGain-RAG) | LLM generation confidence |
-| ΔSePer | semantic perplexity |
-
-Treat these as one family with different inner measurements and pick exactly one, because
-reporting all four inflates your metric count without adding any independent signal. They will
-correlate heavily, and a dashboard showing four numbers in agreement creates false confidence in
-what is really a single underlying estimate.
 
 ```{=latex}
 \end{landscape}

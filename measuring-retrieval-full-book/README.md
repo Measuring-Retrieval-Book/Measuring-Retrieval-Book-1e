@@ -2,16 +2,16 @@
 
 By **Madhava Gaikwad**.
 
-This package builds the complete source-derived manuscript as a production PDF and HTML
-edition. The current PDF is 283 pages. It includes 61 ordered manuscript files, 173 rebuilt
-color diagrams, a consolidated catalogue, twelve visual synthesis plates, and a complete
-diagram ledger.
+This package builds the book as a production PDF and as a multi-page HTML edition. The PDF runs
+to 292 pages at 7 by 10 inches. The manuscript is 62 ordered files with 173 color diagrams, a
+consolidated metric catalogue, a full reference list, and a figure archive.
 
 ## Build
 
 ```sh
-make pdf
-make html
+make pdf     # Pandoc + XeLaTeX
+make html    # single-file HTML
+make site    # multi-page HTML edition into ../docs
 make lint
 ```
 
@@ -20,11 +20,9 @@ The page size is 7 by 10 inches.
 
 ## Editorial guarantees
 
-- The manuscript covers the nine explicit source files listed in `SOURCE_LEDGER.md`.
-- The private `bk` directory stays outside the source list.
-- Every fenced source block has a stable color figure asset.
-- The CKA correction and retrieval-robustness definitions are integrated into their chapters.
-- The catalogue remains available as a full appendix.
+- Every figure has a stable SVG master, and the prose never depends on reading one.
+- The PDF and the HTML edition are built from the same Markdown.
+- `make lint` enforces plain ASCII hyphens, which the fonts require.
 
 ## Files
 
@@ -32,6 +30,6 @@ The page size is 7 by 10 inches.
 - `appendices/`: catalogue, evidence status, and visual synthesis
 - `assets/diagrams/`: editable SVG figures plus rendered PNG files
 - `assets/covers/`: dark front and light back fractal artwork
-- `SOURCE_LEDGER.md`: source completeness record
-- `DIAGRAM_LEDGER.md`: figure provenance record
+- `DIAGRAM_LEDGER.md`: build-time index mapping figures to assets
+- `scripts/build_site.py`: builds the multi-page HTML edition into `docs/`
 - `scripts/style_lint.py`: house-style checks

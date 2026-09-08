@@ -12,8 +12,8 @@ it, and which companion measure exposes that distortion.
 
 | Edition | Where |
 |---|---|
-| **HTML** | [`measuring-retrieval-full-book/index.html`](measuring-retrieval-full-book/index.html) - full book, with contents, vector figures |
-| **PDF** | [`measuring-retrieval-full-book/measuring-retrieval-full.pdf`](measuring-retrieval-full-book/measuring-retrieval-full.pdf) - 323 pages, 7 x 10 in |
+| **HTML** | [measuring-retrieval-book.github.io](https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/) - one page per chapter, with contents and a dark reading mode |
+| **PDF** | [`measuring-retrieval-full-book/measuring-retrieval-full.pdf`](measuring-retrieval-full-book/measuring-retrieval-full.pdf) - 292 pages, 7 x 10 in |
 
 ## What is in it
 
@@ -32,8 +32,8 @@ asks whether it is still right six months later. Efficiency asks what being righ
 - **Part D, Efficiency** - cost centres, index and query time, token economics, evaluation cost.
 - **Chapters 13-15** - judge reliability, test-set quality, and narrowing seventy metrics down to
   eight you actually instrument.
-- **Appendices** - consolidated catalogue, an evidence ledger carrying the verification status of
-  roughly 130 citations, twelve visual synthesis plates, and a figure archive.
+- **Appendices** - a consolidated catalogue of every metric, the full reference list, twelve
+  visual synthesis plates, and a figure archive.
 
 Every metric gets a diagram, a worked example computed in the open, its failure modes, and a
 recommendation.
@@ -53,18 +53,17 @@ edition points at the SVG masters instead, so it stays sharp at any zoom and the
 
 `NODE` in the Makefile is an absolute path and will need changing on another machine.
 
-## Provenance
-
-The manuscript is built from nine Markdown sources and one slide deck.
-[`SOURCE_LEDGER.md`](measuring-retrieval-full-book/SOURCE_LEDGER.md) records every source with its
-size and a content hash, and [`DIAGRAM_LEDGER.md`](measuring-retrieval-full-book/DIAGRAM_LEDGER.md)
-maps each of the 173 figures back to the source file and line it came from. Appendix B carries the
-citation verification status, including two corrections of the author's own errors.
-
 ## Repository layout
 
 ```
-*.md                          the nine source whitepapers
 measuring-retrieval-full-book/   the book: chapters, appendices, assets, build
-measuring-retrieval-book/        an earlier, much shorter draft
+docs/                            the HTML edition, served by GitHub Pages
+*.md                             source material the book was assembled from
 ```
+
+## Licence and citation
+
+Text and figures are the author's. If you cite the book:
+
+> Gaikwad, M. (2026). *Measuring Retrieval: A working book on metrics, evidence, and evaluation
+> design*. First edition.

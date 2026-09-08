@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="346" viewBox="0 0 720 346">
+<style>
+  .mono { font-family: 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace; font-size: 15px; }
+  .title { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 22px; font-weight: 700; }
+  .label { font-family: 'Source Sans 3', 'Avenir Next', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+</style>
+<rect width="720" height="346" rx="10" fill="#FFF0ED"/>
+<rect width="720" height="8" rx="4" fill="#E45E4F"/>
+<text x="34" y="39" fill="#342127" class="title">The Parameter Cliff</text>
+<text x="686" y="37" text-anchor="end" fill="#197FA2" class="label">DIAGRAM</text>
+<text x="46" y="68" fill="#E45E4F" class="mono" xml:space="preserve">   THE PARAMETER CLIFF</text><text x="46" y="88" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="108" fill="#7B5960" class="mono" xml:space="preserve">   recency weight tuned on corpus A  ──▶ Latest@10 = 1.00 on A</text><text x="46" y="128" fill="#7B5960" class="mono" xml:space="preserve">   same weight applied to corpus B   ──▶ Latest@10 = 0.00 on B</text><text x="46" y="148" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="168" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;We enabled the recency prior.&quot;</text><text x="46" y="188" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="208" fill="#D94C42" class="mono" xml:space="preserve">       / \</text><text x="46" y="228" fill="#342127" class="mono" xml:space="preserve"> </text><text x="46" y="248" fill="#D94C42" class="mono" xml:space="preserve">        o    &quot;With whose tuning?&quot;</text><text x="46" y="268" fill="#D94C42" class="mono" xml:space="preserve">       /|\</text><text x="46" y="288" fill="#D94C42" class="mono" xml:space="preserve">       / \</text>
+</svg>

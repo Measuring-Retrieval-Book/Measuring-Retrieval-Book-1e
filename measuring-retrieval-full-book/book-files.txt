@@ -1,3 +1,4 @@
+chapters/00-dedication.md
 chapters/00-preface.md
 chapters/00a-part-classical.md
 chapters/01-chapter-00.md
@@ -57,5 +58,4 @@ chapters/49-chapter-15.md
 chapters/50-closing.md
 appendices/appendix-a-catalogue.md
 appendices/appendix-b-evidence.md
-appendices/appendix-c-visual-synthesis.md
-appendices/appendix-d-figure-archive.md
+appendices/appendix-c-figure-archive.md

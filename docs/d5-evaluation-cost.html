@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D.5 The cost of evaluation itself - Measuring Retrieval</title>
+<meta name="description" content="Every metric in Supplements A and B has a price, and the prices differ by orders of magnitude.">
+<meta name="author" content="Madhava Gaikwad">
+<link rel="canonical" href="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/d5-evaluation-cost.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Measuring Retrieval">
+<meta property="og:title" content="D.5 The cost of evaluation itself - Measuring Retrieval">
+<meta property="og:description" content="Every metric in Supplements A and B has a price, and the prices differ by orders of magnitude.">
+<meta property="og:url" content="https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/d5-evaluation-cost.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="D.5 The cost of evaluation itself - Measuring Retrieval">
+<meta name="twitter:description" content="Every metric in Supplements A and B has a price, and the prices differ by orders of magnitude.">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Chapter", "name": "D.5 The cost of evaluation itself", "description": "Every metric in Supplements A and B has a price, and the prices differ by orders of magnitude.", "url": "https://measuring-retrieval-book.github.io/Measuring-Retrieval-Book-1e/d5-evaluation-cost.html", "position": 41, "isPartOf": {"@type": "Book", "name": "Measuring Retrieval", "author": {"@type": "Person", "name": "Madhava Gaikwad"}}}</script>
+<script>(function(){try{if(localStorage.getItem('mr-mode')==='dark')document.documentElement.className='dark';}catch(e){}})();</script>
+</head>
+<body>
+<div class="page">
+<p class="crumb"><a href="index.html">Measuring Retrieval</a> &rsaquo; D.5 The cost of evaluation itself</p><div class="nav"><span class="navlinks">[ <a href="d4-token-economics.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="d6-efficiency-summary.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><hr>
+<section id="d.5-the-cost-of-evaluation-itself" class="level1">
+<h1>D.5 The cost of evaluation itself</h1>
+<section id="d.5.1-the-invoice-nobody-forecasts" class="level2">
+<h2>D.5.1 The invoice nobody forecasts</h2>
+<p>Every metric in Supplements A and B has a price, and the prices
+differ by orders of magnitude.</p>
+<p><img src="assets/diagrams/fig-153-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>Precision, recall and nDCG are effectively free once you have labels.
+RAGAS faithfulness costs one claim extraction plus an entailment check
+per claim. RAGChecker’s full nine costs two extractions, one over the
+response and one over the ground truth, plus entailment checks across
+every combination of claims and chunks. ALCE’s citation precision is
+combinatorial in the number of citations per sentence, because of the
+leave-one-out test. eRAG costs k model calls, one per retrieved
+document. ΔSePer costs N samples in each of two conditions plus
+entailment across every pair of responses. MIRAGE costs three full
+inference runs per question, covering the Base, Oracle and Mixed
+conditions. WARG requires a Shapley approximation and is the heaviest of
+the set.</p>
+<p>The right response to a team proposing to run the full suite on every
+pull request is to ask them to add up that column first.</p>
+</section>
+<section id="d.5.2-the-published-efficiency-wins" class="level2">
+<h2>D.5.2 The published efficiency wins</h2>
+<p>Two papers explicitly optimized the cost of evaluation, and both
+numbers are large enough to change your architecture.</p>
+<p>eRAG uses up to 50 times less GPU memory than end-to-end evaluation,
+with improved runtime alongside (<a
+href="https://arxiv.org/abs/2404.13781">arXiv:2404.13781</a>), and that
+reduction is what makes utility-based labelling feasible at all.</p>
+<p>MIRAGE uses a 37,800-chunk retrieval pool, roughly 1% of a full wiki
+dump, which significantly reduces computational cost while retaining
+relevance to large-scale benchmarks such as MTEB (<a
+href="https://arxiv.org/abs/2504.17137">arXiv:2504.17137</a>).</p>
+<p>Both are instances of the same principle, which is that evaluation
+does not need to run at production scale to be informative. A
+well-constructed 1% sample beats a full-corpus evaluation you cannot
+afford to run often enough to catch a regression.</p>
+</section>
+<section id="d.5.3-the-tiering-recommendation" class="level2">
+<h2>D.5.3 The tiering recommendation</h2>
+<p><img src="assets/diagrams/fig-154-decision-map.svg"
+class="diagram-figure" style="width:96.0%" alt="Decision map" /></p>
+<p>On every commit, run only the reference-based and reference-free
+metrics, meaning P@K, Recall@k, Pairwise Redundancy, latency and TTFT,
+all of which cost essentially nothing. Nightly, run one judge-based
+metric over a fixed 200-query sample, using RAGAS or the three promoted
+RAGChecker metrics. Per release, run the expensive diagnostics, meaning
+ΔSePer, WARG, the full RAGChecker set and the CUE quadrants. On every
+model change, run the procurement instruments, being MIRAGE, Trust-Score
+and CKA. Quarterly, run the human anchor set, the version-sensitive set
+and the judge-agreement check.</p>
+<hr />
+</section>
+</section>
+<hr>
+<div class="nav"><span class="navlinks">[ <a href="d4-token-economics.html" rel="prev">&lt;&lt; Previous</a> | <a href="index.html">Contents</a> | <a href="d6-efficiency-summary.html" rel="next">Next &gt;&gt;</a> ]</span><button type="button" id="mode" class="mode" aria-label="Toggle dark reading mode">Dark mode</button></div><p class="foot">Measuring Retrieval &middot; Madhava Gaikwad &middot; First edition, September 2026</p></div>
+<script>
+(function(){
+  var b=document.getElementById('mode');if(!b)return;
+  function set(d){document.documentElement.className=d?'dark':'';b.textContent=d?'Light mode':'Dark mode';
+    try{localStorage.setItem('mr-mode',d?'dark':'light');}catch(e){}}
+  set(document.documentElement.className==='dark');
+  b.addEventListener('click',function(){set(document.documentElement.className!=='dark');});
+})();
+</script>
+</body>
+</html>

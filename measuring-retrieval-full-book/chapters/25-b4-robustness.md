@@ -1,10 +1,6 @@
 # B.4 Robustness - the perturbation family
 
-## B.4.1 Retrieval robustness: verified definitions
-
-**Previously:** OPEN ABSTRACT-ONLY, recorded as three metrics whose definitions had not been
-obtained.
-**Now:** VERIFIED Named and characterized.
+## B.4.1 Retrieval robustness
 
 **Source:** Cao et al., *Evaluating the Retrieval Robustness of Large Language Models* ·
 [arXiv:2505.21870](https://arxiv.org/abs/2505.21870)
@@ -16,7 +12,7 @@ The question nobody asks is what happens on the queries where it does not, and w
 model more documents or the same documents in a different order changes its answer. Those three
 questions have answers you can measure.
 
-## AD.1.1 The three metrics
+### The three metrics
 
 The paper introduces three retrieval robustness metrics, being the no-degradation rate, retrieval
 size robustness and retrieval order robustness, which together quantify how reliably a model
@@ -36,7 +32,7 @@ Retrieval size robustness asks whether more documents beat fewer, and in the exa
 rises from k=5 to k=20 and then drops at k=50, which fails. Retrieval order robustness asks
 whether the original, reversed and shuffled orderings give comparable results.
 
-## AD.1.2 Experimental setup, now specified
+### Experimental setup
 
 | Element | Detail |
 |---|---|
@@ -52,7 +48,7 @@ That last row is worth noting, because the authors deliberately moved away from 
 scoring, which means these robustness figures inherit a dependency on a language model judge and
 therefore inherit the drift problem §B.5 describes.
 
-## AD.1.3 The result, and the caveat that is the actual finding
+### The result, and the caveat that is the actual finding
 
 Models achieve over 80% on the geometric mean of the three metrics. Read on its own that is
 reassuring, since it says that RAG usually beats non-RAG, more documents usually help, and order
@@ -79,9 +75,7 @@ the model's own knowledge can improve retrieval robustness and can also limit th
 RAG is able to reach. Hedging against retrieval failure costs you retrieval upside, and that is a
 genuine trade-off rather than a tuning problem.
 
-## AD.1.4 Revised recommendation
-
-Run the comparison with a sharper protocol than the paper's headline suggests.
+### Recommendation
 
 Do not evaluate robustness at the aggregate level alone. Compute the no-degradation rate for each
 sample and report the degraded fraction explicitly, because a higher mean can coexist with
@@ -91,7 +85,7 @@ experience.
 If you can segment by query class, do so, because a 19% degradation rate concentrated in one
 customer segment is a very different problem from 19% spread evenly across all of them.
 
-## AD.1.5 Two related works found during the evidence pass
+### Two related works
 
 **RARE-Met** ([arXiv:2506.00789](https://arxiv.org/abs/2506.00789)) VERIFIED is a
 retrieval-aware robustness metric with an explicit refusal clause, and its definition of
@@ -117,9 +111,8 @@ reading before you treat either result as settled.
 
 **Facets:** Integrity/Drift | query | free | E2E | EMERGING VERIFIED
 **Source:** Perçin et al., GEM 2025 · [arXiv:2507.06956](https://arxiv.org/abs/2507.06956)
-OPEN ABSTRACT-ONLY.
 
-This is the complement to §B.4.1 measured at a finer unit. An aggregate robustness score can hide
+This is the complement to §B.4.1, measured at a finer unit. An aggregate robustness score can hide
 a query class that is catastrophically fragile, and query classes tend to map onto user segments,
 which map onto particular customers.
 
@@ -132,7 +125,7 @@ group of people.
 **One-line:** Whether a recency prior actually surfaces the freshest relevant item.
 
 **Facets:** Integrity/Drift | query | ref | R | EMERGING VERIFIED
-**Source:** [arXiv:2509.19376](https://arxiv.org/abs/2509.19376) OPEN ABSTRACT-ONLY.
+**Source:** [arXiv:2509.19376](https://arxiv.org/abs/2509.19376)
 
 ### Why it is here: a citable negative result
 
